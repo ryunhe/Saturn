@@ -1,4 +1,4 @@
-package io.knows.saturn;
+package io.knows.saturn.activity;
 
 import android.app.Activity;
 import android.content.Context;
@@ -15,6 +15,7 @@ import java.util.ArrayList;
 import butterknife.ButterKnife;
 import butterknife.InjectView;
 import butterknife.OnClick;
+import io.knows.saturn.R;
 
 /**
  * Created by ryun on 15-4-19.

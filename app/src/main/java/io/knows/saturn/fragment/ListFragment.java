@@ -1,9 +1,10 @@
-package io.knows.saturn;
+package io.knows.saturn.fragment;
 
 import android.app.Activity;
 import android.graphics.drawable.StateListDrawable;
 import android.os.Bundle;
-import android.os.StrictMode;
+import android.support.annotation.Nullable;
+import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -16,19 +17,27 @@ import android.widget.TextView;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.inject.Inject;
+import javax.inject.Named;
+
 import butterknife.ButterKnife;
 import butterknife.InjectView;
+import io.knows.saturn.R;
+import io.knows.saturn.SaturnApp;
 import io.knows.saturn.model.Media;
-import io.knows.saturn.service.MediaService;
+import io.knows.saturn.module.MediaModule;
+import io.knows.saturn.response.MediaListResponse;
+import io.knows.saturn.service.SamuiService;
 import retrofit.RestAdapter;
+import rx.Observable;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
 
 /**
- * Created by ryun on 15-4-20.
+ * Created by ryun on 15-4-21.
  */
-public class MainActivity extends Activity implements SwipeRefreshLayout.OnRefreshListener, AbsListView.OnScrollListener {
-    protected static String TAG = MainActivity.class.getName();
+
+public class ListFragment extends Fragment implements SwipeRefreshLayout.OnRefreshListener, AbsListView.OnScrollListener  {
 
     @InjectView(R.id.swipe_container)
     SwipeRefreshLayout mSwipeContainer;
@@ -36,43 +45,45 @@ public class MainActivity extends Activity implements SwipeRefreshLayout.OnRefre
     @InjectView(R.id.list_main)
     ListView mListView;
 
-    RestAdapter mRestAdapter;
+    @Inject
+    Observable<MediaListResponse> mediaPopular;
+
     MediaListAdapter mListAdapter;
 
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        mListAdapter = new MediaListAdapter(getActivity());
+    }
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
-        ButterKnife.inject(this);
+    public View onCreateView(LayoutInflater inflater,
+                             @Nullable ViewGroup container,
+                             @Nullable Bundle savedInstanceState) {
 
-        if (android.os.Build.VERSION.SDK_INT > 9) {
-            StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
-            StrictMode.setThreadPolicy(policy);
-        }
+        ((SaturnApp) getActivity().getApplication()).getObjectGraph()
+                .plus(new MediaModule()).inject(this);
+
+        View layout = inflater.inflate(R.layout.fragment_list, container, false);
+        ButterKnife.inject(this, layout);
 
         mSwipeContainer.setColorSchemeResources(
                 R.color.green,
                 R.color.orange,
                 R.color.blue,
                 R.color.purple
-
         );
         mSwipeContainer.setOnRefreshListener(this);
 
         mListView.setOnScrollListener(this);
         mListView.setSelector(new StateListDrawable());
-
-        mListAdapter = new MediaListAdapter(this);
         mListView.setAdapter(mListAdapter);
 
-        mRestAdapter = new RestAdapter.Builder()
-                .setLogLevel(RestAdapter.LogLevel.FULL)
-                .setEndpoint("http://samui.knows.io/api/v1/")
-                .build();
-
         mListAdapter.doFetch();
+
+        return layout;
     }
+
 
     @Override
     public void onRefresh() {
@@ -102,14 +113,11 @@ public class MainActivity extends Activity implements SwipeRefreshLayout.OnRefre
         public void doFetch() {
             mData.clear();
 
-            mRestAdapter.create(MediaService.class).getPopular()
-                    .subscribeOn(Schedulers.io())
-                    .observeOn(AndroidSchedulers.mainThread())
-                    .subscribe(mediaListResponse -> {
-                        mData.addAll(mediaListResponse.getList());
-                        mListAdapter.notifyDataSetChanged();
-                        mSwipeContainer.setRefreshing(false);
-                    });
+            mediaPopular.subscribe(mediaListResponse -> {
+                mData.addAll(mediaListResponse.getList());
+                mListAdapter.notifyDataSetChanged();
+                mSwipeContainer.setRefreshing(false);
+            });
         }
 
         @Override
@@ -153,3 +161,4 @@ public class MainActivity extends Activity implements SwipeRefreshLayout.OnRefre
         }
     }
 }
+
