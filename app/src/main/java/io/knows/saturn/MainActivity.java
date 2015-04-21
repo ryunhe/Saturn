@@ -5,12 +5,11 @@ import android.graphics.drawable.StateListDrawable;
 import android.os.Bundle;
 import android.os.StrictMode;
 import android.support.v4.widget.SwipeRefreshLayout;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AbsListView;
-import android.widget.BaseAdapter;
+import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -20,11 +19,8 @@ import java.util.List;
 import butterknife.ButterKnife;
 import butterknife.InjectView;
 import io.knows.saturn.model.Media;
-import io.knows.saturn.model.Model;
 import io.knows.saturn.service.MediaService;
-import io.knows.saturn.service.UserService;
 import retrofit.RestAdapter;
-import rx.Observable;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
 
@@ -39,7 +35,10 @@ public class MainActivity extends Activity implements SwipeRefreshLayout.OnRefre
 
     @InjectView(R.id.list_main)
     ListView mListView;
+
     RestAdapter mRestAdapter;
+    MediaListAdapter mListAdapter;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -64,26 +63,21 @@ public class MainActivity extends Activity implements SwipeRefreshLayout.OnRefre
         mListView.setOnScrollListener(this);
         mListView.setSelector(new StateListDrawable());
 
+        mListAdapter = new MediaListAdapter(this);
+        mListView.setAdapter(mListAdapter);
+
         mRestAdapter = new RestAdapter.Builder()
                 .setLogLevel(RestAdapter.LogLevel.FULL)
                 .setEndpoint("http://samui.knows.io/api/v1/")
                 .build();
 
-        onRefresh();
+        mListAdapter.doFetch();
     }
 
     @Override
     public void onRefresh() {
         mSwipeContainer.setRefreshing(true);
-
-        mRestAdapter.create(UserService.class).getRecent("100001")
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(mediaListResponse -> {
-                    MediaListAdapter listAdapter = new MediaListAdapter(this, mediaListResponse.getList());
-                    mListView.setAdapter(listAdapter);
-                    mSwipeContainer.setRefreshing(false);
-                });
+        mListAdapter.doFetch();
     }
 
     @Override
@@ -97,22 +91,35 @@ public class MainActivity extends Activity implements SwipeRefreshLayout.OnRefre
         mSwipeContainer.setEnabled(pos >= 0);
     }
 
-    class MediaListAdapter extends BaseAdapter {
+    class MediaListAdapter extends ArrayAdapter<Media> {
         private Activity mContext;
-        private List<Media> mList = new ArrayList<Media>();
-        public MediaListAdapter(Activity context, List<Media> list) {
+        private List<Media> mData = new ArrayList<Media>();
+        public MediaListAdapter(Activity context) {
+            super(context, R.layout.row_main);
             mContext = context;
-            mList = list;
+        }
+
+        public void doFetch() {
+            mData.clear();
+
+            mRestAdapter.create(MediaService.class).getPopular()
+                    .subscribeOn(Schedulers.io())
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .subscribe(mediaListResponse -> {
+                        mData.addAll(mediaListResponse.getList());
+                        mListAdapter.notifyDataSetChanged();
+                        mSwipeContainer.setRefreshing(false);
+                    });
         }
 
         @Override
         public int getCount() {
-            return mList.size();
+            return mData.size();
         }
 
         @Override
         public Media getItem(int position) {
-            return mList.get(position);
+            return mData.get(position);
         }
 
         @Override
@@ -131,8 +138,7 @@ public class MainActivity extends Activity implements SwipeRefreshLayout.OnRefre
                 view.setTag(holder);
             }
 
-            Log.d(TAG, getItem(position).id);
-            holder.text.setText(getItem(position).id);
+            holder.text.setText(getItem(position).content);
 
             return view;
         }
