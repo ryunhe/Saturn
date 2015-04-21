@@ -2,11 +2,8 @@ package io.knows.saturn;
 
 import android.app.Application;
 
-import javax.inject.Inject;
-
 import dagger.ObjectGraph;
-import dagger.internal.Modules;
-import timber.log.Timber;
+import io.knows.saturn.module.ApiModule;
 
 /**
  * Created by ryun on 15-4-21.
@@ -17,7 +14,7 @@ public class SaturnApp extends Application {
     @Override
     public void onCreate() {
         super.onCreate();
-        mObjectGraph = ObjectGraph.create();
+        mObjectGraph = ObjectGraph.create(new ApiModule());
     }
 
     public void inject(Object o) {

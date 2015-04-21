@@ -7,6 +7,7 @@ import io.knows.saturn.response.MediaListResponse;
 import io.knows.saturn.response.UserEntityResponse;
 import retrofit.http.GET;
 import retrofit.http.Path;
+import retrofit.http.Query;
 import rx.Observable;
 
 /**
@@ -16,6 +17,12 @@ public interface SamuiService {
     // Media
     @GET("/media/{media}")
     Observable<MediaEntityResponse> getMedia(@Path("media") String media);
+
+    @GET("/media/feed")
+    Observable<MediaListResponse> getFeedMedia(@Query("offset") int offset);
+
+    @GET("/media/recent")
+    Observable<MediaListResponse> getRecentMedia();
 
     @GET("/media/popular")
     Observable<MediaListResponse> getPopularMedia();

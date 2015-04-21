@@ -10,7 +10,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AbsListView;
-import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -24,11 +23,10 @@ import butterknife.ButterKnife;
 import butterknife.InjectView;
 import io.knows.saturn.R;
 import io.knows.saturn.SaturnApp;
+import io.knows.saturn.adapter.Adapter;
+import io.knows.saturn.listener.EndlessScrollListener;
 import io.knows.saturn.model.Media;
-import io.knows.saturn.module.MediaModule;
-import io.knows.saturn.response.MediaListResponse;
 import io.knows.saturn.service.SamuiService;
-import retrofit.RestAdapter;
 import rx.Observable;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
@@ -37,23 +35,23 @@ import rx.schedulers.Schedulers;
  * Created by ryun on 15-4-21.
  */
 
-public class MediaListFragment extends Fragment implements SwipeRefreshLayout.OnRefreshListener, AbsListView.OnScrollListener  {
-
-    @InjectView(R.id.swipe_container)
-    SwipeRefreshLayout mSwipeContainer;
+public class MediaListFragment extends Fragment implements SwipeRefreshLayout.OnRefreshListener {
 
     @InjectView(R.id.list_main)
     ListView mListView;
 
+    @InjectView(R.id.swipe_container)
+    SwipeRefreshLayout mSwipeContainer;
+
     @Inject
-    Observable<MediaListResponse> mediaPopular;
+    SamuiService mSamuiService;
 
     MediaListAdapter mListAdapter;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        mListAdapter = new MediaListAdapter(getActivity());
+        mListAdapter = new MediaListAdapter(getActivity(), new ArrayList<Media>());
     }
 
     @Override
@@ -61,8 +59,7 @@ public class MediaListFragment extends Fragment implements SwipeRefreshLayout.On
                              @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
 
-        ((SaturnApp) getActivity().getApplication()).getObjectGraph()
-                .plus(new MediaModule()).inject(this);
+        ((SaturnApp) getActivity().getApplication()).inject(this);
 
         View layout = inflater.inflate(R.layout.fragment_list, container, false);
         ButterKnife.inject(this, layout);
@@ -75,11 +72,9 @@ public class MediaListFragment extends Fragment implements SwipeRefreshLayout.On
         );
         mSwipeContainer.setOnRefreshListener(this);
 
-        mListView.setOnScrollListener(this);
+        mListView.setOnScrollListener(new OnScrollListener());
         mListView.setSelector(new StateListDrawable());
         mListView.setAdapter(mListAdapter);
-
-        mListAdapter.doFetch();
 
         return layout;
     }
@@ -91,64 +86,40 @@ public class MediaListFragment extends Fragment implements SwipeRefreshLayout.On
         mListAdapter.doFetch();
     }
 
-    @Override
-    public void onScrollStateChanged(AbsListView view, int scrollState) {
+    class OnScrollListener extends EndlessScrollListener {
+        @Override
+        public void onLoadMore(int page, int totalItemsCount) {
+            mListAdapter.loadMore(totalItemsCount - 1);
+        }
 
+        @Override
+        public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
+            int pos = (mListView == null || mListView.getChildCount() == 0) ? 0 : mListView.getChildAt(0).getTop();
+            mSwipeContainer.setEnabled(pos >= 0);
+
+            super.onScroll(view, firstVisibleItem, visibleItemCount, totalItemCount);
+        }
     }
 
-    @Override
-    public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
-        int pos = (mListView == null || mListView.getChildCount() == 0) ? 0 : mListView.getChildAt(0).getTop();
-        mSwipeContainer.setEnabled(pos >= 0);
-    }
-
-    class MediaListAdapter extends ArrayAdapter<Media> {
-        private Activity mContext;
-        private List<Media> mData = new ArrayList<Media>();
-        public MediaListAdapter(Activity context) {
-            super(context, R.layout.row_main);
-            mContext = context;
-        }
-
-        public void doFetch() {
-            mData.clear();
-
-            mediaPopular.subscribe(mediaListResponse -> {
-                mData.addAll(mediaListResponse.getList());
-                mListAdapter.notifyDataSetChanged();
-                mSwipeContainer.setRefreshing(false);
-            });
+    class MediaListAdapter extends Adapter<Media> {
+        public MediaListAdapter(Activity activity, List<Media> list) {
+            super(activity, list);
         }
 
         @Override
-        public int getCount() {
-            return mData.size();
-        }
-
-        @Override
-        public Media getItem(int position) {
-            return mData.get(position);
-        }
-
-        @Override
-        public long getItemId(int position) {
-            return position;
-        }
-
-        @Override
-        public View getView(int position, View view, ViewGroup parent) {
+        public View getDataRow(int position, View convertView, ViewGroup parent) {
             ViewHolder holder;
-            if (view != null) {
-                holder = (ViewHolder) view.getTag();
+            if (convertView != null) {
+                holder = (ViewHolder) convertView.getTag();
             } else {
-                view = LayoutInflater.from(mContext).inflate(R.layout.row_main, parent, false);
-                holder = new ViewHolder(view);
-                view.setTag(holder);
+                convertView = LayoutInflater.from(mActivity).inflate(R.layout.row_main, parent, false);
+                holder = new ViewHolder(convertView);
+                convertView.setTag(holder);
             }
 
             holder.text.setText(getItem(position).content);
 
-            return view;
+            return convertView;
         }
 
         class ViewHolder {
@@ -159,6 +130,31 @@ public class MediaListFragment extends Fragment implements SwipeRefreshLayout.On
                 ButterKnife.inject(this, view);
             }
         }
+
+        public void loadMore(int offset) {
+            mSamuiService.getFeedMedia(offset)
+                    .subscribeOn(Schedulers.io())
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .subscribe(mediaListResponse -> {
+                        mDataList.addAll(mediaListResponse.getList());
+                        mListAdapter.notifyDataSetChanged();
+                    });
+        }
+
+        public void doFetch() {
+            mDataList.clear();
+
+            mSamuiService.getFeedMedia(0)
+                    .subscribeOn(Schedulers.io())
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .subscribe(mediaListResponse -> {
+                        mDataList.addAll(mediaListResponse.getList());
+                        mListAdapter.notifyDataSetChanged();
+                        mSwipeContainer.setRefreshing(false);
+                    });
+
+        }
     }
+
 }
 

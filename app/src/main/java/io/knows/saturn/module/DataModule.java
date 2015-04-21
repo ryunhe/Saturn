@@ -1,10 +1,7 @@
 package io.knows.saturn.module;
 
-import android.app.Application;
 import android.content.Context;
 
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 import com.squareup.okhttp.Cache;
 import com.squareup.okhttp.OkHttpClient;
 import com.squareup.picasso.OkHttpDownloader;
@@ -16,7 +13,6 @@ import javax.inject.Singleton;
 
 import dagger.Module;
 import dagger.Provides;
-import io.knows.saturn.fragment.ListFragment;
 import timber.log.Timber;
 
 import static com.jakewharton.byteunits.DecimalByteUnit.MEGABYTES;

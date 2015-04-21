@@ -6,7 +6,7 @@ import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 
 import io.knows.saturn.R;
-import io.knows.saturn.fragment.ListFragment;
+import io.knows.saturn.fragment.MediaListFragment;
 
 /**
  * Created by ryun on 15-4-21.
@@ -24,7 +24,7 @@ public class MainActivity extends FragmentActivity {
 
         getSupportFragmentManager().beginTransaction()
                 .addToBackStack(this.toString())
-                .replace(R.id.frame_main, new ListFragment())
+                .replace(R.id.frame_main, new MediaListFragment())
                 .commit();
     }
 }
