@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <color name="blue">#80D8FF</color>
+    <color name="blue_light">#c5ecff</color>
+    <color name="blue_dark">#6da3d9</color>
+    <color name="blue_cloud">#ABDBE1</color>
+
+    <color name="green">#60bf64</color>
+    <color name="green_light">#77ec7c</color>
+    <color name="green_dark">#4b954e</color>
+
+    <color name="pink">#F7A3C1</color>
+    <color name="pink_dark">#e57398</color>
+    <color name="pink_red">#FD6463</color>
+
+    <color name="red">#ff4d4d</color>
+    <color name="orange">#ffc61e</color>
+    <color name="orange_dark">#e1a01c</color>
+    <color name="black">#333333</color>
+    <color name="white">#ffffff</color>
+    <color name="yellow_light">#bbfffabb</color>
+    <color name="gray">#eeeeee</color>
+    <color name="gray_light">#f4f4f4</color>
+    <color name="gray_dark">#e1e1e1</color>
+    <color name="gray_icon">#778085</color>
+    <color name="purple">#B37CC4</color>
+    <color name="purple_dark">#ff4f4a86</color>
+
+    <color name="text_black">#333333</color>
+    <color name="text_gray">#666666</color>
+    <color name="text_gray_light">#999999</color>
+
+    <color name="transparent">#00000000</color>
+    <color name="white_transparent">#ddffffff</color>
+    <color name="gray_transparent">#44333333</color>
+    <color name="black_transparent">#cc333333</color>
+
+</resources>
