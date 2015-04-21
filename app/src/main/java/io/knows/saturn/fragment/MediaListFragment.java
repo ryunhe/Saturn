@@ -37,7 +37,7 @@ import rx.schedulers.Schedulers;
  * Created by ryun on 15-4-21.
  */
 
-public class ListFragment extends Fragment implements SwipeRefreshLayout.OnRefreshListener, AbsListView.OnScrollListener  {
+public class MediaListFragment extends Fragment implements SwipeRefreshLayout.OnRefreshListener, AbsListView.OnScrollListener  {
 
     @InjectView(R.id.swipe_container)
     SwipeRefreshLayout mSwipeContainer;

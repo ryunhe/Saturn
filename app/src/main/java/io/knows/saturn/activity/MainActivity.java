@@ -11,7 +11,7 @@ import io.knows.saturn.fragment.ListFragment;
 /**
  * Created by ryun on 15-4-21.
  */
-public class ListActivity extends FragmentActivity {
+public class MainActivity extends FragmentActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
