@@ -1,12 +1,4 @@
 <resources>
-    <style name="SaturnTheme" parent="android:Theme.Holo.Light.DarkActionBar">
-        <!-- Customize your theme here. -->
+    <style name="SaturnTheme" parent="MaterialDrawerTheme.Light.DarkToolbar.TranslucentStatus">
     </style>
-
-    <style name="SaturnNavigationDrawerTheme" parent="MaterialNavigationDrawerTheme">
-        <item name="colorPrimary">#8bc34a</item>
-        <item name="colorPrimaryDark">#558b2f</item>
-        <item name="colorAccent">#FFFFFF</item>
-    </style>
-
 </resources>

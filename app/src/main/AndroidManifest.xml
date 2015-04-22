@@ -11,13 +11,12 @@
         android:label="@string/app_name"
         android:theme="@style/SaturnTheme"
         android:name=".SaturnApp"
-        tools:replace="android:icon"
         >
 
         <activity
             android:name=".activity.MainActivity"
-            android:theme="@style/SaturnNavigationDrawerTheme"
-            android:label="@string/app_name">
+            android:windowSoftInputMode="stateHidden"
+            >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />

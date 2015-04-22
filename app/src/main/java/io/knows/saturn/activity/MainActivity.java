@@ -1,37 +1,77 @@
 package io.knows.saturn.activity;
 
-import android.graphics.Color;
-import android.os.Build;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
+import android.view.View;
 
+import com.mikepenz.iconics.typeface.FontAwesome;
+import com.mikepenz.materialdrawer.Drawer;
+import com.mikepenz.materialdrawer.model.PrimaryDrawerItem;
+import com.mikepenz.materialdrawer.model.interfaces.Nameable;
+import com.mikepenz.materialdrawer.util.KeyboardUtil;
+
+import butterknife.ButterKnife;
+import butterknife.InjectView;
+import io.knows.saturn.R;
 import io.knows.saturn.fragment.MediaCardStackFragment;
-import io.knows.saturn.fragment.MediaListFragment;
-import it.neokree.materialnavigationdrawer.MaterialNavigationDrawer;
-import it.neokree.materialnavigationdrawer.elements.MaterialSection;
 
 /**
  * Created by ryun on 15-4-21.
  */
-public class MainActivity extends MaterialNavigationDrawer {
-//    @Override
-//    protected void onCreate(Bundle savedInstanceState) {
-//        super.onCreate(savedInstanceState);
-//        setContentView(R.layout.activity_list);
-//
-//
-//        getSupportFragmentManager().beginTransaction()
-//                .addToBackStack(this.toString())
-//                .replace(R.id.frame_main, new MediaListFragment())
-//                .commit();
-//    }
+public class MainActivity extends AppCompatActivity {
+    @InjectView(R.id.toolbar)
+    Toolbar mToolbar;
+
+    Drawer.Result mDrawerResult;
 
     @Override
-    public void init(Bundle bundle) {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            // Remove the status bar color. The DrawerLayout is responsible for drawing it from now on.
-            getWindow().setStatusBarColor(Color.TRANSPARENT);
-        }
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_main);
+        ButterKnife.inject(this);
 
-        addSection(newSection("首页", new MediaCardStackFragment()));
+        setSupportActionBar(mToolbar);
+
+        mDrawerResult = new Drawer()
+                .withActivity(this)
+                .withToolbar(mToolbar)
+                .addDrawerItems(
+                        new PrimaryDrawerItem().withName(R.string.drawer_item_home).withIcon(FontAwesome.Icon.faw_home)
+                )
+                .withOnDrawerItemClickListener((parent, view, position, id, drawerItem) -> {
+                    if (drawerItem != null && drawerItem instanceof Nameable) {
+                        mToolbar.setTitle(((Nameable) drawerItem).getNameRes());
+                        getSupportFragmentManager()
+                                .beginTransaction()
+                                .replace(R.id.fragment_container, new MediaCardStackFragment())
+                                .commit();
+                    }
+                })
+                .withOnDrawerListener(new Drawer.OnDrawerListener() {
+                    @Override
+                    public void onDrawerOpened(View drawerView) {
+                        KeyboardUtil.hideKeyboard(MainActivity.this);
+                    }
+
+                    @Override
+                    public void onDrawerClosed(View drawerView) {
+
+                    }
+                })
+                .withFireOnInitialOnClick(true)
+                .build();
+
+        mDrawerResult.keyboardSupportEnabled(this, true);
+    }
+
+    @Override
+    public void onBackPressed() {
+        //handle the back press :D close the drawer first and if the drawer is closed close the activity
+        if (mDrawerResult != null && mDrawerResult.isDrawerOpen()) {
+            mDrawerResult.closeDrawer();
+        } else {
+            super.onBackPressed();
+        }
     }
 }
