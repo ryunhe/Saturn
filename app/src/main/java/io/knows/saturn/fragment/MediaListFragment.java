@@ -48,8 +48,6 @@ public class MediaListFragment extends Fragment implements SwipeRefreshLayout.On
 
     @Inject
     SamuiService mSamuiService;
-    @Inject
-    RxDatabase mDatabase;
 
     MediaListAdapter mListAdapter;
 
@@ -81,10 +79,10 @@ public class MediaListFragment extends Fragment implements SwipeRefreshLayout.On
         mListView.setSelector(new StateListDrawable());
         mListView.setAdapter(mListAdapter);
 
-        mDatabase.query(Media.class)
-                .subscribeOn(Schedulers.newThread())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(media -> Timber.i(media.id));
+//        mDatabase.query(Media.class)
+//                .subscribeOn(Schedulers.newThread())
+//                .observeOn(AndroidSchedulers.mainThread())
+//                .subscribe(media -> Timber.i(media.id));
 
         return layout;
     }
@@ -93,13 +91,13 @@ public class MediaListFragment extends Fragment implements SwipeRefreshLayout.On
     @Override
     public void onRefresh() {
         mSwipeContainer.setRefreshing(true);
-        mListAdapter.doFetch();
+        mListAdapter.doFetch(0);
     }
 
     class OnScrollListener extends EndlessScrollListener {
         @Override
         public void onLoadMore(int page, int totalItemsCount) {
-            mListAdapter.loadMore(totalItemsCount - 1);
+            mListAdapter.doFetch(totalItemsCount - 1);
         }
 
         @Override
@@ -112,6 +110,8 @@ public class MediaListFragment extends Fragment implements SwipeRefreshLayout.On
     }
 
     class MediaListAdapter extends Adapter<Media> {
+        private boolean fetching = false;
+
         public MediaListAdapter(Activity activity, List<Media> list) {
             super(activity, list);
         }
@@ -141,32 +141,24 @@ public class MediaListFragment extends Fragment implements SwipeRefreshLayout.On
             }
         }
 
-        public void loadMore(int offset) {
-            mSamuiService.getFeedMedia(offset)
-                    .subscribeOn(Schedulers.io())
-                    .observeOn(AndroidSchedulers.mainThread())
-                    .subscribe(mediaListResponse -> {
-                        mDataList.addAll(mediaListResponse.getList());
-                        mListAdapter.notifyDataSetChanged();
+        public void doFetch(int offset) {
+            if (!fetching) {
+                fetching = true;
+                
+                if (0 == offset) {
+                    mDataList.clear();
+                }
 
-                        for (Media media : mediaListResponse.getList()) {
-                            mDatabase.put(media);
-                        }
-                    });
-        }
-
-        public void doFetch() {
-            mDataList.clear();
-
-            mSamuiService.getFeedMedia(0)
-                    .subscribeOn(Schedulers.io())
-                    .observeOn(AndroidSchedulers.mainThread())
-                    .subscribe(mediaListResponse -> {
-                        mDataList.addAll(mediaListResponse.getList());
-                        mListAdapter.notifyDataSetChanged();
-                        mSwipeContainer.setRefreshing(false);
-                    });
-
+                mSamuiService.getRecentMedia(offset)
+                        .subscribeOn(Schedulers.io())
+                        .observeOn(AndroidSchedulers.mainThread())
+                        .subscribe(mediaListResponse -> {
+                            mDataList.addAll(mediaListResponse.getList());
+                            mListAdapter.notifyDataSetChanged();
+                            mSwipeContainer.setRefreshing(false);
+                            fetching = false;
+                        });
+            }
         }
     }
 

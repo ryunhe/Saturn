@@ -22,16 +22,16 @@ public interface SamuiService {
     Observable<MediaListResponse> getFeedMedia(@Query("offset") int offset);
 
     @GET("/media/recent")
-    Observable<MediaListResponse> getRecentMedia();
+    Observable<MediaListResponse> getRecentMedia(@Query("offset") int offset);
 
     @GET("/media/popular")
-    Observable<MediaListResponse> getPopularMedia();
+    Observable<MediaListResponse> getPopularMedia(@Query("offset") int offset);
 
     // User
     @GET("/users/{user}")
     Observable<UserEntityResponse> getUser(@Path("user") String user);
 
     @GET("/users/{user}/media/recent")
-    Observable<MediaListResponse> getUserRecentMedia(@Path("user") String user);
+    Observable<MediaListResponse> getUserRecentMedia(@Path("user") String user, @Query("offset") int offset);
 
 }

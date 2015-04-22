@@ -3,4 +3,10 @@
         <!-- Customize your theme here. -->
     </style>
 
+    <style name="SaturnNavigationDrawerTheme" parent="MaterialNavigationDrawerTheme">
+        <item name="colorPrimary">#8bc34a</item>
+        <item name="colorPrimaryDark">#558b2f</item>
+        <item name="colorAccent">#FFFFFF</item>
+    </style>
+
 </resources>
