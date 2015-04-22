@@ -4,6 +4,8 @@ import android.app.Application;
 
 import dagger.ObjectGraph;
 import io.knows.saturn.module.ApiModule;
+import io.knows.saturn.module.DataModule;
+import timber.log.Timber;
 
 /**
  * Created by ryun on 15-4-21.
@@ -14,7 +16,12 @@ public class SaturnApp extends Application {
     @Override
     public void onCreate() {
         super.onCreate();
-        mObjectGraph = ObjectGraph.create(new ApiModule());
+
+        if (BuildConfig.DEBUG) {
+            Timber.plant(new Timber.DebugTree());
+        }
+
+        mObjectGraph = ObjectGraph.create(new DataModule(this));
     }
 
     public void inject(Object o) {

@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -27,9 +28,11 @@ import io.knows.saturn.adapter.Adapter;
 import io.knows.saturn.listener.EndlessScrollListener;
 import io.knows.saturn.model.Media;
 import io.knows.saturn.service.SamuiService;
+import nl.nl2312.rxcupboard.RxDatabase;
 import rx.Observable;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
+import timber.log.Timber;
 
 /**
  * Created by ryun on 15-4-21.
@@ -45,6 +48,8 @@ public class MediaListFragment extends Fragment implements SwipeRefreshLayout.On
 
     @Inject
     SamuiService mSamuiService;
+    @Inject
+    RxDatabase mDatabase;
 
     MediaListAdapter mListAdapter;
 
@@ -75,6 +80,11 @@ public class MediaListFragment extends Fragment implements SwipeRefreshLayout.On
         mListView.setOnScrollListener(new OnScrollListener());
         mListView.setSelector(new StateListDrawable());
         mListView.setAdapter(mListAdapter);
+
+        mDatabase.query(Media.class)
+                .subscribeOn(Schedulers.newThread())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(media -> Timber.i(media.id));
 
         return layout;
     }
@@ -138,6 +148,10 @@ public class MediaListFragment extends Fragment implements SwipeRefreshLayout.On
                     .subscribe(mediaListResponse -> {
                         mDataList.addAll(mediaListResponse.getList());
                         mListAdapter.notifyDataSetChanged();
+
+                        for (Media media : mediaListResponse.getList()) {
+                            mDatabase.put(media);
+                        }
                     });
         }
 

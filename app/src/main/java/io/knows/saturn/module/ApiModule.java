@@ -14,9 +14,7 @@ import retrofit.RestAdapter;
  * Created by ryun on 15-4-21.
  */
 @Module (
-    injects = {
-        MediaListFragment.class
-    }
+    library = true
 )
 public class ApiModule {
     public static final String PRODUCTION_API_URL = "http://samui.knows.io/api/v1/";
