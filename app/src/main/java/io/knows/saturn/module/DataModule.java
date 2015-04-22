@@ -16,6 +16,7 @@ import javax.inject.Singleton;
 
 import dagger.Module;
 import dagger.Provides;
+import io.knows.saturn.fragment.MediaCardStackFragment;
 import io.knows.saturn.fragment.MediaListFragment;
 import io.knows.saturn.helper.CupboardDbHelper;
 import nl.nl2312.rxcupboard.RxCupboard;
@@ -38,7 +39,8 @@ import static android.content.Context.MODE_PRIVATE;
     complete = false,
     includes = ApiModule.class,
     injects = {
-        MediaListFragment.class
+        MediaListFragment.class,
+        MediaCardStackFragment.class
     }
 )
 public class DataModule {

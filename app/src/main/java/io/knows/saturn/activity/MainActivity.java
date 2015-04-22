@@ -4,6 +4,7 @@ import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
 
+import io.knows.saturn.fragment.MediaCardStackFragment;
 import io.knows.saturn.fragment.MediaListFragment;
 import it.neokree.materialnavigationdrawer.MaterialNavigationDrawer;
 import it.neokree.materialnavigationdrawer.elements.MaterialSection;
@@ -31,6 +32,6 @@ public class MainActivity extends MaterialNavigationDrawer {
             getWindow().setStatusBarColor(Color.TRANSPARENT);
         }
 
-        addSection(newSection("首页", new MediaListFragment()));
+        addSection(newSection("首页", new MediaCardStackFragment()));
     }
 }
