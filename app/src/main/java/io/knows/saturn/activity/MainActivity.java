@@ -4,10 +4,15 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
+import android.widget.ImageView;
 
 import com.mikepenz.iconics.typeface.FontAwesome;
 import com.mikepenz.materialdrawer.Drawer;
+import com.mikepenz.materialdrawer.accountswitcher.AccountHeader;
 import com.mikepenz.materialdrawer.model.PrimaryDrawerItem;
+import com.mikepenz.materialdrawer.model.ProfileDrawerItem;
+import com.mikepenz.materialdrawer.model.ProfileSettingDrawerItem;
+import com.mikepenz.materialdrawer.model.interfaces.IProfile;
 import com.mikepenz.materialdrawer.model.interfaces.Nameable;
 import com.mikepenz.materialdrawer.util.KeyboardUtil;
 
@@ -23,6 +28,9 @@ public class MainActivity extends AppCompatActivity {
     @InjectView(R.id.toolbar)
     Toolbar mToolbar;
 
+    View mDrawerHeader;
+    ImageView mAvatarImage;
+
     Drawer.Result mDrawerResult;
 
     @Override
@@ -33,9 +41,13 @@ public class MainActivity extends AppCompatActivity {
 
         setSupportActionBar(mToolbar);
 
+        mDrawerHeader = getLayoutInflater().inflate(R.layout.item_profile, null);
+        mAvatarImage = (ImageView) mDrawerHeader.findViewById(R.id.image_avatar);
+
         mDrawerResult = new Drawer()
                 .withActivity(this)
                 .withToolbar(mToolbar)
+                .withHeader(mDrawerHeader)
                 .addDrawerItems(
                         new PrimaryDrawerItem().withName(R.string.drawer_item_home).withIcon(FontAwesome.Icon.faw_home)
                 )

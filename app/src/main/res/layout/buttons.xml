@@ -8,14 +8,16 @@
     android:layout_height="wrap_content">
 
     <Button
-        android:id="@+id/left"
+        style="?android:buttonBarButtonStyle"
+        android:id="@+id/button_left"
         android:layout_margin="10dp"
         android:text="Left"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content" />
 
     <Button
-        android:id="@+id/right"
+        style="?android:buttonBarButtonStyle"
+        android:id="@+id/button_right"
         android:layout_margin="10dp"
         android:text="Right"
         android:layout_width="wrap_content"

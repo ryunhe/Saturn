@@ -1,4 +1,4 @@
 <resources>
-    <style name="SaturnTheme" parent="MaterialDrawerTheme.Light.DarkToolbar.TranslucentStatus">
+    <style name="SaturnTheme" parent="MaterialDrawerTheme.TranslucentStatus">
     </style>
 </resources>

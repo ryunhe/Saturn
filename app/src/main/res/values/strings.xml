@@ -1,6 +1,5 @@
 <resources>
-    <string name="app_name">Saturn</string>
-    <string name="action_settings">Settings</string>
+    <string name="app_name">友颜</string>
 
     <string name="drawer_item_home">首页</string>
 </resources>

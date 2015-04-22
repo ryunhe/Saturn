@@ -63,14 +63,14 @@ public class MediaCardStackFragment extends Fragment {
         return layout;
     }
 
-    @OnClick(R.id.right)
+    @OnClick(R.id.button_right)
     public void right() {
         if (mListAdapter.getCount() > 0) {
             mFlingContainer.getTopCardListener().selectRight();
         }
     }
 
-    @OnClick(R.id.left)
+    @OnClick(R.id.button_left)
     public void left() {
         if (mListAdapter.getCount() > 0) {
             mFlingContainer.getTopCardListener().selectLeft();
@@ -106,8 +106,8 @@ public class MediaCardStackFragment extends Fragment {
         @Override
         public void onScroll(float scrollProgressPercent) {
             View view = mFlingContainer.getSelectedView();
-            view.findViewById(R.id.item_swipe_right_indicator).setAlpha(scrollProgressPercent < 0 ? -scrollProgressPercent : 0);
-            view.findViewById(R.id.item_swipe_left_indicator).setAlpha(scrollProgressPercent > 0 ? scrollProgressPercent : 0);
+            view.findViewById(R.id.indicator_item_swipe_right).setAlpha(scrollProgressPercent < 0 ? -scrollProgressPercent : 0);
+            view.findViewById(R.id.indicator_item_swipe_left).setAlpha(scrollProgressPercent > 0 ? scrollProgressPercent : 0);
         }
     }
 
