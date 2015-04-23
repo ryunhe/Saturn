@@ -13,12 +13,12 @@
         android:orientation="vertical">
 
         <com.lorentzos.flingswipe.SwipeFlingAdapterView
-            android:id="@+id/frame"
+            android:id="@+id/container"
             android:layout_weight="1"
             android:layout_width="match_parent"
             android:layout_height="0dp"
             app:rotation_degrees="10"
-            app:max_visible="4"
+            app:max_visible="3"
             app:min_adapter_stack="10"
             />
 

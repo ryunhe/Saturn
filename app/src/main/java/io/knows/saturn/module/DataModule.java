@@ -1,7 +1,6 @@
 package io.knows.saturn.module;
 
 import android.app.Application;
-import android.content.Context;
 import android.content.SharedPreferences;
 import android.database.sqlite.SQLiteDatabase;
 
@@ -16,7 +15,6 @@ import javax.inject.Singleton;
 
 import dagger.Module;
 import dagger.Provides;
-import io.knows.saturn.BuildConfig;
 import io.knows.saturn.fragment.MediaCardStackFragment;
 import io.knows.saturn.fragment.MediaListFragment;
 import io.knows.saturn.helper.CupboardDbHelper;
@@ -27,9 +25,9 @@ import nl.qbusict.cupboard.CupboardBuilder;
 import nl.qbusict.cupboard.CupboardFactory;
 import timber.log.Timber;
 
+import static android.content.Context.MODE_PRIVATE;
 import static com.jakewharton.byteunits.DecimalByteUnit.MEGABYTES;
 import static java.util.concurrent.TimeUnit.SECONDS;
-import static android.content.Context.MODE_PRIVATE;
 
 
 /**
@@ -84,7 +82,7 @@ public class DataModule {
         return new Picasso.Builder(application)
                 .downloader(new OkHttpDownloader(client))
                 .listener((picasso, uri, e) -> Timber.e(e, "Failed to load image: %s", uri))
-                .loggingEnabled(BuildConfig.DEBUG)
+//                .loggingEnabled(BuildConfig.DEBUG)
                 .build();
     }
 

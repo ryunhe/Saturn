@@ -148,7 +148,7 @@ public class MediaListFragment extends Fragment implements SwipeRefreshLayout.On
                         .subscribeOn(Schedulers.io())
                         .observeOn(AndroidSchedulers.mainThread())
                         .subscribe(mediaListResponse -> {
-                            mDataList.addAll(mediaListResponse.getList());
+                            mDataList.addAll(mediaListResponse.getResult());
                             mListAdapter.notifyDataSetChanged();
                             mSwipeContainer.setRefreshing(false);
                             fetching = false;

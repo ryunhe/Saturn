@@ -9,15 +9,13 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.lorentzos.flingswipe.SwipeFlingAdapterView;
-import com.squareup.picasso.MemoryPolicy;
+import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.logging.Handler;
 
 import javax.inject.Inject;
 
@@ -34,9 +32,7 @@ import io.knows.saturn.widget.RoundedTopTransformation;
 import rx.Observer;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
-import timber.log.Timber;
 import tr.xip.errorview.ErrorView;
-import tr.xip.errorview.HttpStatusCodes;
 
 /**
  * Created by ryun on 15-4-22.
@@ -44,7 +40,7 @@ import tr.xip.errorview.HttpStatusCodes;
 public class MediaCardStackFragment extends Fragment {
     @InjectView(R.id.error_view)
     ErrorView mErrorView;
-    @InjectView(R.id.frame)
+    @InjectView(R.id.container)
     SwipeFlingAdapterView mFlingContainer;
     @Inject
     SamuiService mSamuiService;
@@ -114,7 +110,7 @@ public class MediaCardStackFragment extends Fragment {
 
         @Override
         public void onAdapterAboutToEmpty(int itemsInAdapter) {
-            mListAdapter.doFetch(0);
+            mListAdapter.doFetch();
         }
 
         @Override
@@ -130,6 +126,7 @@ public class MediaCardStackFragment extends Fragment {
     class MediaListAdapter extends Adapter<Media> {
         private boolean fetching = false;
         private boolean retrying = false;
+        private final RoundedTopTransformation transformation = new RoundedTopTransformation(3, 0);
 
         public MediaListAdapter(Activity activity, List<Media> list) {
             super(activity, list);
@@ -149,10 +146,8 @@ public class MediaCardStackFragment extends Fragment {
             Media media = getItem(position);
             holder.contentText.setText(media.content);
 
-//            holder.resourceImage.setImageResource(R.drawable.content_default_pic);
-
-            mPicasso.load(media.resource.standard)
-                    .transform(holder.transformer)
+            mPicasso.load(media.resource.medium)
+                    .transform(transformation)
                     .into(holder.resourceImage);
 
             return convertView;
@@ -165,11 +160,8 @@ public class MediaCardStackFragment extends Fragment {
             @InjectView(R.id.image_resource)
             public ImageView resourceImage;
 
-            public final RoundedTopTransformation transformer;
-
             public ViewHolder(View view) {
                 ButterKnife.inject(this, view);
-                transformer = new RoundedTopTransformation(3, 0);
             }
         }
 
@@ -177,19 +169,19 @@ public class MediaCardStackFragment extends Fragment {
             mDataList.remove(position);
         }
 
-        public void doFetch(int offset) {
+        public void doFetch() {
             if (!fetching) {
                 fetching = true;
 
-                mSamuiService.getRecentMedia(offset)
-                        .subscribeOn(Schedulers.newThread())
+                mSamuiService.getRecentMedia(0)
+                        .subscribeOn(Schedulers.io())
                         .observeOn(AndroidSchedulers.mainThread())
                         .subscribe(new Observer<MediaListResponse>() {
                             @Override
                             public void onCompleted() {
                                 mErrorView.setVisibility(View.INVISIBLE);
                                 retrying = false;
-                                
+
                                 fetching = false;
                             }
 
@@ -201,17 +193,23 @@ public class MediaCardStackFragment extends Fragment {
 
                             @Override
                             public void onNext(MediaListResponse mediaListResponse) {
-                                if (0 == offset) {
-                                    mDataList.clear();
+                                for (Media media : mediaListResponse.getResult()) {
+                                    mPicasso.load(media.resource.medium)
+                                            .transform(transformation)
+                                            .fetch(new Callback() {
+                                                @Override
+                                                public void onSuccess() {
+                                                    mDataList.add(media);
+                                                    mListAdapter.notifyDataSetChanged();
+                                                }
+
+                                                @Override
+                                                public void onError() {
+
+                                                }
+                                            });
                                 }
 
-                                for (Media media : mediaListResponse.getList()) {
-                                    mPicasso.load(media.resource.standard);
-                                    mDataList.add(media);
-                                }
-//                                mDataList.addAll(mediaListResponse.getList());
-
-                                mListAdapter.notifyDataSetChanged();
                             }
                         });
             }
@@ -221,7 +219,7 @@ public class MediaCardStackFragment extends Fragment {
             if (!retrying) {
                 retrying = true;
                 fetching = false;
-                doFetch(0);
+                doFetch();
             }
         }
     }

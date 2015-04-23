@@ -12,7 +12,7 @@ public class MediaListResponse implements ListResponse {
     private List<Media> data;
 
     @Override
-    public List<Media> getList() {
+    public List<Media> getResult() {
         return data;
     }
 }
