@@ -16,6 +16,7 @@ import javax.inject.Singleton;
 
 import dagger.Module;
 import dagger.Provides;
+import io.knows.saturn.BuildConfig;
 import io.knows.saturn.fragment.MediaCardStackFragment;
 import io.knows.saturn.fragment.MediaListFragment;
 import io.knows.saturn.helper.CupboardDbHelper;
@@ -44,7 +45,7 @@ import static android.content.Context.MODE_PRIVATE;
     }
 )
 public class DataModule {
-    static final int DISK_CACHE_SIZE = (int) MEGABYTES.toBytes(50);
+    static final int DISK_CACHE_SIZE = (int) MEGABYTES.toBytes(100);
     Application application;
 
     public DataModule(Application application) {
@@ -83,6 +84,7 @@ public class DataModule {
         return new Picasso.Builder(application)
                 .downloader(new OkHttpDownloader(client))
                 .listener((picasso, uri, e) -> Timber.e(e, "Failed to load image: %s", uri))
+                .loggingEnabled(BuildConfig.DEBUG)
                 .build();
     }
 

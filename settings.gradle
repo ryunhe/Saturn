@@ -1,1 +1,3 @@
+include ':swipecards'
+project(':swipecards').projectDir = new File('swipecards/library')
 include ':app'

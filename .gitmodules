@@ -1,0 +1,3 @@
+[submodule "swipecards"]
+	path = swipecards
+	url = git@github.com:ryunhe/Swipecards.git

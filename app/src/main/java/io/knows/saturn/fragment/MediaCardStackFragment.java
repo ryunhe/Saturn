@@ -12,10 +12,12 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.lorentzos.flingswipe.SwipeFlingAdapterView;
+import com.squareup.picasso.MemoryPolicy;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Handler;
 
 import javax.inject.Inject;
 
@@ -118,8 +120,10 @@ public class MediaCardStackFragment extends Fragment {
         @Override
         public void onScroll(float scrollProgressPercent) {
             View view = mFlingContainer.getSelectedView();
-            view.findViewById(R.id.indicator_item_swipe_right).setAlpha(scrollProgressPercent < 0 ? -scrollProgressPercent : 0);
-            view.findViewById(R.id.indicator_item_swipe_left).setAlpha(scrollProgressPercent > 0 ? scrollProgressPercent : 0);
+            if (view != null) {
+                view.findViewById(R.id.indicator_item_swipe_right).setAlpha(scrollProgressPercent < 0 ? -scrollProgressPercent : 0);
+                view.findViewById(R.id.indicator_item_swipe_left).setAlpha(scrollProgressPercent > 0 ? scrollProgressPercent : 0);
+            }
         }
     }
 
@@ -143,10 +147,13 @@ public class MediaCardStackFragment extends Fragment {
             }
 
             Media media = getItem(position);
+            holder.contentText.setText(media.content);
+
+//            holder.resourceImage.setImageResource(R.drawable.content_default_pic);
+
             mPicasso.load(media.resource.standard)
                     .transform(holder.transformer)
                     .into(holder.resourceImage);
-            holder.contentText.setText(media.content);
 
             return convertView;
         }
@@ -174,16 +181,16 @@ public class MediaCardStackFragment extends Fragment {
             if (!fetching) {
                 fetching = true;
 
-                if (0 == offset) {
-                    mDataList.clear();
-                }
-
                 mSamuiService.getRecentMedia(offset)
-                        .subscribeOn(Schedulers.io())
+                        .subscribeOn(Schedulers.newThread())
                         .observeOn(AndroidSchedulers.mainThread())
                         .subscribe(new Observer<MediaListResponse>() {
                             @Override
                             public void onCompleted() {
+                                mErrorView.setVisibility(View.INVISIBLE);
+                                retrying = false;
+                                
+                                fetching = false;
                             }
 
                             @Override
@@ -194,12 +201,17 @@ public class MediaCardStackFragment extends Fragment {
 
                             @Override
                             public void onNext(MediaListResponse mediaListResponse) {
-                                mDataList.addAll(mediaListResponse.getList());
-                                mListAdapter.notifyDataSetChanged();
+                                if (0 == offset) {
+                                    mDataList.clear();
+                                }
 
-                                mErrorView.setVisibility(View.INVISIBLE);
-                                retrying = false;
-                                fetching = false;
+                                for (Media media : mediaListResponse.getList()) {
+                                    mPicasso.load(media.resource.standard);
+                                    mDataList.add(media);
+                                }
+//                                mDataList.addAll(mediaListResponse.getList());
+
+                                mListAdapter.notifyDataSetChanged();
                             }
                         });
             }
