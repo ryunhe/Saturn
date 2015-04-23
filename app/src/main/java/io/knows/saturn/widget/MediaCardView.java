@@ -5,6 +5,8 @@ import android.support.v7.widget.CardView;
 import android.util.AttributeSet;
 import android.widget.RelativeLayout;
 
+import io.knows.saturn.utility.DisplayMetricsConverter;
+
 /**
  * Created by ryun on 15-4-22.
  */
@@ -16,6 +18,6 @@ public class MediaCardView extends CardView {
 
     @Override
     protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
-        super.onMeasure(widthMeasureSpec, widthMeasureSpec + 50);
+        super.onMeasure(widthMeasureSpec, widthMeasureSpec + (int) DisplayMetricsConverter.getPixel(getContext(), 80));
     }
 }

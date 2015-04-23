@@ -4,11 +4,12 @@ import javax.inject.Singleton;
 
 import dagger.Module;
 import dagger.Provides;
-import io.knows.saturn.fragment.MediaListFragment;
 import io.knows.saturn.service.SamuiService;
 import retrofit.Endpoint;
 import retrofit.Endpoints;
 import retrofit.RestAdapter;
+import retrofit.RetrofitError;
+import retrofit.client.Response;
 
 /**
  * Created by ryun on 15-4-21.

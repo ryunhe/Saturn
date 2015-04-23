@@ -1,21 +1,43 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="vertical">
+    android:layout_height="wrap_content"
+    android:layout_width="wrap_content"
+    >
 
-    <com.lorentzos.flingswipe.SwipeFlingAdapterView
-        android:id="@+id/frame"
-        android:layout_weight="1"
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="0dp"
-        app:rotation_degrees="10"
-        app:max_visible="4"
-        app:min_adapter_stack="10"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <com.lorentzos.flingswipe.SwipeFlingAdapterView
+            android:id="@+id/frame"
+            android:layout_weight="1"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            app:rotation_degrees="10"
+            app:max_visible="4"
+            app:min_adapter_stack="10"
+            />
+
+        <include layout="@layout/buttons" />
+
+    </LinearLayout>
+
+    <tr.xip.errorview.ErrorView
+        android:id="@+id/error_view"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:visibility="invisible"
+        android:layout_centerInParent="true"
+        app:ev_titleColor="@color/text_gray"
+        app:ev_title="网络不稳定"
+        app:ev_subtitle="请检查网络信号或轻击重试按钮"
+        app:ev_retryButtonText="重试"
+        app:ev_retryButtonTextColor="@color/text_gray_light"
         />
 
-    <include layout="@layout/buttons" />
+</RelativeLayout>
 
-</LinearLayout>

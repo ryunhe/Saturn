@@ -17,11 +17,11 @@ public class SaturnApp extends Application {
     public void onCreate() {
         super.onCreate();
 
+        mObjectGraph = ObjectGraph.create(new DataModule(this));
+
         if (BuildConfig.DEBUG) {
             Timber.plant(new Timber.DebugTree());
         }
-
-        mObjectGraph = ObjectGraph.create(new DataModule(this));
     }
 
     public void inject(Object o) {

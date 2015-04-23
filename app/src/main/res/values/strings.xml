@@ -2,4 +2,5 @@
     <string name="app_name">友颜</string>
 
     <string name="drawer_item_home">首页</string>
+    <string name="info_retrying">正在重试…</string>
 </resources>

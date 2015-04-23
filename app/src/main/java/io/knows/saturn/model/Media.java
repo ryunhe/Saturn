@@ -7,4 +7,11 @@ import com.google.gson.annotations.SerializedName;
  */
 public class Media extends Model {
     public String content;
+    public Resource resource;
+
+    public class Resource {
+        public String standard;
+        public String medium;
+        public String thumbnail;
+    }
 }

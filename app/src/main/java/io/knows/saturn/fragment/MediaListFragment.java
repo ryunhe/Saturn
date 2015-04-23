@@ -128,7 +128,7 @@ public class MediaListFragment extends Fragment implements SwipeRefreshLayout.On
         }
 
         class ViewHolder {
-            @InjectView(R.id.text)
+            @InjectView(R.id.text_content)
             public TextView text;
 
             public ViewHolder(View view) {

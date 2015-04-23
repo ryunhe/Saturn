@@ -1,18 +1,18 @@
 package io.knows.saturn.activity;
 
+import android.content.Context;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.Toast;
 
 import com.mikepenz.iconics.typeface.FontAwesome;
 import com.mikepenz.materialdrawer.Drawer;
-import com.mikepenz.materialdrawer.accountswitcher.AccountHeader;
 import com.mikepenz.materialdrawer.model.PrimaryDrawerItem;
-import com.mikepenz.materialdrawer.model.ProfileDrawerItem;
-import com.mikepenz.materialdrawer.model.ProfileSettingDrawerItem;
-import com.mikepenz.materialdrawer.model.interfaces.IProfile;
 import com.mikepenz.materialdrawer.model.interfaces.Nameable;
 import com.mikepenz.materialdrawer.util.KeyboardUtil;
 
@@ -20,6 +20,8 @@ import butterknife.ButterKnife;
 import butterknife.InjectView;
 import io.knows.saturn.R;
 import io.knows.saturn.fragment.MediaCardStackFragment;
+import tr.xip.errorview.ErrorView;
+import tr.xip.errorview.HttpStatusCodes;
 
 /**
  * Created by ryun on 15-4-21.

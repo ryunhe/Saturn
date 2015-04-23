@@ -1,22 +1,30 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<io.knows.saturn.widget.MediaCardView
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<io.knows.saturn.widget.MediaCardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:card_view="http://schemas.android.com/apk/res-auto"
     android:id="@+id/view_card"
     android:layout_gravity="center"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_margin="@dimen/activity_horizontal_margin"
-    card_view:cardCornerRadius="6dp"
-    >
+    card_view:cardPreventCornerOverlap="false">
+
+    <ImageView
+        android:id="@+id/image_resource"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:scaleType="fitCenter"
+        android:adjustViewBounds="true"
+        />
 
     <TextView
-        android:id="@+id/text"
+        android:id="@+id/text_content"
+        android:padding="@dimen/cardview_content_padding"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:textColor="@color/text_black"
-        android:textSize="30sp"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom"
+        android:textColor="@color/black_transparent"
+        android:textSize="20sp"
         />
 
     <View
