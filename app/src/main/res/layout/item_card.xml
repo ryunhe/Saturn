@@ -6,42 +6,57 @@
     android:layout_gravity="center"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_margin="@dimen/activity_horizontal_margin"
-    card_view:cardPreventCornerOverlap="false">
+    android:layout_marginLeft="@dimen/activity_horizontal_margin"
+    android:layout_marginRight="@dimen/activity_horizontal_margin"
+    android:layout_marginBottom="30dp"
+    android:background="@color/white"
+    card_view:cardCornerRadius="2dp"
+    card_view:cardPreventCornerOverlap="false"
+    >
 
-    <ImageView
-        android:id="@+id/image_resource"
+    <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:scaleType="fitCenter"
-        android:adjustViewBounds="true"
-        />
+        android:layout_height="match_parent"
+        >
 
-    <TextView
-        android:id="@+id/text_content"
-        android:padding="@dimen/cardview_content_padding"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_gravity="bottom"
-        android:textColor="@color/black_transparent"
-        android:textSize="20sp"
-        />
+        <com.makeramen.roundedimageview.RoundedImageView
+            xmlns:app="http://schemas.android.com/apk/res-auto"
+            android:id="@+id/image_resource"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:scaleType="fitCenter"
+            android:adjustViewBounds="true"
+            app:riv_oval="false"
+            app:riv_corner_radius="2dp"
+            />
 
-    <View
-        android:id="@+id/indicator_item_swipe_left"
-        android:alpha="0"
-        android:layout_width="20dp"
-        android:layout_height="20dp"
-        android:layout_margin="10dp"
-        android:background="#A5F" />
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="70dp"
+            android:layout_marginTop="-2dp"
+            android:layout_below="@id/image_resource"
+            android:background="@color/white"
+            >
 
-    <View
-        android:id="@+id/indicator_item_swipe_right"
-        android:alpha="0"
-        android:layout_width="20dp"
-        android:layout_height="20dp"
-        android:layout_margin="10dp"
-        android:layout_gravity="right"
-        android:background="#5AF" />
+        </RelativeLayout>
+
+        <View
+            android:id="@+id/indicator_item_swipe_left"
+            android:alpha="0"
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:layout_margin="10dp"
+            android:background="#A5F" />
+
+        <View
+            android:id="@+id/indicator_item_swipe_right"
+            android:alpha="0"
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:layout_margin="10dp"
+            android:layout_gravity="right"
+            android:background="#5AF" />
+
+    </RelativeLayout>
 
 </io.knows.saturn.widget.MediaCardView>

@@ -75,15 +75,15 @@ public class MediaCardStackFragment extends Fragment {
         return layout;
     }
 
-    @OnClick(R.id.button_right)
-    public void right() {
+    @OnClick(R.id.button_like)
+    public void like() {
         if (mListAdapter.getCount() > 0) {
             mFlingContainer.getTopCardListener().selectRight();
         }
     }
 
-    @OnClick(R.id.button_left)
-    public void left() {
+    @OnClick(R.id.button_pass)
+    public void pass() {
         if (mListAdapter.getCount() > 0) {
             mFlingContainer.getTopCardListener().selectLeft();
         }
@@ -126,7 +126,7 @@ public class MediaCardStackFragment extends Fragment {
     class MediaListAdapter extends Adapter<Media> {
         private boolean fetching = false;
         private boolean retrying = false;
-        private final RoundedTopTransformation transformation = new RoundedTopTransformation(3, 0);
+        private final RoundedTopTransformation transformation = new RoundedTopTransformation(2, 0);
 
         public MediaListAdapter(Activity activity, List<Media> list) {
             super(activity, list);
@@ -144,18 +144,17 @@ public class MediaCardStackFragment extends Fragment {
             }
 
             Media media = getItem(position);
-            holder.contentText.setText(media.content);
 
             mPicasso.load(media.resource.medium)
-                    .transform(transformation)
+//                    .transform(transformation)
                     .into(holder.resourceImage);
 
             return convertView;
         }
 
         class ViewHolder {
-            @InjectView(R.id.text_content)
-            public TextView contentText;
+//            @InjectView(R.id.text_content)
+//            public TextView contentText;
 
             @InjectView(R.id.image_resource)
             public ImageView resourceImage;
@@ -195,7 +194,7 @@ public class MediaCardStackFragment extends Fragment {
                             public void onNext(MediaListResponse mediaListResponse) {
                                 for (Media media : mediaListResponse.getResult()) {
                                     mPicasso.load(media.resource.medium)
-                                            .transform(transformation)
+//                                            .transform(transformation)
                                             .fetch(new Callback() {
                                                 @Override
                                                 public void onSuccess() {

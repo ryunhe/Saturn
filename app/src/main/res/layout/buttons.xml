@@ -2,25 +2,28 @@
 
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="horizontal"
-    android:layout_gravity="center_horizontal|bottom"
-    android:layout_marginBottom="20dp"
     android:layout_width="wrap_content"
-    android:layout_height="wrap_content">
+    android:layout_height="wrap_content"
+    >
 
     <Button
         style="?android:buttonBarButtonStyle"
-        android:id="@+id/button_left"
-        android:layout_margin="10dp"
-        android:text="Left"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content" />
+        android:id="@+id/button_pass"
+        android:layout_width="72dp"
+        android:layout_height="72dp"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
+        android:background="@drawable/button_card_action_pass"
+        />
 
     <Button
         style="?android:buttonBarButtonStyle"
-        android:id="@+id/button_right"
-        android:layout_margin="10dp"
-        android:text="Right"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content" />
+        android:id="@+id/button_like"
+        android:layout_width="72dp"
+        android:layout_height="72dp"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
+        android:background="@drawable/button_card_action_like"
+        />
 
 </LinearLayout>

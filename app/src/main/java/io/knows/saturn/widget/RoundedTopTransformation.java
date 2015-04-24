@@ -26,9 +26,11 @@ public class RoundedTopTransformation implements com.squareup.picasso.Transforma
         paint.setShader(new BitmapShader(source, Shader.TileMode.CLAMP, Shader.TileMode.CLAMP));
 
         Bitmap output = Bitmap.createBitmap(source.getWidth(), source.getHeight(), Bitmap.Config.ARGB_8888);
+//        output.eraseColor(Color.argb(1, 0, 0, 0));
         Canvas canvas = new Canvas(output);
         // hack it. Just set the RectF larger by as many pixels as the radius of the rounded corners like this:
         canvas.drawRoundRect(new RectF(margin, margin, source.getWidth() - margin, source.getHeight() - margin + radius), radius, radius, paint);
+
 
         if (source != output) {
             source.recycle();

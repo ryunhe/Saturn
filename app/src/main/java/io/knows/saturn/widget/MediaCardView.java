@@ -18,6 +18,6 @@ public class MediaCardView extends CardView {
 
     @Override
     protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
-        super.onMeasure(widthMeasureSpec, widthMeasureSpec + (int) DisplayMetricsConverter.getPixel(getContext(), 80));
+        super.onMeasure(widthMeasureSpec, widthMeasureSpec + (int) DisplayMetricsConverter.getPixel(getContext(), 72));
     }
 }
