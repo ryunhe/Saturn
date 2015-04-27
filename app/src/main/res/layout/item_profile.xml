@@ -1,16 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:padding="@dimen/activity_horizontal_margin"
-    android:orientation="horizontal"
+    android:padding="@dimen/activity_margin"
+    android:layout_marginTop="@dimen/status_bar_height"
     >
+
     <com.makeramen.roundedimageview.RoundedImageView
         xmlns:app="http://schemas.android.com/apk/res-auto"
         android:id="@+id/image_avatar"
         android:layout_width="60dp"
         android:layout_height="60dp"
-        android:layout_marginTop="@dimen/status_bar_height"
+        android:layout_centerInParent="true"
+        android:layout_margin="@dimen/item_margin_large"
         android:src="@drawable/content_default_pic"
         app:riv_oval="false"
         app:riv_corner_radius="60dp"
@@ -20,8 +22,17 @@
 
     <TextView
         android:id="@+id/text_nickname"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        style="?android:textColorPrimaryInverse"
+        android:layout_below="@id/image_avatar"
+        android:layout_centerHorizontal="true"
+        android:textColor="@color/text_gray_light"
+        android:text="{nickname}"
+        style="@style/SaturnTextSmallStyle"
         />
-</LinearLayout>
+    <TextView
+        android:id="@+id/text_modify_profile"
+        android:layout_below="@id/text_nickname"
+        android:layout_centerHorizontal="true"
+        android:text="@string/label_modify_profile"
+        style="@style/SaturnTextMiniStyle"
+        />
+</RelativeLayout>

@@ -1,4 +1,25 @@
 <resources>
     <style name="SaturnTheme" parent="MaterialDrawerTheme.TranslucentStatus">
     </style>
+    <style name="SaturnNoActionBarTheme" parent="SaturnTheme">
+        <item name="android:windowActionBar">false</item>
+        <item name="android:windowNoTitle">true</item>
+    </style>
+    <style name="SaturnTextNormalStyle">
+        <item name="android:textSize">@dimen/text_size_normal</item>
+        <item name="android:textColor">@color/text_black</item>
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+    </style>
+    <style name="SaturnTextLargeStyle" parent="SaturnTextNormalStyle">
+        <item name="android:textSize">@dimen/text_size_large</item>
+    </style>
+    <style name="SaturnTextSmallStyle" parent="SaturnTextNormalStyle">
+        <item name="android:textSize">@dimen/text_size_small</item>
+        <item name="android:textColor">@color/text_gray</item>
+    </style>
+    <style name="SaturnTextMiniStyle" parent="SaturnTextSmallStyle">
+        <item name="android:layout_marginLeft">@dimen/item_margin_small</item>
+        <item name="android:textSize">@dimen/text_size_mini</item>
+    </style>
 </resources>

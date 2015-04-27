@@ -16,7 +16,6 @@
 
         <activity
             android:name=".activity.MainActivity"
-            android:windowSoftInputMode="stateHidden"
             android:screenOrientation="portrait"
             >
             <intent-filter>
@@ -24,6 +23,11 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
+        <activity
+            android:name=".activity.CongratsActivity"
+            android:screenOrientation="portrait"
+            />
 
     </application>
 

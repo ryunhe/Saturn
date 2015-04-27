@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="horizontal"
+    android:padding="@dimen/item_margin"
+    >
+
+    <LinearLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_weight="1"
+        android:orientation="vertical"
+        >
+
+        <TextView
+            android:id="@+id/text_primary"
+            android:layout_width="match_parent"
+            android:text="{primary}"
+            style="@style/SaturnTextLargeStyle"
+            />
+
+        <TextView
+            android:id="@+id/text_secondary"
+            android:layout_width="match_parent"
+            android:layout_marginTop="@dimen/item_margin_small"
+            android:text="{secondary}"
+            style="@style/SaturnTextSmallStyle"
+            />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/item_margin_small"
+        android:orientation="horizontal"
+        >
+        <ImageView
+            android:id="@+id/image_picture"
+            android:layout_width="16dp"
+            android:layout_height="16dp"
+            android:src="@drawable/card_icon_pic"
+            />
+        <TextView
+            android:id="@+id/text_counts"
+            android:text="999"
+            android:gravity="center_vertical"
+            android:layout_height="match_parent"
+            style="@style/SaturnTextMiniStyle"
+            />
+    </LinearLayout>
+
+</LinearLayout>
+
+
+

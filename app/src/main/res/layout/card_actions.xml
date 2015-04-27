@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="horizontal"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:gravity="center_vertical">
+
+    <Button
+        android:id="@+id/button_report"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:layout_margin="@dimen/item_margin_small"
+        android:background="@drawable/button_card_action_report"
+        />
+
+    <Button
+        android:id="@+id/button_pass"
+        android:layout_width="72dp"
+        android:layout_height="72dp"
+        android:layout_margin="@dimen/item_margin_small"
+        android:background="@drawable/button_card_action_pass"
+        />
+
+    <Button
+        android:id="@+id/button_like"
+        android:layout_width="72dp"
+        android:layout_height="72dp"
+        android:layout_margin="@dimen/item_margin_small"
+        android:background="@drawable/button_card_action_like"
+        />
+
+    <Button
+        android:id="@+id/button_info"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:layout_margin="@dimen/item_margin_small"
+        android:background="@drawable/button_card_action_info"
+        />
+
+</LinearLayout>

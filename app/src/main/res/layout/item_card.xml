@@ -6,8 +6,8 @@
     android:layout_gravity="center"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_marginLeft="@dimen/activity_horizontal_margin"
-    android:layout_marginRight="@dimen/activity_horizontal_margin"
+    android:layout_marginLeft="@dimen/activity_margin"
+    android:layout_marginRight="@dimen/activity_margin"
     android:layout_marginBottom="30dp"
     android:background="@color/white"
     card_view:cardCornerRadius="2dp"
@@ -30,7 +30,7 @@
             app:riv_corner_radius="2dp"
             />
 
-        <RelativeLayout
+        <FrameLayout
             android:layout_width="match_parent"
             android:layout_height="70dp"
             android:layout_marginTop="-2dp"
@@ -38,7 +38,9 @@
             android:background="@color/white"
             >
 
-        </RelativeLayout>
+            <include layout="@layout/basic_profile" />
+
+        </FrameLayout>
 
         <View
             android:id="@+id/indicator_item_swipe_left"

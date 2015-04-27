@@ -1,14 +1,10 @@
 package io.knows.saturn.activity;
 
-import android.content.Context;
 import android.os.Bundle;
-import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ImageView;
-import android.widget.Toast;
 
 import com.mikepenz.iconics.typeface.FontAwesome;
 import com.mikepenz.materialdrawer.Drawer;
@@ -19,9 +15,7 @@ import com.mikepenz.materialdrawer.util.KeyboardUtil;
 import butterknife.ButterKnife;
 import butterknife.InjectView;
 import io.knows.saturn.R;
-import io.knows.saturn.fragment.MediaCardStackFragment;
-import tr.xip.errorview.ErrorView;
-import tr.xip.errorview.HttpStatusCodes;
+import io.knows.saturn.fragment.CardStackFragment;
 
 /**
  * Created by ryun on 15-4-21.
@@ -51,14 +45,14 @@ public class MainActivity extends AppCompatActivity {
                 .withToolbar(mToolbar)
                 .withHeader(mDrawerHeader)
                 .addDrawerItems(
-                        new PrimaryDrawerItem().withName(R.string.drawer_item_home).withIcon(FontAwesome.Icon.faw_home)
+                        new PrimaryDrawerItem().withName(R.string.drawer_item_home).withIcon(FontAwesome.Icon.faw_star_o)
                 )
                 .withOnDrawerItemClickListener((parent, view, position, id, drawerItem) -> {
                     if (drawerItem != null && drawerItem instanceof Nameable) {
                         mToolbar.setTitle(((Nameable) drawerItem).getNameRes());
                         getSupportFragmentManager()
                                 .beginTransaction()
-                                .replace(R.id.fragment_container, new MediaCardStackFragment())
+                                .replace(R.id.fragment_frame, new CardStackFragment())
                                 .commit();
                     }
                 })

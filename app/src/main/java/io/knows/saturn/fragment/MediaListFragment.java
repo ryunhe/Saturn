@@ -122,7 +122,7 @@ public class MediaListFragment extends Fragment implements SwipeRefreshLayout.On
                 convertView.setTag(holder);
             }
 
-            holder.text.setText(getItem(position).content);
+            holder.text.setText(getItem(position).id);
 
             return convertView;
         }

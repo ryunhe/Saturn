@@ -4,6 +4,7 @@ import android.app.Application;
 import android.content.SharedPreferences;
 import android.database.sqlite.SQLiteDatabase;
 
+import com.google.gson.Gson;
 import com.squareup.okhttp.Cache;
 import com.squareup.okhttp.OkHttpClient;
 import com.squareup.picasso.OkHttpDownloader;
@@ -15,9 +16,14 @@ import javax.inject.Singleton;
 
 import dagger.Module;
 import dagger.Provides;
-import io.knows.saturn.fragment.MediaCardStackFragment;
+import io.knows.saturn.fragment.CongratsFragment;
+import io.knows.saturn.fragment.CardStackFragment;
 import io.knows.saturn.fragment.MediaListFragment;
 import io.knows.saturn.helper.CupboardDbHelper;
+import io.knows.saturn.helper.GsonFieldConverterFactory;
+import io.knows.saturn.helper.StringsFieldConverterFactory;
+import io.knows.saturn.model.Media;
+import io.knows.saturn.model.User;
 import nl.nl2312.rxcupboard.RxCupboard;
 import nl.nl2312.rxcupboard.RxDatabase;
 import nl.qbusict.cupboard.Cupboard;
@@ -39,7 +45,8 @@ import static java.util.concurrent.TimeUnit.SECONDS;
     includes = ApiModule.class,
     injects = {
         MediaListFragment.class,
-        MediaCardStackFragment.class
+        CardStackFragment.class,
+        CongratsFragment.class
     }
 )
 public class DataModule {
@@ -56,9 +63,19 @@ public class DataModule {
     }
 
     @Provides @Singleton
-    Cupboard provideCupboard() {
-        CupboardFactory.setCupboard(new CupboardBuilder().useAnnotations().build());
+    Cupboard provideCupboard(Gson gson) {
+        CupboardFactory.setCupboard(new CupboardBuilder()
+                .registerFieldConverterFactory(new GsonFieldConverterFactory(gson, Media.Resource.class))
+                .registerFieldConverterFactory(new GsonFieldConverterFactory(gson, User.Counts.class))
+                .registerFieldConverterFactory(new StringsFieldConverterFactory(gson))
+                .useAnnotations()
+                .build());
         return CupboardFactory.cupboard();
+    }
+
+    @Provides @Singleton
+    Gson provideGson() {
+        return new Gson();
     }
 
     @Provides @Singleton

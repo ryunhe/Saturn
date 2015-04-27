@@ -3,7 +3,6 @@ package io.knows.saturn;
 import android.app.Application;
 
 import dagger.ObjectGraph;
-import io.knows.saturn.module.ApiModule;
 import io.knows.saturn.module.DataModule;
 import timber.log.Timber;
 
