@@ -3,6 +3,7 @@ package io.knows.saturn.module;
 import android.app.Application;
 import android.content.SharedPreferences;
 import android.database.sqlite.SQLiteDatabase;
+import android.os.UserManager;
 
 import com.google.gson.Gson;
 import com.squareup.okhttp.Cache;
@@ -19,16 +20,20 @@ import dagger.Provides;
 import io.knows.saturn.fragment.CongratsFragment;
 import io.knows.saturn.fragment.CardStackFragment;
 import io.knows.saturn.fragment.MediaListFragment;
+import io.knows.saturn.fragment.ProfileFragment;
 import io.knows.saturn.helper.CupboardDbHelper;
 import io.knows.saturn.helper.GsonFieldConverterFactory;
 import io.knows.saturn.helper.StringsFieldConverterFactory;
+import io.knows.saturn.model.Authenticator;
 import io.knows.saturn.model.Media;
+import io.knows.saturn.model.Model;
 import io.knows.saturn.model.User;
 import nl.nl2312.rxcupboard.RxCupboard;
 import nl.nl2312.rxcupboard.RxDatabase;
 import nl.qbusict.cupboard.Cupboard;
 import nl.qbusict.cupboard.CupboardBuilder;
 import nl.qbusict.cupboard.CupboardFactory;
+import nl.qbusict.cupboard.DatabaseCompartment;
 import timber.log.Timber;
 
 import static android.content.Context.MODE_PRIVATE;
@@ -46,7 +51,8 @@ import static java.util.concurrent.TimeUnit.SECONDS;
     injects = {
         MediaListFragment.class,
         CardStackFragment.class,
-        CongratsFragment.class
+        CongratsFragment.class,
+        ProfileFragment.class,
     }
 )
 public class DataModule {
@@ -74,14 +80,23 @@ public class DataModule {
     }
 
     @Provides @Singleton
+    SQLiteDatabase provideSQLiteDatabase(Application application) {
+        return CupboardDbHelper.getConnection(application);
+    }
+
+    @Provides @Singleton
     Gson provideGson() {
         return new Gson();
     }
 
     @Provides @Singleton
-    RxDatabase provideRxDatabase(Application application, Cupboard cupboard) {
-        SQLiteDatabase db = CupboardDbHelper.getConnection(application);
+    RxDatabase provideRxDatabase(Cupboard cupboard, SQLiteDatabase db) {
         return RxCupboard.with(cupboard, db);
+    }
+
+    @Provides @Singleton
+    DatabaseCompartment provideDatabaseCompartment(Cupboard cupboard, SQLiteDatabase db) {
+        return cupboard.withDatabase(db);
     }
 
     @Provides @Singleton

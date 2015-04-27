@@ -15,7 +15,7 @@ import static nl.qbusict.cupboard.CupboardFactory.cupboard;
 public class CupboardDbHelper extends SQLiteOpenHelper {
 
     private static final String DATABASE_NAME = "SaturnCupboard.db";
-    private static final int DATABASE_VERSION = 1;
+    private static final int DATABASE_VERSION = 2;
 
     private static SQLiteDatabase database;
 

@@ -4,7 +4,6 @@ import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -27,6 +26,7 @@ import butterknife.OnClick;
 import io.knows.saturn.R;
 import io.knows.saturn.SaturnApp;
 import io.knows.saturn.activity.CongratsActivity;
+import io.knows.saturn.activity.ProfileActivity;
 import io.knows.saturn.adapter.Adapter;
 import io.knows.saturn.model.Media;
 import io.knows.saturn.response.MediaListResponse;
@@ -55,6 +55,7 @@ public class CardStackFragment extends Fragment {
 
     MediaListAdapter mListAdapter;
     static final int PAGE_CONGRATS = 1;
+    static final int PAGE_PROFILE = 2;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -99,6 +100,9 @@ public class CardStackFragment extends Fragment {
 
     @OnClick(R.id.button_info)
     public void info() {
+        Intent i = new Intent(getActivity(), ProfileActivity.class);
+        i.putExtra(ProfileActivity.INTENT_KEY_USER, mListAdapter.getItem(0).user.id);
+        startActivityForResult(i, PAGE_PROFILE);
 
     }
 
@@ -113,11 +117,7 @@ public class CardStackFragment extends Fragment {
 
         @Override
         public void onLeftCardExit(Object dataObject) {
-            BlurBehind.getInstance().execute(getActivity(), () -> {
-                Intent i = new Intent(getActivity(), CongratsActivity.class);
-                i.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
-                startActivityForResult(i, PAGE_CONGRATS);
-            });
+
         }
 
         @Override
@@ -174,7 +174,7 @@ public class CardStackFragment extends Fragment {
 
             Media media = getItem(position);
 
-            mPicasso.load(media.resource.medium).into(holder.resourceImage);
+            mPicasso.load(media.resource.standard).into(holder.resourceImage);
 
             holder.primaryText.setText(String.format("%s, %d", media.user.nickname, media.user.age));
             holder.secondaryText.setText(String.format("%s, %s", media.user.school, media.user.hometown[media.user.hometown.length-1]));
@@ -232,14 +232,13 @@ public class CardStackFragment extends Fragment {
                                 for (Media media : mediaListResponse.getResult()) {
 
                                     // Pre-load resource
-                                    mPicasso.load(media.resource.medium)
+                                    mPicasso.load(media.resource.standard)
                                             .fetch(new Callback() {
                                                 @Override
                                                 public void onSuccess() {
                                                     mDataList.add(media);
 
                                                     // Store object
-//                                                    media.save(mRxDatabase);
                                                     media.user.save(mRxDatabase);
                                                 }
 
