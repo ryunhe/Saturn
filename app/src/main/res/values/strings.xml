@@ -1,7 +1,7 @@
 <resources>
     <string name="app_name">友颜</string>
 
-    <string name="label_modify_profile">查看/修改资料</string>
+    <string name="label_modify_profile">点击查看/修改</string>
     <string name="label_congrats_title">Congratulation!</string>
     <string name="label_congrats_chat">打个招呼</string>
     <string name="label_congrats_goon">继续发现</string>

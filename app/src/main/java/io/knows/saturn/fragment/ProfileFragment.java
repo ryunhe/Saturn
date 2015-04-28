@@ -21,6 +21,7 @@ import javax.inject.Inject;
 
 import butterknife.ButterKnife;
 import butterknife.InjectView;
+import butterknife.OnClick;
 import io.knows.saturn.R;
 import io.knows.saturn.SaturnApp;
 import io.knows.saturn.activity.ProfileActivity;
@@ -133,6 +134,11 @@ public class ProfileFragment extends Fragment {
             ImageView resourceView;
 
             String resource;
+
+            @OnClick(R.id.image_resource)
+            public void dismiss() {
+                getActivity().finish();
+            }
 
             @Override
             public View onCreateView(LayoutInflater inflater,
