@@ -1,39 +1,66 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<RelativeLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    >
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:background="@color/white">
 
-    <android.support.v4.widget.SwipeRefreshLayout
-        android:id="@+id/swipe_container"
+    <io.knows.saturn.widget.SquaredRelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:background="@color/white"
+        android:layout_height="0dp"
         >
-
-        <ScrollView
+        <android.support.v4.view.ViewPager
+            android:id="@+id/viewpager_resource"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            />
+        <com.viewpagerindicator.CirclePageIndicator
+            android:id="@+id/indicator_resource"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignBottom="@+id/viewpager_resource"
+            android:layout_centerHorizontal="true"
+            android:layout_marginBottom="@dimen/item_margin_small"
+            android:padding="@dimen/item_margin"
+            app:radius="@dimen/item_margin_small"
+            app:fillColor="@color/orange"
+            app:pageColor="@color/gray_transparent"
+            app:strokeWidth="0dp"
+            />
+    </io.knows.saturn.widget.SquaredRelativeLayout>
+
+    <LinearLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:padding="@dimen/item_margin"
+        >
+
+        <LinearLayout
+            xmlns:android="http://schemas.android.com/apk/res/android"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:orientation="vertical"
             >
 
-            <LinearLayout
+            <TextView
+                android:id="@+id/text_primary"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical">
+                android:text="{primary}"
+                style="@style/SaturnTextLargeStyle"
+                />
 
-                <ImageView
-                    android:id="@+id/image_resource"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:scaleType="fitCenter"
-                    android:adjustViewBounds="true"
-                    />
-
-            </LinearLayout>
-
-        </ScrollView>
-    </android.support.v4.widget.SwipeRefreshLayout>
-
-</RelativeLayout>
+            <TextView
+                android:id="@+id/text_secondary"
+                android:layout_width="match_parent"
+                android:layout_marginTop="@dimen/item_margin_small"
+                android:text="{secondary}"
+                style="@style/SaturnTextSmallStyle"
+                />
+        </LinearLayout>
+    </LinearLayout>
+</LinearLayout>

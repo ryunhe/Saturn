@@ -20,20 +20,20 @@ public interface SamuiService {
     Observable<MediaEntityResponse> getMedia(@Path("media") String media);
 
     @GET("/media/feed")
-    Observable<MediaListResponse> getFeedMedia(@Query("offset") int offset);
+    Observable<MediaListResponse> getFeedMedia();
 
     @GET("/media/recent")
-    Observable<MediaListResponse> getRecentMedia(@Query("offset") int offset);
+    Observable<MediaListResponse> getRecentMedia();
 
     @GET("/media/popular")
-    Observable<MediaListResponse> getPopularMedia(@Query("offset") int offset);
+    Observable<MediaListResponse> getPopularMedia();
 
     // User
     @GET("/users/{user}")
     Observable<UserEntityResponse> getUser(@Path("user") String user);
 
     @GET("/users/{user}/media/recent")
-    Observable<MediaListResponse> getUserRecentMedia(@Path("user") String user, @Query("offset") int offset);
+    Observable<MediaListResponse> getUserRecentMedia(@Path("user") String user, @Query("limit") int limit);
 
     // Like
     @POST("/media/{media}/likes")

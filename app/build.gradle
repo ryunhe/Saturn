@@ -11,9 +11,7 @@ buildscript {
 // Required because retrolambda is on maven central
 repositories {
     mavenCentral()
-    flatDir{
-        dirs 'libs'
-    }
+    flatDir { dirs 'libs' }
 }
 
 apply plugin: 'com.android.application'
@@ -64,7 +62,8 @@ dependencies {
     compile 'com.github.xiprox.errorview:library:2.0.0'
     compile 'com.makeramen:roundedimageview:2.0.1'
 //    compile 'com.lorentzos.swipecards:library:1.0.8@aar'
-    compile 'com.faradaj:blur-behind:1.0.3@aar'
+    compile 'com.faradaj:blur-behind:1.0.3@aar' // flatDir { dirs 'libs' }
+    compile 'com.viewpagerindicator:library:2.4.1@aar' // maven { url "http://dl.bintray.com/populov/maven" }
     compile 'nl.qbusict:cupboard:2.1.1'
     compile 'nl.2312:rxcupboard:0.2'
     compile 'com.github.rey5137:material:1.1.0'

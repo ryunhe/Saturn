@@ -143,7 +143,7 @@ public class MediaListFragment extends Fragment implements SwipeRefreshLayout.On
                     mDataList.clear();
                 }
 
-                mSamuiService.getRecentMedia(offset)
+                mSamuiService.getRecentMedia()
                         .subscribeOn(Schedulers.io())
                         .observeOn(AndroidSchedulers.mainThread())
                         .subscribe(mediaListResponse -> {

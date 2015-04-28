@@ -60,7 +60,7 @@ public class CardStackFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        mListAdapter = new MediaListAdapter(getActivity(), new ArrayList<Media>());
+        mListAdapter = new MediaListAdapter(getActivity(), new ArrayList<>());
     }
 
     @Override
@@ -76,7 +76,9 @@ public class CardStackFragment extends Fragment {
         mFlingContainer.setAdapter(mListAdapter);
         mFlingContainer.setFlingListener(new CardFlingListener());
         mFlingContainer.setOnItemClickListener((itemPosition, dataObject) -> {
-            // Optionally add an OnItemClickListener
+            Intent i = new Intent(getActivity(), ProfileActivity.class);
+            i.putExtra(ProfileActivity.INTENT_KEY_USER, mListAdapter.getItem(0).user.id);
+            startActivityForResult(i, PAGE_PROFILE);
         });
 
         mErrorView.setOnRetryListener(mListAdapter::onRetry);
@@ -96,14 +98,6 @@ public class CardStackFragment extends Fragment {
         if (mListAdapter.getCount() > 0) {
             mFlingContainer.getTopCardListener().selectLeft();
         }
-    }
-
-    @OnClick(R.id.button_info)
-    public void info() {
-        Intent i = new Intent(getActivity(), ProfileActivity.class);
-        i.putExtra(ProfileActivity.INTENT_KEY_USER, mListAdapter.getItem(0).user.id);
-        startActivityForResult(i, PAGE_PROFILE);
-
     }
 
     class CardFlingListener implements SwipeFlingAdapterView.onFlingListener {
@@ -177,7 +171,7 @@ public class CardStackFragment extends Fragment {
             mPicasso.load(media.resource.standard).into(holder.resourceImage);
 
             holder.primaryText.setText(String.format("%s, %d", media.user.nickname, media.user.age));
-            holder.secondaryText.setText(String.format("%s, %s", media.user.school, media.user.hometown[media.user.hometown.length-1]));
+            holder.secondaryText.setText(String.format("%s, %s", media.user.school, media.user.hometown[media.user.hometown.length - 1]));
             holder.countsText.setText(String.format("%d", media.user.counts.media));
 
             return convertView;
@@ -209,7 +203,7 @@ public class CardStackFragment extends Fragment {
             if (!fetching) {
                 fetching = true;
 
-                mSamuiService.getRecentMedia(0)
+                mSamuiService.getRecentMedia()
                         .subscribeOn(Schedulers.io())
                         .observeOn(AndroidSchedulers.mainThread())
                         .subscribe(new Observer<MediaListResponse>() {
