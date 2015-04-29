@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="horizontal"
+    >
+
+    <Button
+        style="@style/SaturnActionBarButton"
+        android:id="@+id/button_back"
+        android:text="返回"
+        />
+
+    <TextView
+        style="@style/SaturnActionBarTitle"
+        android:id="@+id/text_title"
+        />
+
+    <Button
+        style="@style/SaturnActionBarButton"
+        android:id="@+id/button_submit"
+        android:text="@string/label_confirm"
+        />
+
+</LinearLayout>

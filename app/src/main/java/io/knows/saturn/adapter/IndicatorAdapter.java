@@ -8,17 +8,11 @@ import android.app.Activity;
 import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.BaseAdapter;
 import android.widget.TextView;
-
-import java.util.List;
 
 import io.knows.saturn.R;
 
-public abstract class IndicatorAdapter<T> extends BaseAdapter {
-    protected List<T> mDataList;
-    protected Activity mActivity;
-
+public abstract class IndicatorAdapter<T> extends Adapter {
     protected int mServerListSize = -1;
 
     // Two view types which will be used to determine whether a row should be displaying
@@ -26,9 +20,8 @@ public abstract class IndicatorAdapter<T> extends BaseAdapter {
     public static final int VIEW_TYPE_LOADING = 0;
     public static final int VIEW_TYPE_ACTIVITY = 1;
 
-    public IndicatorAdapter(Activity activity, List<T> list) {
-        mActivity = activity;
-        mDataList = list;
+    public IndicatorAdapter(Activity activity) {
+        super(activity);
     }
 
     public void setServerListSize(int size) {
@@ -70,7 +63,7 @@ public abstract class IndicatorAdapter<T> extends BaseAdapter {
 
     @Override
     public T getItem(int position) {
-        return (getItemViewType(position) == VIEW_TYPE_ACTIVITY) ? mDataList.get(position) : null;
+        return (getItemViewType(position) == VIEW_TYPE_ACTIVITY) ? (T) mDataList.get(position) : null;
     }
 
     @Override
@@ -84,14 +77,14 @@ public abstract class IndicatorAdapter<T> extends BaseAdapter {
             // Display the last row
             return getFooterView(position, convertView, parent);
         } else {
-            return getDataRow(position, convertView, parent);
+            return getRowView(position, convertView, parent);
         }
     }
 
     /**
      * A subclass should override this method to supply the data row.
      */
-    public abstract View getDataRow(int position, View convertView, ViewGroup parent);
+    public abstract View getRowView(int position, View convertView, ViewGroup parent);
 
     /**
      * Returns a View to be displayed in the last row.

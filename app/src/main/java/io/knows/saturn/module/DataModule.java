@@ -17,10 +17,16 @@ import javax.inject.Singleton;
 
 import dagger.Module;
 import dagger.Provides;
+import io.knows.saturn.activity.CongratsActivity;
+import io.knows.saturn.activity.MainActivity;
+import io.knows.saturn.activity.ProfileActivity;
+import io.knows.saturn.activity.SchoolPickerActivity;
+import io.knows.saturn.activity.SignupActivity;
 import io.knows.saturn.fragment.CongratsFragment;
 import io.knows.saturn.fragment.CardStackFragment;
 import io.knows.saturn.fragment.MediaListFragment;
 import io.knows.saturn.fragment.ProfileFragment;
+import io.knows.saturn.fragment.SchoolPickerFragment;
 import io.knows.saturn.helper.CupboardDbHelper;
 import io.knows.saturn.helper.GsonFieldConverterFactory;
 import io.knows.saturn.helper.StringsFieldConverterFactory;
@@ -45,15 +51,22 @@ import static java.util.concurrent.TimeUnit.SECONDS;
  * Created by ryun on 15-4-21.
  */
 @Module(
-    library = true,
-    complete = false,
-    includes = ApiModule.class,
-    injects = {
-        MediaListFragment.class,
-        CardStackFragment.class,
-        CongratsFragment.class,
-        ProfileFragment.class,
-    }
+        library = true,
+        complete = false,
+        includes = ApiModule.class,
+        injects = {
+                MediaListFragment.class,
+                CardStackFragment.class,
+                CongratsFragment.class,
+                ProfileFragment.class,
+                SchoolPickerFragment.class,
+
+                MainActivity.class,
+                CongratsActivity.class,
+                ProfileActivity.class,
+                SignupActivity.class,
+                SchoolPickerActivity.class,
+        }
 )
 public class DataModule {
     static final int DISK_CACHE_SIZE = (int) MEGABYTES.toBytes(100);

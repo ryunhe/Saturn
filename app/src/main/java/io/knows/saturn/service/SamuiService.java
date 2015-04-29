@@ -1,8 +1,10 @@
 package io.knows.saturn.service;
 
+import io.knows.saturn.response.AuthResponse;
 import io.knows.saturn.response.MatchedResponse;
 import io.knows.saturn.response.MediaEntityResponse;
 import io.knows.saturn.response.MediaListResponse;
+import io.knows.saturn.response.SchoolListResponse;
 import io.knows.saturn.response.UserEntityResponse;
 import retrofit.http.DELETE;
 import retrofit.http.GET;
@@ -41,5 +43,13 @@ public interface SamuiService {
 
     @DELETE("/media/{media}/likes")
     void dislike(@Path("media") String media);
+
+    // School
+    @GET("/schools/search")
+    Observable<SchoolListResponse> getSearchSchool(@Query("q") String query);
+
+    // Auth
+    @GET("/auth/renren")
+    Observable<AuthResponse> authRenren(@Query("device_id") String deviceId, @Query("identity") String identity);
 
 }

@@ -33,10 +33,8 @@ public class CongratsFragment extends Fragment {
                              @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
 
-        ((SaturnApp) getActivity().getApplication()).inject(this);
-
         View layout = inflater.inflate(R.layout.fragment_congrats, container, false);
-        ButterKnife.inject(this, layout);
+        inject(layout);
 
         titleText.setTypeface(Typeface.createFromAsset(getActivity().getAssets(), "fonts/Estrya_Handwriting.ttf"));
 
@@ -44,7 +42,7 @@ public class CongratsFragment extends Fragment {
     }
 
     @OnClick(R.id.button_chat)
-    public void chat() {
+    void chat() {
 
     }
 

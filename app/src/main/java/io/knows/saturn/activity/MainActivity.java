@@ -20,7 +20,7 @@ import io.knows.saturn.fragment.CardStackFragment;
 /**
  * Created by ryun on 15-4-21.
  */
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends Activity {
     @InjectView(R.id.toolbar)
     Toolbar mToolbar;
 
@@ -32,8 +32,9 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
         setContentView(R.layout.activity_main);
-        ButterKnife.inject(this);
+        inject();
 
         setSupportActionBar(mToolbar);
 
@@ -45,7 +46,7 @@ public class MainActivity extends AppCompatActivity {
                 .withToolbar(mToolbar)
                 .withHeader(mDrawerHeader)
                 .addDrawerItems(
-                        new PrimaryDrawerItem().withName(R.string.drawer_item_home).withIcon(FontAwesome.Icon.faw_star_o)
+                        new PrimaryDrawerItem().withName(R.string.drawer_item_home).withIcon(FontAwesome.Icon.faw_home)
                 )
                 .withOnDrawerItemClickListener((parent, view, position, id, drawerItem) -> {
                     if (drawerItem != null && drawerItem instanceof Nameable) {

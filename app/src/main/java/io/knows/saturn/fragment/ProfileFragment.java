@@ -66,10 +66,8 @@ public class ProfileFragment extends Fragment {
                              @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
 
-        ((SaturnApp) getActivity().getApplication()).inject(this);
-
         View layout = inflater.inflate(R.layout.fragment_profile, container, false);
-        ButterKnife.inject(this, layout);
+        inject(layout);
 
         mPager.setAdapter(mPagerAdapter);
 

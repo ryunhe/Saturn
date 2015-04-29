@@ -60,7 +60,7 @@ public class CardStackFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        mListAdapter = new MediaListAdapter(getActivity(), new ArrayList<>());
+        mListAdapter = new MediaListAdapter(getActivity());
     }
 
     @Override
@@ -68,10 +68,8 @@ public class CardStackFragment extends Fragment {
                              @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
 
-        ((SaturnApp) getActivity().getApplication()).inject(this);
-
         View layout = inflater.inflate(R.layout.fragment_card, container, false);
-        ButterKnife.inject(this, layout);
+        inject(layout);
 
         mFlingContainer.setAdapter(mListAdapter);
         mFlingContainer.setFlingListener(new CardFlingListener());
@@ -87,14 +85,14 @@ public class CardStackFragment extends Fragment {
     }
 
     @OnClick(R.id.button_like)
-    public void like() {
+    void like() {
         if (mListAdapter.getCount() > 0) {
             mFlingContainer.getTopCardListener().selectRight();
         }
     }
 
     @OnClick(R.id.button_pass)
-    public void pass() {
+    void pass() {
         if (mListAdapter.getCount() > 0) {
             mFlingContainer.getTopCardListener().selectLeft();
         }
@@ -149,8 +147,8 @@ public class CardStackFragment extends Fragment {
         private boolean fetching = false;
         private boolean retrying = false;
 
-        public MediaListAdapter(Activity activity, List<Media> list) {
-            super(activity, list);
+        public MediaListAdapter(Activity activity) {
+            super(activity);
         }
 
         @Override

@@ -8,5 +8,5 @@ import io.knows.saturn.model.Model;
  * Created by ryun on 15-4-20.
  */
 public interface ListResponse {
-    <T extends Model> List<T> getResult();
+    <T> List<T> getResult();
 }

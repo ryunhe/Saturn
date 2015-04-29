@@ -48,7 +48,7 @@ public class MediaListFragment extends Fragment implements SwipeRefreshLayout.On
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        mListAdapter = new MediaListAdapter(getActivity(), new ArrayList<Media>());
+        mListAdapter = new MediaListAdapter(getActivity());
     }
 
     @Override
@@ -56,10 +56,8 @@ public class MediaListFragment extends Fragment implements SwipeRefreshLayout.On
                              @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
 
-        ((SaturnApp) getActivity().getApplication()).inject(this);
-
         View layout = inflater.inflate(R.layout.fragment_list, container, false);
-        ButterKnife.inject(this, layout);
+        inject(layout);
 
         mSwipeContainer.setColorSchemeResources(
                 R.color.green,
@@ -106,12 +104,12 @@ public class MediaListFragment extends Fragment implements SwipeRefreshLayout.On
     class MediaListAdapter extends IndicatorAdapter<Media> {
         private boolean fetching = false;
 
-        public MediaListAdapter(Activity activity, List<Media> list) {
-            super(activity, list);
+        public MediaListAdapter(Activity activity) {
+            super(activity);
         }
 
         @Override
-        public View getDataRow(int position, View convertView, ViewGroup parent) {
+        public View getRowView(int position, View convertView, ViewGroup parent) {
             ViewHolder holder;
             if (convertView != null) {
                 holder = (ViewHolder) convertView.getTag();

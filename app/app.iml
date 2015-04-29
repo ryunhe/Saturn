@@ -113,6 +113,7 @@
     <orderEntry type="library" exported="" name="support-v13-21.0.3" level="project" />
     <orderEntry type="library" exported="" name="material-1.1.0" level="project" />
     <orderEntry type="library" exported="" name="javax.inject-1" level="project" />
+    <orderEntry type="library" exported="" name="RennSDK-Android" level="project" />
     <orderEntry type="library" exported="" name="support-v4-22.1.0" level="project" />
     <orderEntry type="library" exported="" name="cupboard-2.1.1" level="project" />
     <orderEntry type="library" exported="" name="javawriter-2.5.0" level="project" />

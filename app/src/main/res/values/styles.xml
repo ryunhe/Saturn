@@ -1,25 +1,59 @@
 <resources>
     <style name="SaturnTheme" parent="MaterialDrawerTheme.TranslucentStatus">
+        <item name="android:listViewStyle">@style/SaturnListView</item>
     </style>
-    <style name="SaturnNoActionBarTheme" parent="SaturnTheme">
-        <item name="android:windowActionBar">false</item>
-        <item name="android:windowNoTitle">true</item>
+    <style name="SaturnActionBarTheme" parent="MaterialDrawerTheme.ActionBar">
+        <item name="android:listViewStyle">@style/SaturnListView</item>
     </style>
-    <style name="SaturnTextNormalStyle">
+    <style name="SaturnTextNormal">
         <item name="android:textSize">@dimen/text_size_normal</item>
         <item name="android:textColor">@color/text_black</item>
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>
     </style>
-    <style name="SaturnTextLargeStyle" parent="SaturnTextNormalStyle">
+    <style name="SaturnTextLarge" parent="SaturnTextNormal">
         <item name="android:textSize">@dimen/text_size_large</item>
     </style>
-    <style name="SaturnTextSmallStyle" parent="SaturnTextNormalStyle">
+    <style name="SaturnTextSmall" parent="SaturnTextNormal">
         <item name="android:textSize">@dimen/text_size_small</item>
         <item name="android:textColor">@color/text_gray</item>
     </style>
-    <style name="SaturnTextMiniStyle" parent="SaturnTextSmallStyle">
+    <style name="SaturnTextMini" parent="SaturnTextSmall">
         <item name="android:layout_marginLeft">@dimen/item_margin_small</item>
         <item name="android:textSize">@dimen/text_size_mini</item>
+    </style>
+    <style name="SaturnListRowNormal">
+        <item name="android:textSize">@dimen/text_size_normal</item>
+        <item name="android:textColor">@color/text_black</item>
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">@dimen/list_row_height_normal</item>
+        <item name="android:gravity">center_vertical</item>
+    </style>
+    <style name="SaturnInputNormal" parent="SaturnListRowNormal">
+        <item name="android:textColorHint">@color/text_gray_light</item>
+        <item name="android:padding">0dp</item>
+        <item name="android:background">@null</item>
+        <item name="android:textCursorDrawable">@null</item>
+        <item name="android:singleLine">true</item>
+        <item name="android:lines">1</item>
+    </style>
+    <style name="SaturnActionBar" parent="Base.Widget.AppCompat.ActionBar">
+        <item name="elevation">0dp</item>
+        <item name="android:background">?attr/colorPrimary</item>
+        <item name="android:layout_height">?attr/actionBarSize</item>
+    </style>
+    <style name="SaturnActionBarButton" parent="Base.Widget.AppCompat.ActionButton">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">match_parent</item>
+    </style>
+    <style name="SaturnActionBarTitle" parent="Base.TextAppearance.Widget.AppCompat.Toolbar.Title">
+        <item name="android:layout_width">0dp</item>
+        <item name="android:layout_height">match_parent</item>
+        <item name="android:layout_weight">1</item>
+        <item name="android:gravity">center</item>
+    </style>
+    <style name="SaturnListView" parent="Base.Widget.AppCompat.ListView">
+        <item name="android:divider">@color/gray</item>
+        <item name="android:dividerHeight">1px</item>
     </style>
 </resources>

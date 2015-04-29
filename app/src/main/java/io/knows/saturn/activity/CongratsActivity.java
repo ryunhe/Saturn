@@ -13,7 +13,7 @@ import io.knows.saturn.fragment.CongratsFragment;
 /**
  * Created by ryun on 15-4-25.
  */
-public class CongratsActivity extends FragmentActivity {
+public class CongratsActivity extends Activity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

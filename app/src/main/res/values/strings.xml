@@ -1,10 +1,20 @@
 <resources>
     <string name="app_name">友颜</string>
+    <string name="title_signup">注册</string>
+    <string name="title_school_picker">选择学校</string>
 
+    <string name="label_confirm">确定</string>
+    <string name="label_cancel">取消</string>
     <string name="label_modify_profile">点击查看/修改</string>
     <string name="label_congrats_title">Congratulation!</string>
     <string name="label_congrats_chat">打个招呼</string>
     <string name="label_congrats_goon">继续发现</string>
+    <string name="label_nickname">姓名</string>
+    <string name="label_birthday">出生日期</string>
+    <string name="label_gender">性别</string>
+    <string name="label_hometown">家乡</string>
+    <string name="label_school">学校</string>
+    <string name="hint_school_search">请输入学校名称</string>
     <string name="drawer_item_home">主屏幕</string>
     <string name="info_retrying">正在重试…</string>
 </resources>

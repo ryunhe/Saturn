@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:focusable="true"
+    android:focusableInTouchMode="true"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="@color/white"
+    android:padding="@dimen/activity_margin"
+    >
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:background="@drawable/background_border_bottom"
+        >
+
+        <EditText
+            style="@style/SaturnInputNormal"
+            android:id="@+id/input_nickname"
+            android:layout_weight="1"
+            android:hint="@string/label_nickname"
+            android:cursorVisible="true"
+            />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:background="@drawable/background_border_bottom"
+        >
+
+        <EditText
+            style="@style/SaturnInputNormal"
+            android:id="@+id/input_birthday"
+            android:layout_weight="1"
+            android:hint="@string/label_birthday"
+            android:focusable="false"
+            />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:background="@drawable/background_border_bottom"
+        >
+
+        <EditText
+            style="@style/SaturnInputNormal"
+            android:id="@+id/input_gender"
+            android:layout_weight="1"
+            android:hint="@string/label_gender"
+            android:focusable="false"
+            />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:background="@drawable/background_border_bottom"
+        >
+
+        <EditText
+            style="@style/SaturnInputNormal"
+            android:id="@+id/input_school"
+            android:layout_weight="1"
+            android:hint="@string/label_school"
+            android:focusable="false"
+            />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:background="@drawable/background_border_bottom"
+        >
+
+        <EditText
+            style="@style/SaturnInputNormal"
+            android:id="@+id/input_hometown"
+            android:layout_weight="1"
+            android:hint="@string/label_hometown"
+            android:focusable="false"
+            />
+
+    </LinearLayout>
+
+
+</LinearLayout>
