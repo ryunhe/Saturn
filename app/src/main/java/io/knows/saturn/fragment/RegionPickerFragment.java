@@ -4,27 +4,29 @@ import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.inputmethod.EditorInfo;
-import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.TextView;
+
+import com.google.common.base.Strings;
+
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 import javax.inject.Inject;
 
 import butterknife.ButterKnife;
 import butterknife.InjectView;
-import butterknife.OnEditorAction;
 import butterknife.OnItemClick;
-import butterknife.OnTextChanged;
 import io.knows.saturn.R;
-import io.knows.saturn.activity.SchoolPickerActivity;
 import io.knows.saturn.activity.SignupActivity;
 import io.knows.saturn.activity.SubmitActivity;
 import io.knows.saturn.adapter.Adapter;
+import io.knows.saturn.model.Region;
 import io.knows.saturn.service.SamuiService;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
@@ -32,22 +34,23 @@ import rx.schedulers.Schedulers;
 /**
  * Created by ryun on 15-4-22.
  */
-public class SchoolPickerFragment extends Fragment {
+public class RegionPickerFragment extends Fragment {
     @Inject
     SamuiService mSamuiService;
 
     @InjectView(R.id.list_main)
     ListView mListView;
 
-    @InjectView(R.id.input_school)
-    EditText mSchoolInput;
-
-    SchoolListAdapter mListAdapter;
+    RegionListAdapter mListAdapter;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        mListAdapter = new SchoolListAdapter(getActivity());
+        try {
+            mListAdapter = new RegionListAdapter(getActivity());
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     @Override
@@ -55,16 +58,15 @@ public class SchoolPickerFragment extends Fragment {
                              @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
 
-        View layout = inflater.inflate(R.layout.fragment_school_picker, container, false);
+        View layout = inflater.inflate(R.layout.fragment_list, container, false);
         inject(layout);
 
         mListView.setAdapter(mListAdapter);
-        mListAdapter.doFetch("");
 
         ((SubmitActivity) getActivity()).setOnPageSubmitListener(new SubmitActivity.OnPageSubmitListener() {
             @Override
             public void onSubmit() {
-                submit(mSchoolInput.getText().toString());
+                submit();
             }
         });
 
@@ -72,10 +74,16 @@ public class SchoolPickerFragment extends Fragment {
     }
 
 
-    class SchoolListAdapter extends Adapter<String> {
+    class RegionListAdapter extends Adapter<Region> {
 
-        public SchoolListAdapter(Activity activity) {
-            super(activity);
+        public RegionListAdapter(Activity activity) throws IOException {
+            super(activity, Region.build(activity));
+        }
+
+        public void update(List<Region> list) {
+            mDataList.clear();
+            mDataList.addAll(list);
+            mListAdapter.notifyDataSetChanged();
         }
 
         @Override
@@ -89,7 +97,7 @@ public class SchoolPickerFragment extends Fragment {
                 convertView.setTag(holder);
             }
 
-            holder.text.setText(getItem(position));
+            holder.text.setText(getItem(position).fullName);
 
             return convertView;
         }
@@ -102,44 +110,38 @@ public class SchoolPickerFragment extends Fragment {
                 ButterKnife.inject(this, view);
             }
         }
-
-        public void doFetch(String keyword) {
-            mSamuiService.getSearchSchool(keyword)
-                    .subscribeOn(Schedulers.io())
-                    .observeOn(AndroidSchedulers.mainThread())
-                    .subscribe(schoolListResponse -> {
-                        if (schoolListResponse.getResult().size() > 0) {
-                            mDataList.clear();
-                            mDataList.addAll(schoolListResponse.getResult());
-                            mListAdapter.notifyDataSetChanged();
-                            mListView.setSelection(0);
-                        }
-                    });
-        }
     }
 
     @OnItemClick(R.id.list_main)
     void select(int position) {
-        submit(mListAdapter.getItem(position));
-    }
+        Region region = mListAdapter.getItem(position);
+        regions.add(region.name);
 
-    @OnEditorAction(R.id.input_school)
-    boolean custom(TextView v, int actionId, KeyEvent event) {
-        if (actionId == EditorInfo.IME_ACTION_DONE) {
-            submit(mSchoolInput.getText().toString());
-            return true;
+        if (null != region.children) {
+            if (1 == region.children.size() && null != region.children.get(0).children) {
+                mListAdapter.update(region.children.get(0).children);
+            } else {
+                mListAdapter.update(region.children);
+            }
+        } else {
+            submit();
         }
-        return false;
     }
 
-    @OnTextChanged(R.id.input_school)
-    void search(CharSequence s, int start, int before, int count) {
-        mListAdapter.doFetch(s.toString());
-    }
+    ArrayList<String> regions = new ArrayList<>();
 
-    void submit(String school) {
+    void submit() {
+
+        StringBuilder builder = new StringBuilder();
+        builder.append(regions.remove(0));
+
+        for (String name : regions) {
+            builder.append(" ");
+            builder.append(name);
+        }
+
         Intent i = new Intent();
-        i.putExtra(SignupActivity.INTENT_KEY_SCHOOL, school);
+        i.putExtra(SignupActivity.INTENT_KEY_REGION, builder.toString());
         getActivity().setResult(Activity.RESULT_OK, i);
         getActivity().finish();
     }

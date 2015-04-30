@@ -1,27 +1,23 @@
 package io.knows.saturn.fragment;
 
-import android.graphics.Typeface;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.renn.rennsdk.RennClient;
-import com.squareup.picasso.Picasso;
 
 import javax.inject.Inject;
 
-import butterknife.ButterKnife;
-import butterknife.InjectView;
 import butterknife.OnClick;
 import io.knows.saturn.R;
-import io.knows.saturn.SaturnApp;
-import io.knows.saturn.helper.DeviceInfoHelper;
+import io.knows.saturn.activity.MainActivity;
+import io.knows.saturn.activity.SignupActivity;
+import io.knows.saturn.helper.DeviceEnvHelper;
 import io.knows.saturn.model.User;
-import io.knows.saturn.response.AuthResponse;
 import io.knows.saturn.service.SamuiService;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
@@ -55,7 +51,7 @@ public class AuthFragment extends Fragment {
             public void onLoginSuccess() {
                 Toast.makeText(getActivity(), "登录成功", Toast.LENGTH_SHORT).show();
 
-                mSamuiService.authRenren(DeviceInfoHelper.getDeviceId(getActivity()), mRennClient.getUid().toString())
+                mSamuiService.authRenren(DeviceEnvHelper.getDeviceId(getActivity()), mRennClient.getUid().toString())
                         .subscribeOn(Schedulers.io())
                         .observeOn(AndroidSchedulers.mainThread())
                         .subscribe(authResponse -> {
@@ -63,6 +59,12 @@ public class AuthFragment extends Fragment {
 
                             Timber.d(authResponse.getAuth().sessionCode);
                             Timber.d(user.nickname);
+
+                            if (null == user.nickname) {
+                                startActivity(new Intent(getActivity(), SignupActivity.class));
+                            } else {
+                                startActivity(new Intent(getActivity(), MainActivity.class));
+                            }
 
                         });
             }

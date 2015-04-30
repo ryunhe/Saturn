@@ -12,7 +12,7 @@ import io.knows.saturn.model.User;
 
 import static nl.qbusict.cupboard.CupboardFactory.cupboard;
 
-public class CupboardDbHelper extends SQLiteOpenHelper {
+public class CupboardHelper extends SQLiteOpenHelper {
 
     private static final String DATABASE_NAME = "SaturnCupboard.db";
     private static final int DATABASE_VERSION = 2;
@@ -33,12 +33,12 @@ public class CupboardDbHelper extends SQLiteOpenHelper {
     public synchronized static SQLiteDatabase getConnection(Context context) {
         if (database == null) {
             // Construct the single helper and open the unique(!) db connection for the app
-            database = new CupboardDbHelper(context.getApplicationContext()).getWritableDatabase();
+            database = new CupboardHelper(context.getApplicationContext()).getWritableDatabase();
         }
         return database;
     }
 
-    public CupboardDbHelper(Context context) {
+    public CupboardHelper(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
     }
 

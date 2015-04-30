@@ -3,9 +3,8 @@ package io.knows.saturn.widget;
 import android.content.Context;
 import android.support.v7.widget.CardView;
 import android.util.AttributeSet;
-import android.widget.RelativeLayout;
 
-import io.knows.saturn.utility.DisplayMetricsConverter;
+import io.knows.saturn.helper.DisplayMetricsConverter;
 
 /**
  * Created by ryun on 15-4-22.

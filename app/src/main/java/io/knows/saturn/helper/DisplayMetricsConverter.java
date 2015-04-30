@@ -1,4 +1,4 @@
-package io.knows.saturn.utility;
+package io.knows.saturn.helper;
 
 import android.content.Context;
 import android.util.DisplayMetrics;

@@ -1,7 +1,8 @@
 <resources>
     <string name="app_name">友颜</string>
-    <string name="title_signup">注册</string>
+    <string name="title_signup">注册新用户</string>
     <string name="title_school_picker">选择学校</string>
+    <string name="title_region_picker">选择地区</string>
 
     <string name="label_confirm">确定</string>
     <string name="label_cancel">取消</string>

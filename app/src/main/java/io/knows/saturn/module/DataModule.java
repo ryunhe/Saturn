@@ -3,7 +3,6 @@ package io.knows.saturn.module;
 import android.app.Application;
 import android.content.SharedPreferences;
 import android.database.sqlite.SQLiteDatabase;
-import android.os.UserManager;
 
 import com.google.gson.Gson;
 import com.squareup.okhttp.Cache;
@@ -20,19 +19,19 @@ import dagger.Provides;
 import io.knows.saturn.activity.CongratsActivity;
 import io.knows.saturn.activity.MainActivity;
 import io.knows.saturn.activity.ProfileActivity;
+import io.knows.saturn.activity.RegionPickerActivity;
 import io.knows.saturn.activity.SchoolPickerActivity;
 import io.knows.saturn.activity.SignupActivity;
 import io.knows.saturn.fragment.CongratsFragment;
 import io.knows.saturn.fragment.CardStackFragment;
 import io.knows.saturn.fragment.MediaListFragment;
 import io.knows.saturn.fragment.ProfileFragment;
+import io.knows.saturn.fragment.RegionPickerFragment;
 import io.knows.saturn.fragment.SchoolPickerFragment;
-import io.knows.saturn.helper.CupboardDbHelper;
+import io.knows.saturn.helper.CupboardHelper;
 import io.knows.saturn.helper.GsonFieldConverterFactory;
 import io.knows.saturn.helper.StringsFieldConverterFactory;
-import io.knows.saturn.model.Authenticator;
 import io.knows.saturn.model.Media;
-import io.knows.saturn.model.Model;
 import io.knows.saturn.model.User;
 import nl.nl2312.rxcupboard.RxCupboard;
 import nl.nl2312.rxcupboard.RxDatabase;
@@ -60,12 +59,14 @@ import static java.util.concurrent.TimeUnit.SECONDS;
                 CongratsFragment.class,
                 ProfileFragment.class,
                 SchoolPickerFragment.class,
+                RegionPickerFragment.class,
 
                 MainActivity.class,
                 CongratsActivity.class,
                 ProfileActivity.class,
                 SignupActivity.class,
                 SchoolPickerActivity.class,
+                RegionPickerActivity.class,
         }
 )
 public class DataModule {
@@ -94,7 +95,7 @@ public class DataModule {
 
     @Provides @Singleton
     SQLiteDatabase provideSQLiteDatabase(Application application) {
-        return CupboardDbHelper.getConnection(application);
+        return CupboardHelper.getConnection(application);
     }
 
     @Provides @Singleton

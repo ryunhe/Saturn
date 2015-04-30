@@ -18,6 +18,7 @@ import io.knows.saturn.fragment.SignupFragment;
  */
 public class SignupActivity extends Activity {
     public static final String INTENT_KEY_SCHOOL = "school";
+    public static final String INTENT_KEY_REGION = "region";
 
     @InjectView(R.id.toolbar)
     Toolbar mToolbar;

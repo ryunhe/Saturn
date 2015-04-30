@@ -11,7 +11,7 @@ import android.view.WindowManager;
 
 import java.util.UUID;
 
-public class DeviceInfoHelper {
+public class DeviceEnvHelper {
 
     /**
      * 检测网络是否可用

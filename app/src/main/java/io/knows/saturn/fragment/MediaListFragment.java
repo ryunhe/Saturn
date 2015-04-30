@@ -12,15 +12,11 @@ import android.widget.AbsListView;
 import android.widget.ListView;
 import android.widget.TextView;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import javax.inject.Inject;
 
 import butterknife.ButterKnife;
 import butterknife.InjectView;
 import io.knows.saturn.R;
-import io.knows.saturn.SaturnApp;
 import io.knows.saturn.adapter.IndicatorAdapter;
 import io.knows.saturn.listener.EndlessScrollListener;
 import io.knows.saturn.model.Media;
@@ -56,7 +52,7 @@ public class MediaListFragment extends Fragment implements SwipeRefreshLayout.On
                              @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
 
-        View layout = inflater.inflate(R.layout.fragment_list, container, false);
+        View layout = inflater.inflate(R.layout.fragment_swipeable_list, container, false);
         inject(layout);
 
         mSwipeContainer.setColorSchemeResources(

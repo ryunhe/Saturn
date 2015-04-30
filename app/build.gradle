@@ -66,6 +66,5 @@ dependencies {
     compile 'com.viewpagerindicator:library:2.4.1@aar' // maven { url "http://dl.bintray.com/populov/maven" }
     compile 'nl.qbusict:cupboard:2.1.1'
     compile 'nl.2312:rxcupboard:0.2'
-    compile 'com.github.rey5137:material:1.1.0'
     compile ('com.mikepenz.materialdrawer:library:2.8.0@aar') { transitive = true }
 }

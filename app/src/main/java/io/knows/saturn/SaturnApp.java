@@ -27,6 +27,8 @@ public class SaturnApp extends Application {
 
         if (BuildConfig.DEBUG) {
             Timber.plant(new Timber.DebugTree());
+        } else {
+            // Crash reporting
         }
     }
 
