@@ -21,7 +21,7 @@
     <Button
         style="@style/SaturnActionBarButton"
         android:id="@+id/button_submit"
-        android:text="@string/label_confirm"
+        android:text="完成"
         />
 
 </LinearLayout>

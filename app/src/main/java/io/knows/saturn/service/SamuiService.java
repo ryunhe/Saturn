@@ -5,6 +5,7 @@ import io.knows.saturn.response.MatchedResponse;
 import io.knows.saturn.response.MediaEntityResponse;
 import io.knows.saturn.response.MediaListResponse;
 import io.knows.saturn.response.SchoolListResponse;
+import io.knows.saturn.response.StringResponse;
 import io.knows.saturn.response.UserEntityResponse;
 import retrofit.http.DELETE;
 import retrofit.http.GET;
@@ -51,5 +52,9 @@ public interface SamuiService {
     // Auth
     @GET("/auth/renren")
     Observable<AuthResponse> authRenren(@Query("device_id") String deviceId, @Query("identity") String identity);
+
+    // Service
+    @GET("/services/qiniu/uptoken")
+    Observable<StringResponse> getQiniuToken();
 
 }

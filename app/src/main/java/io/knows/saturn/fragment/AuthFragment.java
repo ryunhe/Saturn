@@ -16,7 +16,7 @@ import butterknife.OnClick;
 import io.knows.saturn.R;
 import io.knows.saturn.activity.MainActivity;
 import io.knows.saturn.activity.SignupActivity;
-import io.knows.saturn.helper.DeviceEnvHelper;
+import io.knows.saturn.helper.DeviceHelper;
 import io.knows.saturn.model.User;
 import io.knows.saturn.service.SamuiService;
 import rx.android.schedulers.AndroidSchedulers;
@@ -51,7 +51,7 @@ public class AuthFragment extends Fragment {
             public void onLoginSuccess() {
                 Toast.makeText(getActivity(), "登录成功", Toast.LENGTH_SHORT).show();
 
-                mSamuiService.authRenren(DeviceEnvHelper.getDeviceId(getActivity()), mRennClient.getUid().toString())
+                mSamuiService.authRenren(DeviceHelper.getDeviceId(getActivity()), mRennClient.getUid().toString())
                         .subscribeOn(Schedulers.io())
                         .observeOn(AndroidSchedulers.mainThread())
                         .subscribe(authResponse -> {

@@ -4,6 +4,10 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.drawable.Drawable;
+import android.media.ThumbnailUtils;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -12,31 +16,45 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.google.gson.Gson;
+import com.qiniu.android.storage.UploadManager;
 import com.renn.rennsdk.RennClient;
 import com.renn.rennsdk.RennExecutor;
 import com.renn.rennsdk.RennResponse;
 import com.renn.rennsdk.exception.RennException;
 import com.renn.rennsdk.param.GetUserParam;
+import com.squareup.picasso.Callback;
+import com.squareup.picasso.Picasso;
+import com.squareup.picasso.Target;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.Calendar;
+import java.util.List;
 
 import javax.inject.Inject;
 
 import butterknife.InjectView;
 import butterknife.OnClick;
 import io.knows.saturn.R;
+import io.knows.saturn.activity.CropperActivity;
 import io.knows.saturn.activity.RegionPickerActivity;
 import io.knows.saturn.activity.SchoolPickerActivity;
 import io.knows.saturn.activity.SignupActivity;
+import io.knows.saturn.helper.FileHelper;
+import io.knows.saturn.model.Resource;
 import io.knows.saturn.model.renren.RennUser;
 import io.knows.saturn.service.SamuiService;
 import io.knows.saturn.widget.DatePickerDialogWithMaxMinRange;
+import me.nereo.multi_image_selector.MultiImageSelectorActivity;
+import rx.android.schedulers.AndroidSchedulers;
+import rx.schedulers.Schedulers;
 import timber.log.Timber;
 
 /**
@@ -44,7 +62,11 @@ import timber.log.Timber;
  */
 public class SignupFragment extends Fragment {
     @Inject
+    Picasso mPicasso;
+    @Inject
     RennClient mRennClient;
+    @Inject
+    UploadManager mUploadManager;
     @Inject
     SamuiService mSamuiService;
 
@@ -63,9 +85,15 @@ public class SignupFragment extends Fragment {
     @InjectView(R.id.input_hometown)
     EditText mHomeTownInput;
 
+    @InjectView(R.id.image_avatar)
+    ImageView mAvatarImage;
+
+    Resource mAvatarResource;
+
     static final int PAGE_SCHOOL_PICKER = 1;
     static final int PAGE_REGION_PICKER = 2;
-
+    static final int PAGE_IMAGE_CROPPER = 5;
+    static final int PAGE_IMAGE_SELECTOR = 10;
 
     @Override
     public View onCreateView(LayoutInflater inflater,
@@ -89,6 +117,17 @@ public class SignupFragment extends Fragment {
                     break;
                 case PAGE_REGION_PICKER:
                     mHomeTownInput.setText(data.getStringExtra(SignupActivity.INTENT_KEY_REGION));
+                    break;
+                case PAGE_IMAGE_SELECTOR:
+                    List<String> path = data.getStringArrayListExtra(MultiImageSelectorActivity.EXTRA_RESULT);
+                    if (path.size() > 0) {
+                        Intent i = new Intent(getActivity(), CropperActivity.class);
+                        i.setData(Uri.fromFile(new File(path.get(0))));
+                        startActivityForResult(i, PAGE_IMAGE_CROPPER);
+                    }
+                    break;
+                case PAGE_IMAGE_CROPPER:
+                    updateAvatarResource(data.getData().getPath());
                     break;
             }
         }
@@ -132,6 +171,32 @@ public class SignupFragment extends Fragment {
         startActivityForResult(new Intent(getActivity(), RegionPickerActivity.class), PAGE_REGION_PICKER);
     }
 
+    @OnClick(R.id.image_avatar)
+    void avatar() {
+        Intent i = new Intent(getActivity(), MultiImageSelectorActivity.class);
+        i.putExtra(MultiImageSelectorActivity.EXTRA_SHOW_CAMERA, true);
+        i.putExtra(MultiImageSelectorActivity.EXTRA_SELECT_MODE, MultiImageSelectorActivity.MODE_SINGLE);
+        startActivityForResult(i, PAGE_IMAGE_SELECTOR);
+    }
+
+    void updateAvatarResource(final String filePath) {
+        mSamuiService.getQiniuToken()
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(stringResponse -> {
+                    mUploadManager.put(filePath, null, stringResponse.getString(), (key, info, response) -> {
+                        try {
+                            Timber.d(response.optString("key"));
+                            mAvatarResource = new Resource(response.getString("key"));
+                            mPicasso.load(mAvatarResource.getUrl(Resource.ResourceSize.THUMBNAIL))
+                                    .into(mAvatarImage);
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                    }, null);
+                });
+    }
+
     void loadRennProfile() {
         try {
             GetUserParam param = new GetUserParam();
@@ -156,6 +221,29 @@ public class SignupFragment extends Fragment {
                         if (null != school) {
                             mSchoolInput.setText(school.name);
                         }
+
+                        RennUser.Image image = user.getAvatar(RennUser.ImageSize.LARGE);
+                        if (null != image) {
+                            mPicasso.load(image.url).into(new Target() {
+                                @Override
+                                public void onBitmapLoaded(Bitmap bitmap, Picasso.LoadedFrom from) {
+                                    File file = FileHelper.createTmpFile(getActivity());
+                                    FileHelper.dumpBitmapToFile(bitmap, file);
+                                    updateAvatarResource(file.getPath());
+                                }
+
+                                @Override
+                                public void onBitmapFailed(Drawable errorDrawable) {
+
+                                }
+
+                                @Override
+                                public void onPrepareLoad(Drawable placeHolderDrawable) {
+
+                                }
+                            });
+                        }
+
                     } catch (JSONException e) {
                         e.printStackTrace();
                     }

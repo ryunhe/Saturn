@@ -1,3 +1,5 @@
 include ':swipecards'
 project(':swipecards').projectDir = new File('swipecards/library')
+include ':multi-image-selector'
+project(':multi-image-selector').projectDir = new File('multi-image-selector/multi-image-selector')
 include ':app'

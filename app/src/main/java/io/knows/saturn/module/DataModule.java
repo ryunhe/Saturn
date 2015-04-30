@@ -5,6 +5,7 @@ import android.content.SharedPreferences;
 import android.database.sqlite.SQLiteDatabase;
 
 import com.google.gson.Gson;
+import com.qiniu.android.storage.UploadManager;
 import com.squareup.okhttp.Cache;
 import com.squareup.okhttp.OkHttpClient;
 import com.squareup.picasso.OkHttpDownloader;
@@ -24,6 +25,7 @@ import io.knows.saturn.activity.SchoolPickerActivity;
 import io.knows.saturn.activity.SignupActivity;
 import io.knows.saturn.fragment.CongratsFragment;
 import io.knows.saturn.fragment.CardStackFragment;
+import io.knows.saturn.fragment.CropperFragment;
 import io.knows.saturn.fragment.MediaListFragment;
 import io.knows.saturn.fragment.ProfileFragment;
 import io.knows.saturn.fragment.RegionPickerFragment;
@@ -60,6 +62,7 @@ import static java.util.concurrent.TimeUnit.SECONDS;
                 ProfileFragment.class,
                 SchoolPickerFragment.class,
                 RegionPickerFragment.class,
+                CropperFragment.class,
 
                 MainActivity.class,
                 CongratsActivity.class,
@@ -121,6 +124,11 @@ public class DataModule {
     @Provides @Singleton
     OkHttpClient provideOkHttpClient(Application application) {
         return createOkHttpClient(application);
+    }
+
+    @Provides @Singleton
+    UploadManager provideUploadManager() {
+        return new UploadManager();
     }
 
     @Provides @Singleton

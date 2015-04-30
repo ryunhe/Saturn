@@ -17,6 +17,16 @@ public class RennUser {
     public EmotionalState emotionalState;
 
     @Nullable
+    public Image getAvatar(ImageSize size) {
+        for (Image image : avatar) {
+            if (size == image.size) {
+                return image;
+            }
+        }
+        return null;
+    }
+
+    @Nullable
     public School getSchool() {
         EducationBackground[] types = new EducationBackground[] {
                 EducationBackground.COLLEGE
@@ -113,10 +123,10 @@ public class RennUser {
     }
 
     public enum ImageSize {
-        MAIN("200ptx600pt"),
-        TINY("50ptx50pt"),
-        LARGE("720ptx720pt"),
-        HEAD("100ptx300pt");
+        MAIN("200pt"),
+        TINY("50pt"),
+        LARGE("720pt"),
+        HEAD("100pt");
         String text;
         ImageSize(String type) {
             this.text = type;

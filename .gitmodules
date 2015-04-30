@@ -1,3 +1,6 @@
 [submodule "swipecards"]
 	path = swipecards
 	url = git@github.com:ryunhe/Swipecards.git
+[submodule "multi-image-selector"]
+	path = multi-image-selector
+	url = git@github.com:ryunhe/MultiImageSelector.git
