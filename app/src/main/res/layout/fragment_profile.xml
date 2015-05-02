@@ -51,7 +51,7 @@
                 android:id="@+id/text_primary"
                 android:layout_width="match_parent"
                 android:text="{primary}"
-                style="@style/SaturnTextLarge"
+                style="@style/SaturnText.Large"
                 />
 
             <TextView
@@ -59,7 +59,7 @@
                 android:layout_width="match_parent"
                 android:layout_marginTop="@dimen/item_margin_small"
                 android:text="{secondary}"
-                style="@style/SaturnTextSmall"
+                style="@style/SaturnText.Small"
                 />
         </LinearLayout>
     </LinearLayout>

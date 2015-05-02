@@ -29,7 +29,8 @@ public class ApiModule {
     RestAdapter provideRestAdapter(Endpoint endpoint) {
         return new RestAdapter.Builder()
                 .setEndpoint(endpoint)
-                .setLogLevel(RestAdapter.LogLevel.BASIC)
+                .setLogLevel(RestAdapter.LogLevel.FULL)
+//                .setLogLevel(RestAdapter.LogLevel.BASIC)
                 .build();
     }
 

@@ -17,7 +17,7 @@
         android:background="@drawable/background_border_bottom"
         >
         <EditText
-            style="@style/SaturnInputNormal"
+            style="@style/SaturnInput"
             android:id="@+id/input_school"
             android:hint="@string/hint_school_search"
             android:imeOptions="actionDone"

@@ -70,4 +70,8 @@ dependencies {
     compile 'nl.qbusict:cupboard:2.1.1'
     compile 'nl.2312:rxcupboard:0.2'
     compile ('com.mikepenz.materialdrawer:library:2.8.0@aar') { transitive = true }
+
+    // Iconfont
+    compile 'com.mikepenz.iconics:library:0.9.1@aar'
+    compile 'com.mikepenz.iconics:community-material-typeface:1.+@aar'
 }

@@ -6,7 +6,6 @@ import android.app.Dialog;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.drawable.Drawable;
-import android.media.ThumbnailUtils;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -26,7 +25,6 @@ import com.renn.rennsdk.RennExecutor;
 import com.renn.rennsdk.RennResponse;
 import com.renn.rennsdk.exception.RennException;
 import com.renn.rennsdk.param.GetUserParam;
-import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
 import com.squareup.picasso.Target;
 
@@ -34,9 +32,11 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.File;
-import java.io.IOException;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.List;
+import java.util.Locale;
 
 import javax.inject.Inject;
 
@@ -47,8 +47,10 @@ import io.knows.saturn.activity.CropperActivity;
 import io.knows.saturn.activity.RegionPickerActivity;
 import io.knows.saturn.activity.SchoolPickerActivity;
 import io.knows.saturn.activity.SignupActivity;
+import io.knows.saturn.activity.SubmitActivity;
 import io.knows.saturn.helper.FileHelper;
 import io.knows.saturn.model.Resource;
+import io.knows.saturn.model.User;
 import io.knows.saturn.model.renren.RennUser;
 import io.knows.saturn.service.SamuiService;
 import io.knows.saturn.widget.DatePickerDialogWithMaxMinRange;
@@ -105,6 +107,17 @@ public class SignupFragment extends Fragment {
 
         loadRennProfile();
 
+        ((SubmitActivity) getActivity()).setOnPageSubmitListener(new SubmitActivity.OnPageSubmitListener() {
+            @Override
+            public void onSubmit() {
+                try {
+                    submit();
+                } catch (ParseException e) {
+                    e.printStackTrace();
+                }
+            }
+        });
+
         return layout;
     }
 
@@ -141,13 +154,13 @@ public class SignupFragment extends Fragment {
             @NonNull
             @Override
             public Dialog onCreateDialog(Bundle savedInstanceState) {
-                final Calendar minCalendar = Calendar.getInstance();
+                final Calendar minCalendar = Calendar.getInstance(Locale.CHINA);
                 minCalendar.set(1990, 0, 1);
-                final Calendar maxCalendar = Calendar.getInstance();
+                final Calendar maxCalendar = Calendar.getInstance(Locale.CHINA);
                 maxCalendar.set(maxCalendar.get(Calendar.YEAR) - 10, 11, 31);
 
                 return new DatePickerDialogWithMaxMinRange(getActivity()
-                        , (view, year, monthOfYear, dayOfMonth) -> mBirthdayInput.setText(String.format("%d-%d-%d", year, monthOfYear + 1, dayOfMonth))
+                        , (view, year, monthOfYear, dayOfMonth) -> mBirthdayInput.setText(String.format("%s年%s月%s日", year, monthOfYear + 1, dayOfMonth))
                         , minCalendar, maxCalendar, (Calendar) minCalendar.clone());
             }
         };
@@ -171,7 +184,7 @@ public class SignupFragment extends Fragment {
         startActivityForResult(new Intent(getActivity(), RegionPickerActivity.class), PAGE_REGION_PICKER);
     }
 
-    @OnClick(R.id.image_avatar)
+    @OnClick(R.id.button_add_avatar)
     void avatar() {
         Intent i = new Intent(getActivity(), MultiImageSelectorActivity.class);
         i.putExtra(MultiImageSelectorActivity.EXTRA_SHOW_CAMERA, true);
@@ -213,7 +226,7 @@ public class SignupFragment extends Fragment {
                         RennUser user = new Gson().fromJson(obj.toString(), RennUser.class);
 
                         mNicknameInput.setText(user.name);
-                        mBirthdayInput.setText(user.basicInformation.birthday);
+                        mBirthdayInput.setText(user.getFormatBirthday(new SimpleDateFormat("yyyy年MM月dd日", Locale.CHINA)));
                         mGenderInput.setText(user.basicInformation.sex.getText());
                         mHomeTownInput.setText(user.basicInformation.homeTown.getText());
 
@@ -257,5 +270,35 @@ public class SignupFragment extends Fragment {
         } catch (RennException e) {
             e.printStackTrace();
         }
+    }
+
+    void submit() throws ParseException {
+        String nickname = mNicknameInput.getEditableText().toString();
+        String school = mSchoolInput.getEditableText().toString();
+        String hometown = mHomeTownInput.getEditableText().toString();
+
+        SimpleDateFormat format = new SimpleDateFormat("yyyy年MM月dd日", Locale.CHINA);
+        int birthday = (int) Math.floor(format.parse(mBirthdayInput.getEditableText().toString()).getTime() / 1000);
+
+        User.Gender gender = User.Gender.MALE.getText().equals(mGenderInput.getEditableText().toString())
+                ? User.Gender.MALE
+                : User.Gender.FEMALE;
+
+        mSamuiService.updateProfile(nickname, gender.getCode(), birthday, hometown, school, null, null)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(userEntityResponse -> {
+                    Toast.makeText(getActivity(), "保存成功", Toast.LENGTH_SHORT).show();
+                    if (null != mAvatarResource) {
+                        mSamuiService.createMedia(mAvatarResource.key)
+                                .subscribeOn(Schedulers.io())
+                                .observeOn(AndroidSchedulers.mainThread())
+                                .subscribe(mediaEntityResponse -> {
+                                    Toast.makeText(getActivity(), "发布成功", Toast.LENGTH_SHORT).show();
+                                    getActivity().setResult(Activity.RESULT_OK);
+                                    getActivity().finish();
+                                });
+                    }
+                });
     }
 }

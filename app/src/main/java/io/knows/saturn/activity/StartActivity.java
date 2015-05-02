@@ -23,11 +23,6 @@ public class StartActivity extends Activity {
     @Inject
     RennClient mRennClient;
 
-    @Inject
-    DatabaseCompartment mDatabaseCompartment;
-    @Inject
-    RxDatabase mRxDatabase;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -36,14 +31,19 @@ public class StartActivity extends Activity {
         inject();
 
         if (mRennClient.isLogin()) {
-            startActivity(new Intent(this, SignupActivity.class));
+            start();
         } else {
             getSupportFragmentManager()
                     .beginTransaction()
                     .replace(R.id.fragment_frame, new AuthFragment())
                     .commit();
         }
+    }
 
-
+    public void start() {
+        Intent i = new Intent(this, MainActivity.class);
+        i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+        startActivity(i);
+        finish();
     }
 }

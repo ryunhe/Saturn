@@ -33,8 +33,13 @@
                 android:background="@drawable/background_border_bottom"
                 >
 
+                <IconicsTextView
+                    style="@style/SaturnIcon"
+                    android:text="{faw-user}"
+                    />
+
                 <EditText
-                    style="@style/SaturnInputNormal"
+                    style="@style/SaturnInput"
                     android:id="@+id/input_nickname"
                     android:layout_weight="1"
                     android:hint="@string/label_nickname"
@@ -49,8 +54,13 @@
                 android:orientation="horizontal"
                 >
 
+                <IconicsTextView
+                    style="@style/SaturnIcon"
+                    android:text="{faw-calendar}"
+                    />
+
                 <EditText
-                    style="@style/SaturnInputNormal"
+                    style="@style/SaturnInput"
                     android:id="@+id/input_birthday"
                     android:layout_weight="1"
                     android:hint="@string/label_birthday"
@@ -62,13 +72,32 @@
         </LinearLayout>
 
         <!-- avatar -->
-        <ImageView
-            android:id="@+id/image_avatar"
-            android:layout_width="@dimen/avatar_normal_size"
-            android:layout_height="@dimen/avatar_normal_size"
-            android:layout_margin="@dimen/item_margin"
-            android:src="@drawable/anonymous_avatar"
-            />
+        <RelativeLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            >
+            <com.makeramen.roundedimageview.RoundedImageView
+                xmlns:app="http://schemas.android.com/apk/res-auto"
+                android:id="@+id/image_avatar"
+                android:layout_width="@dimen/avatar_normal_size"
+                android:layout_height="@dimen/avatar_normal_size"
+                android:layout_margin="@dimen/activity_margin"
+                android:src="@drawable/anonymous_avatar"
+                android:scaleType="fitCenter"
+                android:adjustViewBounds="true"
+                app:riv_oval="false"
+                app:riv_corner_radius="@dimen/corner_radius"
+                />
+            <IconicsTextView
+                style="@style/SaturnIcon.Large"
+                android:id="@+id/button_add_avatar"
+                android:text="{cmd-plus-circle}"
+                android:layout_marginBottom="-16dp"
+                android:layout_marginRight="-16dp"
+                android:layout_alignBottom="@+id/image_avatar"
+                android:layout_alignRight="@+id/image_avatar"
+                />
+        </RelativeLayout>
 
     </LinearLayout>
 
@@ -79,8 +108,13 @@
         android:background="@drawable/background_border_bottom"
         >
 
+        <IconicsTextView
+            style="@style/SaturnIcon"
+            android:text="{faw-transgender}"
+            />
+
         <EditText
-            style="@style/SaturnInputNormal"
+            style="@style/SaturnInput"
             android:id="@+id/input_gender"
             android:layout_weight="1"
             android:hint="@string/label_gender"
@@ -96,8 +130,13 @@
         android:background="@drawable/background_border_bottom"
         >
 
+        <IconicsTextView
+            style="@style/SaturnIcon"
+            android:text="{faw-mortar-board}"
+            />
+
         <EditText
-            style="@style/SaturnInputNormal"
+            style="@style/SaturnInput"
             android:id="@+id/input_school"
             android:layout_weight="1"
             android:hint="@string/label_school"
@@ -113,8 +152,13 @@
         android:background="@drawable/background_border_bottom"
         >
 
+        <IconicsTextView
+            style="@style/SaturnIcon"
+            android:text="{faw-map-marker}"
+            />
+
         <EditText
-            style="@style/SaturnInputNormal"
+            style="@style/SaturnInput"
             android:id="@+id/input_hometown"
             android:layout_weight="1"
             android:hint="@string/label_hometown"

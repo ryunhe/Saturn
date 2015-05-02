@@ -7,21 +7,21 @@
     android:orientation="horizontal"
     >
 
-    <Button
-        style="@style/SaturnActionBarButton"
+    <IconicsTextView
+        style="@style/SaturnIcon.ActionButton"
         android:id="@+id/button_back"
-        android:text="返回"
+        android:text="{cmd-arrow-left}"
         />
 
     <TextView
-        style="@style/SaturnActionBarTitle"
+        style="@style/SaturnActionBar.Title"
         android:id="@+id/text_title"
         />
 
-    <Button
-        style="@style/SaturnActionBarButton"
+    <IconicsTextView
+        style="@style/SaturnIcon.ActionButton"
         android:id="@+id/button_submit"
-        android:text="完成"
+        android:text="{cmd-check}"
         />
 
 </LinearLayout>

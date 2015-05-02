@@ -26,13 +26,13 @@
         android:layout_centerHorizontal="true"
         android:textColor="@color/text_gray_light"
         android:text="{nickname}"
-        style="@style/SaturnTextSmall"
+        style="@style/SaturnText.Small"
         />
     <TextView
         android:id="@+id/text_modify_profile"
         android:layout_below="@id/text_nickname"
         android:layout_centerHorizontal="true"
         android:text="@string/label_modify_profile"
-        style="@style/SaturnTextMini"
+        style="@style/SaturnText.Mini"
         />
 </RelativeLayout>

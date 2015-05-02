@@ -5,7 +5,7 @@
     android:orientation="vertical"
     >
     <TextView
-        style="@style/SaturnListRowNormal"
+        style="@style/SaturnRow"
         android:id="@+id/text_content"
         />
 </LinearLayout>

@@ -1,5 +1,6 @@
 package io.knows.saturn.fragment;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -13,9 +14,11 @@ import com.renn.rennsdk.RennClient;
 import javax.inject.Inject;
 
 import butterknife.OnClick;
+import io.knows.saturn.BuildConfig;
 import io.knows.saturn.R;
 import io.knows.saturn.activity.MainActivity;
 import io.knows.saturn.activity.SignupActivity;
+import io.knows.saturn.activity.StartActivity;
 import io.knows.saturn.helper.DeviceHelper;
 import io.knows.saturn.model.User;
 import io.knows.saturn.service.SamuiService;
@@ -32,6 +35,8 @@ public class AuthFragment extends Fragment {
     @Inject
     SamuiService mSamuiService;
 
+    static final int PAGE_SIGN_UP = 1;
+
     @Override
     public View onCreateView(LayoutInflater inflater,
                              @Nullable ViewGroup container,
@@ -41,6 +46,15 @@ public class AuthFragment extends Fragment {
         inject(layout);
 
         return layout;
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (Activity.RESULT_OK == resultCode) {
+            if (PAGE_SIGN_UP == requestCode) {
+                ((StartActivity) getActivity()).start();
+            }
+        }
     }
 
     @OnClick(R.id.button_renren)
@@ -60,10 +74,10 @@ public class AuthFragment extends Fragment {
                             Timber.d(authResponse.getAuth().sessionCode);
                             Timber.d(user.nickname);
 
-                            if (null == user.nickname) {
-                                startActivity(new Intent(getActivity(), SignupActivity.class));
+                            if (null == user.nickname || BuildConfig.DEBUG) {
+                                startActivityForResult(new Intent(getActivity(), SignupActivity.class), PAGE_SIGN_UP);
                             } else {
-                                startActivity(new Intent(getActivity(), MainActivity.class));
+                                ((StartActivity) getActivity()).start();
                             }
 
                         });

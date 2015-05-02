@@ -2,6 +2,10 @@ package io.knows.saturn;
 
 import android.app.Application;
 
+import com.mikepenz.community_material_typeface_library.CommunityMaterial;
+import com.mikepenz.iconics.Iconics;
+import com.mikepenz.iconics.typeface.FontAwesome;
+
 import dagger.ObjectGraph;
 import io.knows.saturn.module.DataModule;
 import io.knows.saturn.module.RennModule;
@@ -18,6 +22,9 @@ public class SaturnApp extends Application {
         super.onCreate();
 
         mObjectGraph = ObjectGraph.create(new DataModule(this), new RennModule());
+
+        Iconics.registerFont(new FontAwesome());
+        Iconics.registerFont(new CommunityMaterial());
 
 //        CalligraphyConfig.initDefault(new CalligraphyConfig.Builder()
 //                        .setDefaultFontPath("fonts/LantingHei.ttf")

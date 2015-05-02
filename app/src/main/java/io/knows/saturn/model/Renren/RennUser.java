@@ -2,6 +2,10 @@ package io.knows.saturn.model.renren;
 
 import android.support.annotation.Nullable;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Locale;
+
 /**
  * Created by ryun on 15-4-30.
  */
@@ -15,6 +19,14 @@ public class RennUser {
 //    public Work[] work; // @TODO
     public Like[] like;
     public EmotionalState emotionalState;
+
+    public String getFormatBirthday(SimpleDateFormat dateFormat) {
+        try {
+            return dateFormat.format(new SimpleDateFormat("yyyy-MM-dd", Locale.CHINA).parse(basicInformation.birthday).getTime());
+        } catch (ParseException e) {
+            return "";
+        }
+    }
 
     @Nullable
     public Image getAvatar(ImageSize size) {
@@ -92,8 +104,8 @@ public class RennUser {
         ENGAGE("订婚"),
         OUTLOVE("失恋");
         String text;
-        EmotionalState(String type) {
-            this.text = type;
+        EmotionalState(String text) {
+            this.text = text;
         }
         public String getText() {
             return this.text;
@@ -110,8 +122,8 @@ public class RennUser {
         BOOK("书籍"),
         INTEREST("爱好");
         String text;
-        LikeCategory(String type) {
-            this.text = type;
+        LikeCategory(String text) {
+            this.text = text;
         }
         public String getText() {
             return this.text;
@@ -128,8 +140,8 @@ public class RennUser {
         LARGE("720pt"),
         HEAD("100pt");
         String text;
-        ImageSize(String type) {
-            this.text = type;
+        ImageSize(String text) {
+            this.text = text;
         }
         public String getText() {
             return this.text;
@@ -140,8 +152,8 @@ public class RennUser {
         FEMALE("女"),
         MALE("男");
         String text;
-        Sex(String type) {
-            this.text = type;
+        Sex(String text) {
+            this.text = text;
         }
         public String getText() {
             return this.text;

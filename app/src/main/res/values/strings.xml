@@ -4,6 +4,9 @@
     <string name="title_school_picker">选择学校</string>
     <string name="title_region_picker">选择地区</string>
 
+    <string name="drawer_item_home">主屏幕</string>
+    <string name="drawer_item_exit">退出</string>
+
     <string name="label_confirm">确定</string>
     <string name="label_cancel">取消</string>
     <string name="label_modify_profile">点击查看/修改</string>
@@ -16,6 +19,5 @@
     <string name="label_hometown">家乡</string>
     <string name="label_school">学校</string>
     <string name="hint_school_search">请输入学校名称</string>
-    <string name="drawer_item_home">主屏幕</string>
     <string name="info_retrying">正在重试…</string>
 </resources>
