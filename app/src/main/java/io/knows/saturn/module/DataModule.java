@@ -33,6 +33,7 @@ import io.knows.saturn.fragment.SchoolPickerFragment;
 import io.knows.saturn.helper.CupboardHelper;
 import io.knows.saturn.helper.GsonFieldConverterFactory;
 import io.knows.saturn.helper.StringsFieldConverterFactory;
+import io.knows.saturn.model.Authenticator;
 import io.knows.saturn.model.Media;
 import io.knows.saturn.model.User;
 import nl.nl2312.rxcupboard.RxCupboard;
@@ -94,6 +95,11 @@ public class DataModule {
                 .useAnnotations()
                 .build());
         return CupboardFactory.cupboard();
+    }
+
+    @Provides @Singleton
+    Authenticator provideAuthenticator(RxDatabase database, SharedPreferences preferences) {
+        return Authenticator.getInstance(database, preferences);
     }
 
     @Provides @Singleton

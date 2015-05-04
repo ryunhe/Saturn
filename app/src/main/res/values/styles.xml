@@ -30,7 +30,7 @@
         <item name="android:gravity">center</item>
     </style>
     <style name="SaturnIcon.Large" parent="SaturnIcon">
-        <item name="android:textSize">26sp</item>
+        <item name="android:textSize">28sp</item>
     </style>
     <style name="SaturnIcon.ActionButton" parent="SaturnButton.ActionButton">
         <item name="android:textSize">24sp</item>

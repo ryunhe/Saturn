@@ -8,13 +8,14 @@ import io.knows.saturn.fragment.ProfileFragment;
 /**
  * Created by ryun on 15-4-25.
  */
-public class ProfileActivity extends Activity {
+public class ProfileActivity extends MenuActivity {
     public static final String INTENT_KEY_USER = "user";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_frame);
+
+        mPageTitle.setText(R.string.title_profile);
 
         getSupportFragmentManager()
                 .beginTransaction()

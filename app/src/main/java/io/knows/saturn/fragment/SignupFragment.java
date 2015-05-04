@@ -49,6 +49,7 @@ import io.knows.saturn.activity.SchoolPickerActivity;
 import io.knows.saturn.activity.SignupActivity;
 import io.knows.saturn.activity.SubmitActivity;
 import io.knows.saturn.helper.FileHelper;
+import io.knows.saturn.model.Authenticator;
 import io.knows.saturn.model.Resource;
 import io.knows.saturn.model.User;
 import io.knows.saturn.model.renren.RennUser;
@@ -71,6 +72,8 @@ public class SignupFragment extends Fragment {
     UploadManager mUploadManager;
     @Inject
     SamuiService mSamuiService;
+    @Inject
+    Authenticator mAuthenticator;
 
     @InjectView(R.id.input_nickname)
     EditText mNicknameInput;
@@ -284,21 +287,22 @@ public class SignupFragment extends Fragment {
                 ? User.Gender.MALE
                 : User.Gender.FEMALE;
 
-        mSamuiService.updateProfile(nickname, gender.getCode(), birthday, hometown, school, null, null)
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(userEntityResponse -> {
-                    Toast.makeText(getActivity(), "保存成功", Toast.LENGTH_SHORT).show();
-                    if (null != mAvatarResource) {
-                        mSamuiService.createMedia(mAvatarResource.key)
+        if (null != mAvatarResource) {
+            mSamuiService.createMedia(mAvatarResource.key)
+                    .subscribeOn(Schedulers.io())
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .subscribe(mediaEntityResponse -> {
+                        Toast.makeText(getActivity(), "保存成功", Toast.LENGTH_SHORT).show();
+                        mSamuiService.updateProfile(nickname, gender.getCode(), birthday, hometown, school, null, null)
                                 .subscribeOn(Schedulers.io())
                                 .observeOn(AndroidSchedulers.mainThread())
-                                .subscribe(mediaEntityResponse -> {
-                                    Toast.makeText(getActivity(), "发布成功", Toast.LENGTH_SHORT).show();
+                                .subscribe(userEntityResponse -> {
+                                    Toast.makeText(getActivity(), "更新成功", Toast.LENGTH_SHORT).show();
+                                    mAuthenticator.saveUser(userEntityResponse.getEntity());
                                     getActivity().setResult(Activity.RESULT_OK);
                                     getActivity().finish();
                                 });
-                    }
-                });
+                    });
+        }
     }
 }

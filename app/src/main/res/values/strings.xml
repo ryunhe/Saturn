@@ -3,6 +3,7 @@
     <string name="title_signup">注册新用户</string>
     <string name="title_school_picker">选择学校</string>
     <string name="title_region_picker">选择地区</string>
+    <string name="title_profile">个人资料</string>
 
     <string name="drawer_item_home">主屏幕</string>
     <string name="drawer_item_exit">退出</string>

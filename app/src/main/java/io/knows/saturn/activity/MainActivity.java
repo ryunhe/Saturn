@@ -2,28 +2,30 @@ package io.knows.saturn.activity;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ImageView;
+import android.widget.TextView;
 
 import com.mikepenz.community_material_typeface_library.CommunityMaterial;
-import com.mikepenz.iconics.typeface.FontAwesome;
 import com.mikepenz.materialdrawer.Drawer;
 import com.mikepenz.materialdrawer.model.PrimaryDrawerItem;
 import com.mikepenz.materialdrawer.model.interfaces.IDrawerItem;
 import com.mikepenz.materialdrawer.model.interfaces.Nameable;
-import com.mikepenz.materialdrawer.util.KeyboardUtil;
 import com.renn.rennsdk.RennClient;
+import com.squareup.picasso.Picasso;
 
 import javax.inject.Inject;
 
-import butterknife.ButterKnife;
 import butterknife.InjectView;
 import io.knows.saturn.R;
 import io.knows.saturn.fragment.CardStackFragment;
-import io.knows.saturn.fragment.Fragment;
+import io.knows.saturn.model.Authenticator;
+import io.knows.saturn.model.User;
+import rx.android.schedulers.AndroidSchedulers;
+import rx.schedulers.Schedulers;
+import timber.log.Timber;
 
 /**
  * Created by ryun on 15-4-21.
@@ -31,14 +33,16 @@ import io.knows.saturn.fragment.Fragment;
 public class MainActivity extends Activity implements Drawer.OnDrawerItemClickListener, Drawer.OnDrawerListener {
     @Inject
     RennClient mRennClient;
+    @Inject
+    Authenticator mAuthenticator;
+    @Inject
+    Picasso mPicasso;
 
     @InjectView(R.id.toolbar)
     Toolbar mToolbar;
 
-    View mDrawerHeader;
-    ImageView mAvatarImage;
-
     Drawer.Result mDrawerResult;
+    User me;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -49,13 +53,23 @@ public class MainActivity extends Activity implements Drawer.OnDrawerItemClickLi
 
         setSupportActionBar(mToolbar);
 
-        mDrawerHeader = getLayoutInflater().inflate(R.layout.item_profile, null);
-        mAvatarImage = (ImageView) mDrawerHeader.findViewById(R.id.image_avatar);
+        View drawerHeader = getLayoutInflater().inflate(R.layout.item_profile, null);
+        ImageView avatarImage = (ImageView) drawerHeader.findViewById(R.id.image_avatar);
+        TextView nicknameText = (TextView) drawerHeader.findViewById(R.id.text_nickname);
+
+        drawerHeader.setOnClickListener(v -> startActivity(new Intent(getActivity(), ProfileActivity.class)));
+
+        mAuthenticator.getObservable()
+                .subscribe(auth -> {
+                    me = auth.getUser();
+                    mPicasso.load(me.cover).into(avatarImage);
+                    nicknameText.setText(me.nickname);
+                });
 
         mDrawerResult = new Drawer()
                 .withActivity(this)
                 .withToolbar(mToolbar)
-                .withHeader(mDrawerHeader)
+                .withHeader(drawerHeader)
                 .addDrawerItems(
                         new PrimaryDrawerItem().withName(R.string.drawer_item_home).withIcon(CommunityMaterial.Icon.cmd_clipboard_account),
                         new PrimaryDrawerItem().withName(R.string.drawer_item_exit).withIcon(CommunityMaterial.Icon.cmd_arrow_right_bold_hexagon_outline)

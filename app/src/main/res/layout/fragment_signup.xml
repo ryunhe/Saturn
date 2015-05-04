@@ -91,9 +91,9 @@
             <IconicsTextView
                 style="@style/SaturnIcon.Large"
                 android:id="@+id/button_add_avatar"
-                android:text="{cmd-plus-circle}"
-                android:layout_marginBottom="-16dp"
-                android:layout_marginRight="-16dp"
+                android:text="{cmd-camera}"
+                android:layout_marginBottom="-15dp"
+                android:layout_marginRight="-15dp"
                 android:layout_alignBottom="@+id/image_avatar"
                 android:layout_alignRight="@+id/image_avatar"
                 />

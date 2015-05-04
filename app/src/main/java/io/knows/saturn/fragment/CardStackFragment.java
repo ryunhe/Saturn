@@ -166,7 +166,9 @@ public class CardStackFragment extends Fragment {
 
             Media media = getItem(position);
 
-            mPicasso.load(media.resource.standard).into(holder.resourceImage);
+            mPicasso.load(media.resource.standard)
+                    .placeholder(R.drawable.content_default_pic)
+                    .into(holder.resourceImage);
 
             holder.primaryText.setText(String.format("%s, %d", media.user.nickname, media.user.age));
             holder.secondaryText.setText(String.format("%s, %s", media.user.school, media.user.hometown[media.user.hometown.length - 1]));
