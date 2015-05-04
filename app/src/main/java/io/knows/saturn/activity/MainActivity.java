@@ -23,6 +23,7 @@ import io.knows.saturn.R;
 import io.knows.saturn.fragment.CardStackFragment;
 import io.knows.saturn.model.Authenticator;
 import io.knows.saturn.model.User;
+import io.knows.saturn.service.SamuiService;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
 import timber.log.Timber;
@@ -31,6 +32,8 @@ import timber.log.Timber;
  * Created by ryun on 15-4-21.
  */
 public class MainActivity extends Activity implements Drawer.OnDrawerItemClickListener, Drawer.OnDrawerListener {
+    @Inject
+    SamuiService mSamuiService;
     @Inject
     RennClient mRennClient;
     @Inject
@@ -53,11 +56,12 @@ public class MainActivity extends Activity implements Drawer.OnDrawerItemClickLi
 
         setSupportActionBar(mToolbar);
 
+        // load profile
         View drawerHeader = getLayoutInflater().inflate(R.layout.item_profile, null);
+        drawerHeader.setOnClickListener(v -> startActivity(new Intent(getActivity(), ProfileActivity.class)));
+
         ImageView avatarImage = (ImageView) drawerHeader.findViewById(R.id.image_avatar);
         TextView nicknameText = (TextView) drawerHeader.findViewById(R.id.text_nickname);
-
-        drawerHeader.setOnClickListener(v -> startActivity(new Intent(getActivity(), ProfileActivity.class)));
 
         mAuthenticator.getObservable()
                 .subscribe(auth -> {
@@ -66,20 +70,29 @@ public class MainActivity extends Activity implements Drawer.OnDrawerItemClickLi
                     nicknameText.setText(me.nickname);
                 });
 
+        // load drawer
         mDrawerResult = new Drawer()
                 .withActivity(this)
                 .withToolbar(mToolbar)
                 .withHeader(drawerHeader)
                 .addDrawerItems(
-                        new PrimaryDrawerItem().withName(R.string.drawer_item_home).withIcon(CommunityMaterial.Icon.cmd_clipboard_account),
-                        new PrimaryDrawerItem().withName(R.string.drawer_item_exit).withIcon(CommunityMaterial.Icon.cmd_arrow_right_bold_hexagon_outline)
-                        )
+                        new PrimaryDrawerItem().withName(R.string.drawer_item_home).withIcon(CommunityMaterial.Icon.cmd_home),
+                        new PrimaryDrawerItem().withName(R.string.drawer_item_exit).withIcon(CommunityMaterial.Icon.cmd_power)
+                )
                 .withOnDrawerItemClickListener(this)
                 .withOnDrawerListener(this)
                 .withFireOnInitialOnClick(true)
                 .build();
 
         mDrawerResult.keyboardSupportEnabled(this, true);
+
+        // update profile
+        mSamuiService.getUser(mAuthenticator.getUserId())
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(userEntityResponse -> {
+                    mAuthenticator.saveUser(userEntityResponse.getEntity());
+                });
     }
 
     @Override
@@ -111,9 +124,6 @@ public class MainActivity extends Activity implements Drawer.OnDrawerItemClickLi
                     break;
 
             }
-
-
-
         }
     }
 

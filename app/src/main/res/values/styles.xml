@@ -34,6 +34,7 @@
     </style>
     <style name="SaturnIcon.ActionButton" parent="SaturnButton.ActionButton">
         <item name="android:textSize">24sp</item>
+        <item name="android:layout_width">@dimen/action_bar_height</item>
     </style>
     <style name="SaturnInput" parent="SaturnRow">
         <item name="android:textColorHint">@color/text_gray_light</item>
@@ -68,5 +69,25 @@
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">@dimen/row_height_normal</item>
         <item name="android:gravity">center_vertical</item>
+    </style>
+    <style name="SaturnImage">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">match_parent</item>
+        <item name="android:scaleType">centerCrop</item>
+        <item name="android:adjustViewBounds">true</item>
+    </style>
+    <style name="SaturnImage.CardView" parent="SaturnImage">
+        <item name="android:src">@drawable/content_default_pic</item>
+    </style>
+    <style name="SaturnText.CardView">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_alignParentBottom">true</item>
+        <item name="android:gravity">center_vertical</item>
+        <item name="android:padding">@dimen/item_margin</item>
+        <item name="android:background">@drawable/background_gradient_black</item>
+        <item name="android:minHeight">@dimen/row_height_normal</item>
+        <item name="android:textSize">@dimen/text_size_small</item>
+        <item name="android:textColor">@color/white_transparent</item>
     </style>
 </resources>

@@ -32,6 +32,7 @@ import io.knows.saturn.fragment.RegionPickerFragment;
 import io.knows.saturn.fragment.SchoolPickerFragment;
 import io.knows.saturn.helper.CupboardHelper;
 import io.knows.saturn.helper.GsonFieldConverterFactory;
+import io.knows.saturn.helper.StorageWrapper;
 import io.knows.saturn.helper.StringsFieldConverterFactory;
 import io.knows.saturn.model.Authenticator;
 import io.knows.saturn.model.Media;
@@ -98,8 +99,8 @@ public class DataModule {
     }
 
     @Provides @Singleton
-    Authenticator provideAuthenticator(RxDatabase database, SharedPreferences preferences) {
-        return Authenticator.getInstance(database, preferences);
+    Authenticator provideAuthenticator(StorageWrapper wrapper, SharedPreferences preferences) {
+        return Authenticator.getInstance(wrapper, preferences);
     }
 
     @Provides @Singleton
@@ -115,6 +116,11 @@ public class DataModule {
     @Provides @Singleton
     RxDatabase provideRxDatabase(Cupboard cupboard, SQLiteDatabase db) {
         return RxCupboard.with(cupboard, db);
+    }
+
+    @Provides @Singleton
+    StorageWrapper provideStorageWrapper(RxDatabase database) {
+        return new StorageWrapper(database);
     }
 
     @Provides @Singleton

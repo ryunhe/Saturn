@@ -23,13 +23,12 @@ import butterknife.ButterKnife;
 import butterknife.InjectView;
 import butterknife.OnClick;
 import io.knows.saturn.R;
-import io.knows.saturn.SaturnApp;
 import io.knows.saturn.activity.ProfileActivity;
+import io.knows.saturn.helper.StorageWrapper;
+import io.knows.saturn.model.Authenticator;
 import io.knows.saturn.model.Media;
-import io.knows.saturn.model.Model;
 import io.knows.saturn.model.User;
 import io.knows.saturn.service.SamuiService;
-import nl.nl2312.rxcupboard.RxDatabase;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
 
@@ -40,9 +39,11 @@ public class ProfileFragment extends Fragment {
     @Inject
     Picasso mPicasso;
     @Inject
-    RxDatabase mRxDatabase;
+    StorageWrapper mStorageWrapper;
     @Inject
     SamuiService mSamuiService;
+    @Inject
+    Authenticator mAuthenticator;
 
     @InjectView(R.id.viewpager_resource)
     ViewPager mPager;
@@ -54,6 +55,7 @@ public class ProfileFragment extends Fragment {
     TextView mSecondaryText;
 
     ResourcePagerAdapter mPagerAdapter;
+    String mUserId;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -72,9 +74,16 @@ public class ProfileFragment extends Fragment {
         mPager.setAdapter(mPagerAdapter);
 
         if (getActivity().getIntent().hasExtra(ProfileActivity.INTENT_KEY_USER)) {
-            String userId = getActivity().getIntent().getStringExtra(ProfileActivity.INTENT_KEY_USER);
-            Model.load(User.class, mRxDatabase, userId).subscribe(model -> {
-                User user = (User) model;
+            mUserId = getActivity().getIntent().getStringExtra(ProfileActivity.INTENT_KEY_USER);
+        } else {
+            mUserId = mAuthenticator.getUserId();
+        }
+
+        if (null != mUserId) {
+            mStorageWrapper.load(User.class, mUserId).subscribe(user -> {
+
+                ((ProfileActivity) getActivity()).setPageTitle(user.nickname);
+
                 mPrimaryText.setText(String.format("%s, %d", user.nickname, user.age));
                 mSecondaryText.setText(String.format("%s, %s", user.school, user.hometown[user.hometown.length - 1]));
 
@@ -95,7 +104,6 @@ public class ProfileFragment extends Fragment {
                                 mIndicator.setViewPager(mPager);
                             });
                 }
-
             });
         }
 

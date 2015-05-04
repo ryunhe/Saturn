@@ -47,6 +47,10 @@ public abstract class SubmitActivity extends Activity {
         }
     }
 
+    public void setPageTitle(String title) {
+        mPageTitle.setText(title);
+    }
+
     public void setOnPageSubmitListener(OnPageSubmitListener listener) {
         mOnSubmitListener = listener;
     }

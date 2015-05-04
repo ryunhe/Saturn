@@ -83,8 +83,7 @@
                 android:layout_height="@dimen/avatar_normal_size"
                 android:layout_margin="@dimen/activity_margin"
                 android:src="@drawable/anonymous_avatar"
-                android:scaleType="fitCenter"
-                android:adjustViewBounds="true"
+                android:scaleType="centerCrop"
                 app:riv_oval="false"
                 app:riv_corner_radius="@dimen/corner_radius"
                 />

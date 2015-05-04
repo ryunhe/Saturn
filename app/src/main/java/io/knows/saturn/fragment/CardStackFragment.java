@@ -15,23 +15,19 @@ import com.lorentzos.flingswipe.SwipeFlingAdapterView;
 import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import javax.inject.Inject;
 
 import butterknife.ButterKnife;
 import butterknife.InjectView;
 import butterknife.OnClick;
 import io.knows.saturn.R;
-import io.knows.saturn.SaturnApp;
 import io.knows.saturn.activity.CongratsActivity;
 import io.knows.saturn.activity.ProfileActivity;
 import io.knows.saturn.adapter.Adapter;
+import io.knows.saturn.helper.StorageWrapper;
 import io.knows.saturn.model.Media;
 import io.knows.saturn.response.MediaListResponse;
 import io.knows.saturn.service.SamuiService;
-import nl.nl2312.rxcupboard.RxDatabase;
 import rx.Observer;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
@@ -51,7 +47,7 @@ public class CardStackFragment extends Fragment {
     @Inject
     Picasso mPicasso;
     @Inject
-    RxDatabase mRxDatabase;
+    StorageWrapper mStorageWrapper;
 
     MediaListAdapter mListAdapter;
     static final int PAGE_CONGRATS = 1;
@@ -166,18 +162,22 @@ public class CardStackFragment extends Fragment {
 
             Media media = getItem(position);
 
-            mPicasso.load(media.resource.standard)
-                    .placeholder(R.drawable.content_default_pic)
-                    .into(holder.resourceImage);
-
+            holder.contentText.setText(media.content);
             holder.primaryText.setText(String.format("%s, %d", media.user.nickname, media.user.age));
             holder.secondaryText.setText(String.format("%s, %s", media.user.school, media.user.hometown[media.user.hometown.length - 1]));
             holder.countsText.setText(String.format("%d", media.user.counts.media));
+
+            mPicasso.load(media.resource.standard)
+                    .placeholder(R.drawable.content_default_pic)
+                    .into(holder.resourceImage);
 
             return convertView;
         }
 
         class ViewHolder {
+            @InjectView(R.id.text_content)
+            public TextView contentText;
+
             @InjectView(R.id.text_primary)
             public TextView primaryText;
 
@@ -233,7 +233,7 @@ public class CardStackFragment extends Fragment {
                                                     mDataList.add(media);
 
                                                     // Store object
-                                                    media.user.save(mRxDatabase);
+                                                    media.user.save(mStorageWrapper);
                                                 }
 
                                                 @Override

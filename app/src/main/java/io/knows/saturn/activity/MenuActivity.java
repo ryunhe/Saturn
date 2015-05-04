@@ -42,4 +42,8 @@ public abstract class MenuActivity extends Activity {
 
     }
 
+    public void setPageTitle(String title) {
+        mPageTitle.setText(title);
+    }
+
 }

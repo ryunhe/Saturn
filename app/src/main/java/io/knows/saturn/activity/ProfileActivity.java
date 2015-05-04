@@ -15,8 +15,6 @@ public class ProfileActivity extends MenuActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        mPageTitle.setText(R.string.title_profile);
-
         getSupportFragmentManager()
                 .beginTransaction()
                 .replace(R.id.fragment_frame, new ProfileFragment())

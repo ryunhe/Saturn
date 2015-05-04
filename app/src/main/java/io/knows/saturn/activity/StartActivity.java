@@ -5,16 +5,11 @@ import android.os.Bundle;
 
 import com.renn.rennsdk.RennClient;
 
-import java.io.IOException;
-import java.io.InputStream;
-
 import javax.inject.Inject;
 
 import io.knows.saturn.R;
 import io.knows.saturn.fragment.AuthFragment;
-import io.knows.saturn.model.Region;
-import nl.nl2312.rxcupboard.RxDatabase;
-import nl.qbusict.cupboard.DatabaseCompartment;
+import io.knows.saturn.model.Authenticator;
 
 /**
  * Created by ryun on 15-4-25.
@@ -22,6 +17,8 @@ import nl.qbusict.cupboard.DatabaseCompartment;
 public class StartActivity extends Activity {
     @Inject
     RennClient mRennClient;
+    @Inject
+    Authenticator mAuthenticator;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -30,7 +27,7 @@ public class StartActivity extends Activity {
 
         inject();
 
-        if (mRennClient.isLogin()) {
+        if (mAuthenticator.isLoggedIn() && mRennClient.isLogin()) {
             start();
         } else {
             getSupportFragmentManager()

@@ -5,66 +5,77 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_margin="@dimen/activity_margin"
+    android:background="@color/gray_dark"
     card_view:cardCornerRadius="@dimen/corner_radius"
     card_view:cardPreventCornerOverlap="false"
+    card_view:cardElevation="1dp"
     >
 
-    <RelativeLayout
+    <LinearLayout
         android:id="@+id/view_card"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:orientation="vertical"
         >
 
-        <com.makeramen.roundedimageview.RoundedImageView
-            xmlns:app="http://schemas.android.com/apk/res-auto"
-            android:id="@+id/image_resource"
+        <io.knows.saturn.widget.SquaredRelativeLayout
+            android:id="@+id/image_resource_frame"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:scaleType="fitCenter"
-            android:adjustViewBounds="true"
-            android:src="@drawable/content_default_pic"
-            app:riv_oval="false"
-            app:riv_corner_radius="@dimen/corner_radius"
-            />
+            android:layout_height="match_parent"
+            android:layout_marginBottom="-2dp"
+            >
+
+            <com.makeramen.roundedimageview.RoundedImageView
+                xmlns:app="http://schemas.android.com/apk/res-auto"
+                style="@style/SaturnImage.CardView"
+                android:id="@+id/image_resource"
+                app:riv_oval="false"
+                app:riv_corner_radius="@dimen/corner_radius"
+                />
+
+            <TextView
+                style="@style/SaturnText.CardView"
+                android:id="@+id/text_content"
+                />
+
+            <IconicsTextView
+                android:alpha="0"
+                android:id="@+id/indicator_item_swipe_left"
+                android:text="{cmd-heart-outline}"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="@dimen/activity_margin"
+                android:layout_centerVertical="true"
+                android:textColor="@color/red"
+                android:textSize="80sp"
+                />
+
+            <IconicsTextView
+                android:alpha="0"
+                android:id="@+id/indicator_item_swipe_right"
+                android:text="{cmd-close-circle-outline}"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="@dimen/activity_margin"
+                android:layout_centerVertical="true"
+                android:layout_alignParentRight="true"
+                android:textColor="@color/text_black"
+                android:textSize="80sp"
+                />
+        </io.knows.saturn.widget.SquaredRelativeLayout>
 
         <FrameLayout
             android:layout_width="match_parent"
             android:layout_height="70dp"
-            android:layout_marginTop="-2dp"
-            android:layout_below="@id/image_resource"
             android:background="@color/white"
             >
-
             <include layout="@layout/basic_profile" />
 
         </FrameLayout>
 
 
-        <IconicsTextView
-            android:alpha="0"
-            android:id="@+id/indicator_item_swipe_left"
-            android:text="{cmd-heart-outline}"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_margin="@dimen/activity_margin"
-            android:layout_centerVertical="true"
-            android:textColor="@color/red"
-            android:textSize="80sp"
-            />
 
-        <IconicsTextView
-            android:alpha="0"
-            android:id="@+id/indicator_item_swipe_right"
-            android:text="{cmd-close-circle-outline}"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_margin="@dimen/activity_margin"
-            android:layout_centerVertical="true"
-            android:layout_alignParentRight="true"
-            android:textColor="@color/text_black"
-            android:textSize="80sp"
-            />
 
-    </RelativeLayout>
+    </LinearLayout>
 
 </io.knows.saturn.widget.MediaCardView>

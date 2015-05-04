@@ -2,10 +2,9 @@ package io.knows.saturn.model;
 
 import android.content.SharedPreferences;
 
-import nl.nl2312.rxcupboard.RxDatabase;
+import io.knows.saturn.helper.StorageWrapper;
 import rx.Observable;
 import rx.android.schedulers.AndroidSchedulers;
-import rx.functions.Func1;
 import rx.schedulers.Schedulers;
 import rx.subjects.PublishSubject;
 
@@ -15,31 +14,29 @@ import rx.subjects.PublishSubject;
 public class Authenticator {
     User mUser = new User();
     final PublishSubject<Authenticator> mSubject = PublishSubject.create();
-    final RxDatabase mDatabase;
+    final StorageWrapper mStorage;
     final SharedPreferences mPreferences;
     static Authenticator mInstance;
 
-    private Authenticator(RxDatabase database, SharedPreferences preferences) {
-        mDatabase = database;
+    private Authenticator(StorageWrapper storage, SharedPreferences preferences) {
+        mStorage = storage;
         mPreferences = preferences;
 
-        String userId = mPreferences.getString(Preferences.AUTHENTICATOR_USER_ID.toString(), null);
-
-        if (null != userId) {
-            mDatabase.query(User.class, "id = ?", userId)
-                    .subscribeOn(Schedulers.io())
+        if (null != getUserId()) {
+            mStorage.load(User.class, getUserId()).subscribeOn(Schedulers.io())
                     .observeOn(AndroidSchedulers.mainThread())
-                    .subscribe(user -> {
-                        mUser = user;
-                        mSubject.onNext(this);
-                    });
+                    .subscribe(this::setUser);
         }
     }
 
     public void saveUser(User user) {
-        user.save(mDatabase);
+        user.save(mStorage);
         mPreferences.edit().putString(Preferences.AUTHENTICATOR_USER_ID.toString(), user.id).apply();
 
+        setUser(user);
+    }
+
+    public void setUser(User user) {
         mUser = user;
         mSubject.onNext(this);
     }
@@ -48,17 +45,21 @@ public class Authenticator {
         return mUser;
     }
 
+    public String getUserId() {
+        return mPreferences.getString(Preferences.AUTHENTICATOR_USER_ID.toString(), null);
+    }
+
     public Boolean isLoggedIn() {
-        return null != mUser.id;
+        return null != getUserId();
     }
 
     public Observable<Authenticator> getObservable() {
         return mSubject.asObservable().startWith(this);
     }
 
-    public static Authenticator getInstance(RxDatabase database, SharedPreferences preferences) {
+    public static Authenticator getInstance(StorageWrapper storage, SharedPreferences preferences) {
         if (mInstance == null) {
-            mInstance = new Authenticator(database, preferences);
+            mInstance = new Authenticator(storage, preferences);
         }
         return mInstance;
     }

@@ -1,13 +1,6 @@
 package io.knows.saturn.model;
 
-import nl.nl2312.rxcupboard.RxDatabase;
-import rx.Observable;
-import rx.Observer;
-import rx.Subscriber;
-import rx.exceptions.OnErrorNotImplementedException;
-import rx.functions.Action0;
-import rx.functions.Action1;
-import timber.log.Timber;
+import io.knows.saturn.helper.StorageWrapper;
 
 /**
  * Created by ryun on 15-4-20.
@@ -16,6 +9,7 @@ public class Media extends Model {
     public Resource resource;
     public User user;
     public String userId;
+    public String content;
 
     public class Resource {
         public String standard;
@@ -23,9 +17,9 @@ public class Media extends Model {
         public String thumbnail;
     }
 
-    public void save(RxDatabase db) {
+    public void save(StorageWrapper wrapper) {
         userId = user.id;
-        super.save(db);
+        super.save(wrapper);
     }
 
 
