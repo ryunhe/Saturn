@@ -1,15 +1,9 @@
 package io.knows.saturn.activity;
 
 import android.os.Bundle;
-import android.support.v7.widget.Toolbar;
-import android.view.View;
-import android.widget.TextView;
 
-import butterknife.InjectView;
-import butterknife.OnClick;
 import io.knows.saturn.R;
 import io.knows.saturn.fragment.RegionPickerFragment;
-import io.knows.saturn.fragment.SchoolPickerFragment;
 
 /**
  * Created by ryun on 15-4-25.
@@ -23,7 +17,7 @@ public class RegionPickerActivity extends SubmitActivity {
 
         getSupportFragmentManager()
                 .beginTransaction()
-                .replace(R.id.fragment_frame, new RegionPickerFragment())
+                .replace(R.id.frame_fragment, new RegionPickerFragment())
                 .commit();
 
     }

@@ -26,20 +26,18 @@ import io.knows.saturn.activity.ProfileActivity;
 import io.knows.saturn.adapter.Adapter;
 import io.knows.saturn.helper.StorageWrapper;
 import io.knows.saturn.model.Media;
+import io.knows.saturn.model.Resource;
 import io.knows.saturn.response.MediaListResponse;
 import io.knows.saturn.service.SamuiService;
 import rx.Observer;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
 import timber.log.Timber;
-import tr.xip.errorview.ErrorView;
 
 /**
  * Created by ryun on 15-4-22.
  */
 public class CardStackFragment extends Fragment {
-    @InjectView(R.id.error_view)
-    ErrorView mErrorView;
     @InjectView(R.id.container)
     SwipeFlingAdapterView mFlingContainer;
     @Inject
@@ -56,6 +54,7 @@ public class CardStackFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
         mListAdapter = new MediaListAdapter(getActivity());
     }
 
@@ -74,8 +73,6 @@ public class CardStackFragment extends Fragment {
             i.putExtra(ProfileActivity.INTENT_KEY_USER, mListAdapter.getItem(0).user.id);
             startActivityForResult(i, PAGE_PROFILE);
         });
-
-        mErrorView.setOnRetryListener(mListAdapter::onRetry);
 
         return layout;
     }
@@ -141,7 +138,6 @@ public class CardStackFragment extends Fragment {
 
     class MediaListAdapter extends Adapter<Media> {
         private boolean fetching = false;
-        private boolean retrying = false;
 
         public MediaListAdapter(Activity activity) {
             super(activity);
@@ -167,7 +163,7 @@ public class CardStackFragment extends Fragment {
             holder.secondaryText.setText(String.format("%s, %s", media.user.school, media.user.hometown[media.user.hometown.length - 1]));
             holder.countsText.setText(String.format("%d", media.user.counts.media));
 
-            mPicasso.load(media.resource.standard)
+            mPicasso.load(media.resource.getUrl(Resource.ResourceSize.STANDARD))
                     .placeholder(R.drawable.content_default_pic)
                     .into(holder.resourceImage);
 
@@ -209,16 +205,12 @@ public class CardStackFragment extends Fragment {
                         .subscribe(new Observer<MediaListResponse>() {
                             @Override
                             public void onCompleted() {
-                                mErrorView.setVisibility(View.INVISIBLE);
-                                retrying = false;
 
-                                fetching = false;
                             }
 
                             @Override
                             public void onError(Throwable e) {
-                                mErrorView.setVisibility(View.VISIBLE);
-                                retrying = false;
+
                             }
 
                             @Override
@@ -226,11 +218,12 @@ public class CardStackFragment extends Fragment {
                                 for (Media media : mediaListResponse.getResult()) {
 
                                     // Pre-load resource
-                                    mPicasso.load(media.resource.standard)
+                                    mPicasso.load(media.resource.getUrl(Resource.ResourceSize.STANDARD))
                                             .fetch(new Callback() {
                                                 @Override
                                                 public void onSuccess() {
                                                     mDataList.add(media);
+                                                    mListAdapter.notifyDataSetChanged();
 
                                                     // Store object
                                                     media.user.save(mStorageWrapper);
@@ -243,19 +236,12 @@ public class CardStackFragment extends Fragment {
                                             });
                                 }
 
-                                mListAdapter.notifyDataSetChanged();
+                                fetching = false;
 
                             }
                         });
             }
         }
-
-        public void onRetry() {
-            if (!retrying) {
-                retrying = true;
-                fetching = false;
-                doFetch();
-            }
-        }
     }
+
 }

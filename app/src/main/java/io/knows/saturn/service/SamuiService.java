@@ -1,6 +1,5 @@
 package io.knows.saturn.service;
 
-import io.knows.saturn.model.Resource;
 import io.knows.saturn.response.AuthResponse;
 import io.knows.saturn.response.MatchedResponse;
 import io.knows.saturn.response.MediaEntityResponse;

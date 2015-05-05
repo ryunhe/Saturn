@@ -81,7 +81,7 @@
                 android:id="@+id/image_avatar"
                 android:layout_width="@dimen/avatar_normal_size"
                 android:layout_height="@dimen/avatar_normal_size"
-                android:layout_margin="@dimen/activity_margin"
+                android:layout_margin="@dimen/item_margin"
                 android:src="@drawable/anonymous_avatar"
                 android:scaleType="centerCrop"
                 app:riv_oval="false"

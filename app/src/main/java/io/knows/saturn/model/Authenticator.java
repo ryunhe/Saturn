@@ -1,6 +1,8 @@
 package io.knows.saturn.model;
 
-import android.content.SharedPreferences;
+import android.support.annotation.Nullable;
+
+import com.github.pwittchen.prefser.library.Prefser;
 
 import io.knows.saturn.helper.StorageWrapper;
 import rx.Observable;
@@ -15,12 +17,12 @@ public class Authenticator {
     User mUser = new User();
     final PublishSubject<Authenticator> mSubject = PublishSubject.create();
     final StorageWrapper mStorage;
-    final SharedPreferences mPreferences;
+    final Prefser mPrefser;
     static Authenticator mInstance;
 
-    private Authenticator(StorageWrapper storage, SharedPreferences preferences) {
+    private Authenticator(StorageWrapper storage, Prefser prefser) {
         mStorage = storage;
-        mPreferences = preferences;
+        mPrefser = prefser;
 
         if (null != getUserId()) {
             mStorage.load(User.class, getUserId()).subscribeOn(Schedulers.io())
@@ -31,7 +33,7 @@ public class Authenticator {
 
     public void saveUser(User user) {
         user.save(mStorage);
-        mPreferences.edit().putString(Preferences.AUTHENTICATOR_USER_ID.toString(), user.id).apply();
+        mPrefser.put(Preferences.AUTHENTICATOR_USER_ID.toString(), user.id);
 
         setUser(user);
     }
@@ -45,8 +47,9 @@ public class Authenticator {
         return mUser;
     }
 
+    @Nullable
     public String getUserId() {
-        return mPreferences.getString(Preferences.AUTHENTICATOR_USER_ID.toString(), null);
+        return mPrefser.get(Preferences.AUTHENTICATOR_USER_ID.toString(), String.class, null);
     }
 
     public Boolean isLoggedIn() {
@@ -57,9 +60,9 @@ public class Authenticator {
         return mSubject.asObservable().startWith(this);
     }
 
-    public static Authenticator getInstance(StorageWrapper storage, SharedPreferences preferences) {
+    public static Authenticator getInstance(StorageWrapper storage, Prefser prefser) {
         if (mInstance == null) {
-            mInstance = new Authenticator(storage, preferences);
+            mInstance = new Authenticator(storage, prefser);
         }
         return mInstance;
     }

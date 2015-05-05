@@ -17,7 +17,7 @@ public class CropperActivity extends Activity {
 
         getSupportFragmentManager()
                 .beginTransaction()
-                .replace(R.id.fragment_frame, new CropperFragment())
+                .replace(R.id.frame_fragment, new CropperFragment())
                 .commit();
     }
 }

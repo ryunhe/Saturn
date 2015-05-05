@@ -1,10 +1,16 @@
 package io.knows.saturn.fragment;
 
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
+import android.text.Spannable;
+import android.text.SpannableString;
+import android.text.SpannableStringBuilder;
+import android.text.style.AbsoluteSizeSpan;
+import android.text.style.StyleSpan;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,6 +21,9 @@ import com.squareup.picasso.Picasso;
 import com.viewpagerindicator.CirclePageIndicator;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.List;
 
 import javax.inject.Inject;
@@ -27,8 +36,11 @@ import io.knows.saturn.activity.ProfileActivity;
 import io.knows.saturn.helper.StorageWrapper;
 import io.knows.saturn.model.Authenticator;
 import io.knows.saturn.model.Media;
+import io.knows.saturn.model.Resource;
 import io.knows.saturn.model.User;
 import io.knows.saturn.service.SamuiService;
+import io.knows.saturn.widget.RoundedBackgroundSpan;
+import io.knows.saturn.widget.TagView;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
 
@@ -53,6 +65,15 @@ public class ProfileFragment extends Fragment {
     TextView mPrimaryText;
     @InjectView(R.id.text_secondary)
     TextView mSecondaryText;
+    @InjectView(R.id.group_stats)
+    View mStatsGroup;
+
+    @InjectView(R.id.tags_book)
+    TagView mBookTags;
+    @InjectView(R.id.tags_music)
+    TagView mMusicTags;
+    @InjectView(R.id.tags_movie)
+    TagView mMovieTags;
 
     ResourcePagerAdapter mPagerAdapter;
     String mUserId;
@@ -72,6 +93,7 @@ public class ProfileFragment extends Fragment {
         inject(layout);
 
         mPager.setAdapter(mPagerAdapter);
+        mStatsGroup.setVisibility(View.GONE);
 
         if (getActivity().getIntent().hasExtra(ProfileActivity.INTENT_KEY_USER)) {
             mUserId = getActivity().getIntent().getStringExtra(ProfileActivity.INTENT_KEY_USER);
@@ -87,7 +109,7 @@ public class ProfileFragment extends Fragment {
                 mPrimaryText.setText(String.format("%s, %d", user.nickname, user.age));
                 mSecondaryText.setText(String.format("%s, %s", user.school, user.hometown[user.hometown.length - 1]));
 
-                mPagerAdapter.addData(user.cover);
+                mPagerAdapter.addData(user.cover.getUrl(Resource.ResourceSize.STANDARD));
                 mPagerAdapter.notifyDataSetChanged();
 
                 if (user.counts.media > 1) {
@@ -96,13 +118,27 @@ public class ProfileFragment extends Fragment {
                             .observeOn(AndroidSchedulers.mainThread())
                             .subscribe(mediaListResponse -> {
                                 for (Media media : mediaListResponse.getResult()) {
-                                    if (!user.cover.equals(media.resource.standard)) {
-                                        mPagerAdapter.addData(media.resource.standard);
+                                    if (!user.cover.identity.equals(media.resource.identity)) {
+                                        mPagerAdapter.addData(media.resource.getUrl(Resource.ResourceSize.STANDARD));
                                     }
                                 }
                                 mPagerAdapter.notifyDataSetChanged();
                                 mIndicator.setViewPager(mPager);
                             });
+                }
+
+                if (null != user.likes) {
+                    int tagColor = getResources().getColor(R.color.gray_light);
+                    HashMap<User.LikeCategory, LinkedList<TagView.Tag>> tags = new HashMap<>();
+                    tags.put(User.LikeCategory.BOOK, new LinkedList<>());
+                    tags.put(User.LikeCategory.MUSIC, new LinkedList<>());
+                    tags.put(User.LikeCategory.MOVIE, new LinkedList<>());
+                    for (User.Like like : user.likes) {
+                        tags.get(like.category).add(new TagView.Tag(like.name, tagColor));
+                    }
+                    mBookTags.setTags(tags.get(User.LikeCategory.BOOK), " ");
+                    mMusicTags.setTags(tags.get(User.LikeCategory.MUSIC), " ");
+                    mMovieTags.setTags(tags.get(User.LikeCategory.MOVIE), " ");
                 }
             });
         }

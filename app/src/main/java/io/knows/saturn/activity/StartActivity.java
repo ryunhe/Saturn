@@ -32,7 +32,7 @@ public class StartActivity extends Activity {
         } else {
             getSupportFragmentManager()
                     .beginTransaction()
-                    .replace(R.id.fragment_frame, new AuthFragment())
+                    .replace(R.id.frame_fragment, new AuthFragment())
                     .commit();
         }
     }

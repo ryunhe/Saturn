@@ -2,15 +2,7 @@ package io.knows.saturn.activity;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v7.widget.Toolbar;
-import android.view.View;
-import android.widget.Button;
-import android.widget.FrameLayout;
-import android.widget.TextView;
 
-import butterknife.ButterKnife;
-import butterknife.InjectView;
-import butterknife.OnClick;
 import io.knows.saturn.R;
 import io.knows.saturn.fragment.SignupFragment;
 
@@ -29,7 +21,7 @@ public class SignupActivity extends SubmitActivity {
 
         getSupportFragmentManager()
                 .beginTransaction()
-                .replace(R.id.fragment_frame, new SignupFragment())
+                .replace(R.id.frame_fragment, new SignupFragment())
                 .commit();
 
     }

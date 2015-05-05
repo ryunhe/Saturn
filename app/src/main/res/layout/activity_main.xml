@@ -10,9 +10,31 @@
         android:layout_height="?attr/actionBarSize"
         />
 
+    <LinearLayout
+        android:id="@+id/alert_offline"
+        android:layout_width="match_parent"
+        android:layout_height="?attr/actionBarSize"
+        android:background="@color/pink_red"
+        android:orientation="horizontal"
+        android:visibility="invisible"
+        android:gravity="center"
+        >
+        <IconicsTextView
+            style="@style/SaturnIcon"
+            android:textColor="@color/white_transparent"
+            android:text="{cmd-alert-circle}"
+            />
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/white_transparent"
+            android:text="@string/alert_status_offline"
+            />
+    </LinearLayout>
+
     <FrameLayout
         android:layout_below="@id/toolbar"
-        android:id="@+id/fragment_frame"
+        android:id="@+id/frame_fragment"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         />

@@ -1,11 +1,7 @@
 package io.knows.saturn.activity;
 
 import android.os.Bundle;
-import android.support.v7.widget.Toolbar;
-import android.widget.TextView;
 
-import butterknife.InjectView;
-import butterknife.OnClick;
 import io.knows.saturn.R;
 import io.knows.saturn.fragment.SchoolPickerFragment;
 
@@ -21,7 +17,7 @@ public class SchoolPickerActivity extends SubmitActivity {
 
         getSupportFragmentManager()
                 .beginTransaction()
-                .replace(R.id.fragment_frame, new SchoolPickerFragment())
+                .replace(R.id.frame_fragment, new SchoolPickerFragment())
                 .commit();
 
     }

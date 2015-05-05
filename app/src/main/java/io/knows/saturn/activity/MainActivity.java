@@ -1,5 +1,6 @@
 package io.knows.saturn.activity;
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
@@ -8,20 +9,27 @@ import android.widget.AdapterView;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.github.pwittchen.networkevents.library.NetworkEvents;
+import com.github.pwittchen.networkevents.library.event.ConnectivityChanged;
 import com.mikepenz.community_material_typeface_library.CommunityMaterial;
 import com.mikepenz.materialdrawer.Drawer;
 import com.mikepenz.materialdrawer.model.PrimaryDrawerItem;
 import com.mikepenz.materialdrawer.model.interfaces.IDrawerItem;
 import com.mikepenz.materialdrawer.model.interfaces.Nameable;
 import com.renn.rennsdk.RennClient;
+import com.squareup.otto.Bus;
+import com.squareup.otto.Subscribe;
 import com.squareup.picasso.Picasso;
 
 import javax.inject.Inject;
 
 import butterknife.InjectView;
+import de.keyboardsurfer.android.widget.crouton.Crouton;
+import de.keyboardsurfer.android.widget.crouton.Style;
 import io.knows.saturn.R;
 import io.knows.saturn.fragment.CardStackFragment;
 import io.knows.saturn.model.Authenticator;
+import io.knows.saturn.model.Resource;
 import io.knows.saturn.model.User;
 import io.knows.saturn.service.SamuiService;
 import rx.android.schedulers.AndroidSchedulers;
@@ -43,13 +51,22 @@ public class MainActivity extends Activity implements Drawer.OnDrawerItemClickLi
 
     @InjectView(R.id.toolbar)
     Toolbar mToolbar;
+    @InjectView(R.id.alert_offline)
+    View mOfflineAlert;
 
     Drawer.Result mDrawerResult;
     User me;
 
+    Bus mBus;
+    NetworkEvents mNetworkEvents;
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        mBus = new Bus();
+        mNetworkEvents = new NetworkEvents(this, mBus);
 
         setContentView(R.layout.activity_main);
         inject();
@@ -66,7 +83,7 @@ public class MainActivity extends Activity implements Drawer.OnDrawerItemClickLi
         mAuthenticator.getObservable()
                 .subscribe(auth -> {
                     me = auth.getUser();
-                    mPicasso.load(me.cover).into(avatarImage);
+                    mPicasso.load(me.cover.getUrl(Resource.ResourceSize.THUMBNAIL)).into(avatarImage);
                     nicknameText.setText(me.nickname);
                 });
 
@@ -90,9 +107,7 @@ public class MainActivity extends Activity implements Drawer.OnDrawerItemClickLi
         mSamuiService.getUser(mAuthenticator.getUserId())
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(userEntityResponse -> {
-                    mAuthenticator.saveUser(userEntityResponse.getEntity());
-                });
+                .subscribe(userEntityResponse -> mAuthenticator.saveUser(userEntityResponse.getEntity()));
     }
 
     @Override
@@ -113,7 +128,7 @@ public class MainActivity extends Activity implements Drawer.OnDrawerItemClickLi
                 case 0:
                     getSupportFragmentManager()
                             .beginTransaction()
-                            .replace(R.id.fragment_frame, new CardStackFragment())
+                            .replace(R.id.frame_fragment, new CardStackFragment())
                             .commit();
                     break;
                 case 1:
@@ -135,5 +150,33 @@ public class MainActivity extends Activity implements Drawer.OnDrawerItemClickLi
     @Override
     public void onDrawerClosed(View view) {
 
+    }
+
+    @Subscribe
+    public void onConnectivityChanged(ConnectivityChanged event) {
+        Timber.d(event.getConnectivityStatus().toString());
+        switch (event.getConnectivityStatus()) {
+            case WIFI_CONNECTED_HAS_NO_INTERNET:
+            case OFFLINE:
+                mOfflineAlert.setVisibility(View.VISIBLE);
+                break;
+            default:
+                mOfflineAlert.setVisibility(View.INVISIBLE);
+                break;
+        }
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        mBus.register(this);
+        mNetworkEvents.register();
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        mBus.unregister(this);
+        mNetworkEvents.unregister();
     }
 }

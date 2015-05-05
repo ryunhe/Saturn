@@ -1,66 +1,43 @@
 <?xml version="1.0" encoding="utf-8"?>
-
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:orientation="vertical"
-    android:background="@color/white">
-
-    <io.knows.saturn.widget.SquaredRelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        >
-        <android.support.v4.view.ViewPager
-            android:id="@+id/viewpager_resource"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            />
-        <com.viewpagerindicator.CirclePageIndicator
-            android:id="@+id/indicator_resource"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_alignBottom="@+id/viewpager_resource"
-            android:layout_centerHorizontal="true"
-            android:layout_marginBottom="@dimen/item_margin_small"
-            android:padding="@dimen/item_margin"
-            app:radius="@dimen/item_margin_small"
-            app:fillColor="@color/orange"
-            app:pageColor="@color/gray_transparent"
-            app:strokeWidth="0dp"
-            />
-    </io.knows.saturn.widget.SquaredRelativeLayout>
+    android:layout_height="match_parent"
+    >
 
     <LinearLayout
-        xmlns:android="http://schemas.android.com/apk/res/android"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:padding="@dimen/item_margin"
-        >
+        android:orientation="vertical"
+        android:background="@color/white">
 
-        <LinearLayout
-            xmlns:android="http://schemas.android.com/apk/res/android"
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:orientation="vertical"
+        <io.knows.saturn.widget.SquaredRelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
             >
-
-            <TextView
-                android:id="@+id/text_primary"
+            <android.support.v4.view.ViewPager
+                android:id="@+id/viewpager_resource"
                 android:layout_width="match_parent"
-                android:text="{primary}"
-                style="@style/SaturnText.Large"
+                android:layout_height="match_parent"
                 />
-
-            <TextView
-                android:id="@+id/text_secondary"
+            <com.viewpagerindicator.CirclePageIndicator
+                android:id="@+id/indicator_resource"
                 android:layout_width="match_parent"
-                android:layout_marginTop="@dimen/item_margin_small"
-                android:text="{secondary}"
-                style="@style/SaturnText.Small"
+                android:layout_height="wrap_content"
+                android:layout_alignBottom="@+id/viewpager_resource"
+                android:layout_centerHorizontal="true"
+                android:padding="@dimen/item_margin"
+                app:radius="@dimen/indicator_radius"
+                app:fillColor="@color/orange"
+                app:pageColor="@color/gray_transparent"
+                app:strokeWidth="0dp"
                 />
-        </LinearLayout>
+        </io.knows.saturn.widget.SquaredRelativeLayout>
+
+        <include layout="@layout/profile_basic" />
+
+        <include layout="@layout/profile_likes" />
+
     </LinearLayout>
-</LinearLayout>
+</ScrollView>

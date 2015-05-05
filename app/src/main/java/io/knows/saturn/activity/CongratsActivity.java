@@ -2,11 +2,9 @@ package io.knows.saturn.activity;
 
 import android.graphics.Color;
 import android.os.Bundle;
-import android.support.v4.app.FragmentActivity;
 
 import com.faradaj.blurbehind.BlurBehind;
 
-import butterknife.ButterKnife;
 import io.knows.saturn.R;
 import io.knows.saturn.fragment.CongratsFragment;
 
@@ -26,7 +24,7 @@ public class CongratsActivity extends Activity {
 
         getSupportFragmentManager()
                 .beginTransaction()
-                .replace(R.id.fragment_frame, new CongratsFragment())
+                .replace(R.id.frame_fragment, new CongratsFragment())
                 .commit();
     }
 }

@@ -17,7 +17,7 @@ public class ProfileActivity extends MenuActivity {
 
         getSupportFragmentManager()
                 .beginTransaction()
-                .replace(R.id.fragment_frame, new ProfileFragment())
+                .replace(R.id.frame_fragment, new ProfileFragment())
                 .commit();
     }
 }

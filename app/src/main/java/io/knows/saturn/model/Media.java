@@ -10,17 +10,10 @@ public class Media extends Model {
     public User user;
     public String userId;
     public String content;
-
-    public class Resource {
-        public String standard;
-        public String medium;
-        public String thumbnail;
-    }
+    public Double[] location;
 
     public void save(StorageWrapper wrapper) {
         userId = user.id;
         super.save(wrapper);
     }
-
-
 }

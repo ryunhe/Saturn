@@ -202,7 +202,6 @@ public class SignupFragment extends Fragment {
                 .subscribe(stringResponse -> {
                     mUploadManager.put(filePath, null, stringResponse.getString(), (key, info, response) -> {
                         try {
-                            Timber.d(response.optString("key"));
                             mAvatarResource = new Resource(response.getString("key"));
                             mPicasso.load(mAvatarResource.getUrl(Resource.ResourceSize.THUMBNAIL))
                                     .into(mAvatarImage);
@@ -288,7 +287,7 @@ public class SignupFragment extends Fragment {
                 : User.Gender.FEMALE;
 
         if (null != mAvatarResource) {
-            mSamuiService.createMedia(mAvatarResource.key)
+            mSamuiService.createMedia(mAvatarResource.identity)
                     .subscribeOn(Schedulers.io())
                     .observeOn(AndroidSchedulers.mainThread())
                     .subscribe(mediaEntityResponse -> {

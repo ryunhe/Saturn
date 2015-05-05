@@ -4,10 +4,13 @@ import android.app.Application;
 import android.content.SharedPreferences;
 import android.database.sqlite.SQLiteDatabase;
 
+import com.github.pwittchen.networkevents.library.NetworkEvents;
+import com.github.pwittchen.prefser.library.Prefser;
 import com.google.gson.Gson;
 import com.qiniu.android.storage.UploadManager;
 import com.squareup.okhttp.Cache;
 import com.squareup.okhttp.OkHttpClient;
+import com.squareup.otto.Bus;
 import com.squareup.picasso.OkHttpDownloader;
 import com.squareup.picasso.Picasso;
 
@@ -31,11 +34,14 @@ import io.knows.saturn.fragment.ProfileFragment;
 import io.knows.saturn.fragment.RegionPickerFragment;
 import io.knows.saturn.fragment.SchoolPickerFragment;
 import io.knows.saturn.helper.CupboardHelper;
+import io.knows.saturn.helper.DoublesFieldConverterFactory;
 import io.knows.saturn.helper.GsonFieldConverterFactory;
+import io.knows.saturn.helper.ResourceFieldConverterFactory;
 import io.knows.saturn.helper.StorageWrapper;
 import io.knows.saturn.helper.StringsFieldConverterFactory;
 import io.knows.saturn.model.Authenticator;
 import io.knows.saturn.model.Media;
+import io.knows.saturn.model.Resource;
 import io.knows.saturn.model.User;
 import nl.nl2312.rxcupboard.RxCupboard;
 import nl.nl2312.rxcupboard.RxDatabase;
@@ -90,17 +96,19 @@ public class DataModule {
     @Provides @Singleton
     Cupboard provideCupboard(Gson gson) {
         CupboardFactory.setCupboard(new CupboardBuilder()
-                .registerFieldConverterFactory(new GsonFieldConverterFactory(gson, Media.Resource.class))
                 .registerFieldConverterFactory(new GsonFieldConverterFactory(gson, User.Counts.class))
+                .registerFieldConverterFactory(new GsonFieldConverterFactory(gson, User.Like[].class))
                 .registerFieldConverterFactory(new StringsFieldConverterFactory(gson))
+                .registerFieldConverterFactory(new DoublesFieldConverterFactory(gson))
+                .registerFieldConverterFactory(new ResourceFieldConverterFactory())
                 .useAnnotations()
                 .build());
         return CupboardFactory.cupboard();
     }
 
     @Provides @Singleton
-    Authenticator provideAuthenticator(StorageWrapper wrapper, SharedPreferences preferences) {
-        return Authenticator.getInstance(wrapper, preferences);
+    Authenticator provideAuthenticator(StorageWrapper wrapper, Prefser prefser) {
+        return Authenticator.getInstance(wrapper, prefser);
     }
 
     @Provides @Singleton
@@ -112,6 +120,8 @@ public class DataModule {
     Gson provideGson() {
         return new Gson();
     }
+
+
 
     @Provides @Singleton
     RxDatabase provideRxDatabase(Cupboard cupboard, SQLiteDatabase db) {
@@ -131,6 +141,11 @@ public class DataModule {
     @Provides @Singleton
     SharedPreferences provideSharedPreferences(Application application) {
         return application.getSharedPreferences("io.knows.saturn", MODE_PRIVATE);
+    }
+
+    @Provides @Singleton
+    Prefser providePrefser(SharedPreferences sharedPreferences) {
+        return new Prefser(sharedPreferences);
     }
 
     @Provides @Singleton

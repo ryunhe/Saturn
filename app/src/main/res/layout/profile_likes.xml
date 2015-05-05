@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    >
+
+
+    <LinearLayout
+        style="@style/SaturnRow.Profile"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:background="@drawable/background_border_bottom"
+        >
+
+        <IconicsTextView
+            style="@style/SaturnIcon"
+            android:text="{faw-book}"
+            />
+
+        <io.knows.saturn.widget.TagView
+            style="@style/SaturnWidget.TagView"
+            android:id="@+id/tags_book"
+            android:layout_weight="1"
+            android:layout_width="0dp"
+            />
+
+    </LinearLayout>
+
+    <LinearLayout
+        style="@style/SaturnRow.Profile"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:background="@drawable/background_border_bottom"
+        >
+
+        <IconicsTextView
+            style="@style/SaturnIcon"
+            android:text="{faw-music}"
+            />
+
+        <io.knows.saturn.widget.TagView
+            style="@style/SaturnWidget.TagView"
+            android:id="@+id/tags_music"
+            android:layout_weight="1"
+            android:layout_width="0dp"
+            />
+
+    </LinearLayout>
+
+    <LinearLayout
+        style="@style/SaturnRow.Profile"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:background="@drawable/background_border_bottom"
+        >
+
+        <IconicsTextView
+            style="@style/SaturnIcon"
+            android:text="{faw-film}"
+            />
+
+        <io.knows.saturn.widget.TagView
+            style="@style/SaturnWidget.TagView"
+            android:id="@+id/tags_movie"
+            android:layout_weight="1"
+            android:layout_width="0dp"
+            />
+
+    </LinearLayout>
+
+</LinearLayout>
+
+
+

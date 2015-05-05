@@ -12,12 +12,19 @@ public class User extends Model {
     public String school;
     public String[] hometown;
     public Counts counts;
-    public String cover;
+    public Resource cover;
     public Gender gender;
+    public Double[] location;
+    public Like[] likes;
 
     public class Counts {
         public int follows;
         public int media;
+    }
+
+    public class Like {
+        public LikeCategory category;
+        public String name;
     }
 
     public enum Gender {
@@ -27,6 +34,33 @@ public class User extends Model {
         int code;
 
         Gender(String text, Integer code) {
+            this.text = text;
+            this.code = code;
+        }
+
+        public int getCode() {
+            return code;
+        }
+
+        public String getText() {
+            return text;
+        }
+    }
+
+    public enum LikeCategory {
+        BOOK("书籍", 0),
+        MUSIC("音乐", 1),
+        MOVIE("电影", 2),
+        SPORT("运动", 3),
+        GAME("游戏", 4),
+        PLACE("足迹", 5),
+        FOOD("食物", 6),
+        ;
+
+        String text;
+        int code;
+
+        LikeCategory(String text, Integer code) {
             this.text = text;
             this.code = code;
         }

@@ -8,6 +8,7 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
 import io.knows.saturn.model.Media;
+import io.knows.saturn.model.Resource;
 import io.knows.saturn.model.User;
 
 import static nl.qbusict.cupboard.CupboardFactory.cupboard;
@@ -23,6 +24,7 @@ public class CupboardHelper extends SQLiteOpenHelper {
         // Register our models with Cupboard as usual
         cupboard().register(User.class);
         cupboard().register(Media.class);
+        cupboard().register(Resource.class);
     }
 
     /**

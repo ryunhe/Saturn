@@ -21,4 +21,5 @@
     <string name="label_school">学校</string>
     <string name="hint_school_search">请输入学校名称</string>
     <string name="info_retrying">正在重试…</string>
+    <string name="alert_status_offline">网络不稳定，请检查连接信号</string>
 </resources>

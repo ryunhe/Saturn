@@ -34,7 +34,6 @@
     </style>
     <style name="SaturnIcon.ActionButton" parent="SaturnButton.ActionButton">
         <item name="android:textSize">24sp</item>
-        <item name="android:layout_width">@dimen/action_bar_height</item>
     </style>
     <style name="SaturnInput" parent="SaturnRow">
         <item name="android:textColorHint">@color/text_gray_light</item>
@@ -70,6 +69,9 @@
         <item name="android:layout_height">@dimen/row_height_normal</item>
         <item name="android:gravity">center_vertical</item>
     </style>
+    <style name="SaturnRow.Profile" parent="SaturnRow">
+        <item name="android:padding">@dimen/item_margin_small</item>
+    </style>
     <style name="SaturnImage">
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">match_parent</item>
@@ -89,5 +91,14 @@
         <item name="android:minHeight">@dimen/row_height_normal</item>
         <item name="android:textSize">@dimen/text_size_small</item>
         <item name="android:textColor">@color/white_transparent</item>
+    </style>
+    <style name="SaturnWidget"/>
+    <style name="SaturnWidget.TagView" parent="SaturnText">
+        <item name="tagCornerRadius">6dp</item>
+        <item name="tagUppercase">true</item>
+        <item name="tagPadding">@dimen/item_margin_small</item>
+        <item name="android:textSize">@dimen/text_size_small</item>
+        <item name="android:lineSpacingExtra">4sp</item>
+        <item name="android:paddingBottom">4sp</item>
     </style>
 </resources>
