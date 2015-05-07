@@ -3,7 +3,13 @@ package io.knows.saturn.module;
 import android.app.Application;
 import android.content.SharedPreferences;
 import android.database.sqlite.SQLiteDatabase;
+import android.location.Location;
+import android.os.Bundle;
 
+import com.amap.api.location.AMapLocation;
+import com.amap.api.location.AMapLocationListener;
+import com.amap.api.location.LocationManagerProxy;
+import com.amap.api.location.LocationProviderProxy;
 import com.github.pwittchen.networkevents.library.NetworkEvents;
 import com.github.pwittchen.prefser.library.Prefser;
 import com.google.gson.Gson;
@@ -22,20 +28,25 @@ import dagger.Module;
 import dagger.Provides;
 import io.knows.saturn.activity.CongratsActivity;
 import io.knows.saturn.activity.MainActivity;
+import io.knows.saturn.activity.PostActivity;
 import io.knows.saturn.activity.ProfileActivity;
 import io.knows.saturn.activity.RegionPickerActivity;
 import io.knows.saturn.activity.SchoolPickerActivity;
 import io.knows.saturn.activity.SignupActivity;
+import io.knows.saturn.fragment.AuthFragment;
 import io.knows.saturn.fragment.CongratsFragment;
 import io.knows.saturn.fragment.CardStackFragment;
 import io.knows.saturn.fragment.CropperFragment;
 import io.knows.saturn.fragment.MediaListFragment;
+import io.knows.saturn.fragment.PostFragment;
 import io.knows.saturn.fragment.ProfileFragment;
 import io.knows.saturn.fragment.RegionPickerFragment;
 import io.knows.saturn.fragment.SchoolPickerFragment;
+import io.knows.saturn.fragment.SignupFragment;
 import io.knows.saturn.helper.CupboardHelper;
 import io.knows.saturn.helper.DoublesFieldConverterFactory;
 import io.knows.saturn.helper.GsonFieldConverterFactory;
+import io.knows.saturn.helper.LocationManager;
 import io.knows.saturn.helper.ResourceFieldConverterFactory;
 import io.knows.saturn.helper.StorageWrapper;
 import io.knows.saturn.helper.StringsFieldConverterFactory;
@@ -71,11 +82,15 @@ import static java.util.concurrent.TimeUnit.SECONDS;
                 SchoolPickerFragment.class,
                 RegionPickerFragment.class,
                 CropperFragment.class,
+                PostFragment.class,
+                AuthFragment.class,
+                SignupFragment.class,
 
                 MainActivity.class,
                 CongratsActivity.class,
                 ProfileActivity.class,
                 SignupActivity.class,
+                PostActivity.class,
                 SchoolPickerActivity.class,
                 RegionPickerActivity.class,
         }
@@ -95,15 +110,7 @@ public class DataModule {
 
     @Provides @Singleton
     Cupboard provideCupboard(Gson gson) {
-        CupboardFactory.setCupboard(new CupboardBuilder()
-                .registerFieldConverterFactory(new GsonFieldConverterFactory(gson, User.Counts.class))
-                .registerFieldConverterFactory(new GsonFieldConverterFactory(gson, User.Like[].class))
-                .registerFieldConverterFactory(new StringsFieldConverterFactory(gson))
-                .registerFieldConverterFactory(new DoublesFieldConverterFactory(gson))
-                .registerFieldConverterFactory(new ResourceFieldConverterFactory())
-                .useAnnotations()
-                .build());
-        return CupboardFactory.cupboard();
+        return createCupboard(gson);
     }
 
     @Provides @Singleton
@@ -121,7 +128,20 @@ public class DataModule {
         return new Gson();
     }
 
+    @Provides @Singleton
+    Bus provideBus() {
+        return new Bus();
+    }
 
+    @Provides @Singleton
+    NetworkEvents provideNetworkEvents(Application application, Bus bus) {
+        return new NetworkEvents(application, bus);
+    }
+
+    @Provides
+    LocationManager provideLocationManager(Application application) {
+        return new LocationManager(application);
+    }
 
     @Provides @Singleton
     RxDatabase provideRxDatabase(Cupboard cupboard, SQLiteDatabase db) {
@@ -179,5 +199,17 @@ public class DataModule {
         client.setCache(cache);
 
         return client;
+    }
+
+    static Cupboard createCupboard(Gson gson) {
+        CupboardFactory.setCupboard(new CupboardBuilder()
+                .registerFieldConverterFactory(new GsonFieldConverterFactory(gson, User.Counts.class))
+                .registerFieldConverterFactory(new GsonFieldConverterFactory(gson, User.Like[].class))
+                .registerFieldConverterFactory(new StringsFieldConverterFactory(gson))
+                .registerFieldConverterFactory(new DoublesFieldConverterFactory(gson))
+                .registerFieldConverterFactory(new ResourceFieldConverterFactory())
+                .useAnnotations()
+                .build());
+        return CupboardFactory.cupboard();
     }
 }

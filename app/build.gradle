@@ -21,6 +21,18 @@ android {
     compileSdkVersion 21
     buildToolsVersion "21.1.2"
 
+    packagingOptions {
+        exclude 'META-INF/NOTICE.txt'
+        exclude 'META-INF/LICENSE.txt'
+    }
+
+    dexOptions {
+        jumboMode true
+        incremental true
+        preDexLibraries false
+        javaMaxHeapSize "4g"
+    }
+
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_1_8
         targetCompatibility JavaVersion.VERSION_1_8
@@ -32,12 +44,27 @@ android {
         targetSdkVersion 21
         versionCode 1
         versionName "1.0"
+        multiDexEnabled = true
     }
 
     buildTypes {
         release {
-            minifyEnabled false
+            minifyEnabled true
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            manifestPlaceholders = [amapApiKey:"377c3b69e2fd2108cd1280194e555b82"
+                                    , getuiAppId:"PBLtzwG2Jc6ZlKk0SSbuA4"
+                                    , getuiAppKey:"jSZKbTvHyV8OoSFktiSgnA"
+                                    , getuiAppSecret:"hLwW3loWa28qxz9iLJImL4"
+            ]
+        }
+        debug {
+            minifyEnabled false
+            debuggable true
+            manifestPlaceholders = [amapApiKey:"82edc3bab05ece9d2a3c6f456ffbdf56"
+                                    , getuiAppId:"PBLtzwG2Jc6ZlKk0SSbuA4"
+                                    , getuiAppKey:"jSZKbTvHyV8OoSFktiSgnA"
+                                    , getuiAppSecret:"hLwW3loWa28qxz9iLJImL4"
+            ]
         }
     }
 }
@@ -46,6 +73,8 @@ dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
     compile project(':swipecards')
     compile project(':multi-image-selector')
+    compile project(':network-events')
+    compile 'com.android.support:multidex:1.0.0'
     compile 'com.android.support:support-v13:21.0.3'
     compile 'com.android.support:appcompat-v7:22.1.0'
     compile 'com.android.support:cardview-v7:21.0.3'
@@ -63,7 +92,7 @@ dependencies {
     compile 'com.jakewharton.byteunits:byteunits:0.9.0'
     compile 'com.qiniu:qiniu-android-sdk:7.0.3'
     compile 'com.github.pwittchen:prefser:1.0.3'
-    compile 'com.github.pwittchen:networkevents:1.0.4'
+//    compile 'com.github.pwittchen:networkevents:1.0.4'
     compile 'com.pnikosis:materialish-progress:1.5'
     compile 'com.edmodo:cropper:1.0.1'
     compile 'com.makeramen:roundedimageview:2.0.1'
@@ -74,6 +103,9 @@ dependencies {
     compile 'nl.2312:rxcupboard:0.2'
     compile ('com.mikepenz.materialdrawer:library:2.8.0@aar') { transitive = true }
     compile('de.keyboardsurfer.android.widget:crouton:1.8.5@aar') { exclude group: 'com.google.android', module: 'support-v4' }
+
+    // Adobe Creative : maven { url "${project.rootDir}/mvn-repo/" }
+    compile 'com.adobe.creativesdk:image:4.0.0'
 
     // Iconfont
     compile 'com.mikepenz.iconics:library:0.9.1@aar'

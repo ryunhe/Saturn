@@ -143,7 +143,7 @@ public class SignupFragment extends Fragment {
                     }
                     break;
                 case PAGE_IMAGE_CROPPER:
-                    updateAvatarResource(data.getData().getPath());
+                    updateAvatarResource(data.getData());
                     break;
             }
         }
@@ -195,12 +195,12 @@ public class SignupFragment extends Fragment {
         startActivityForResult(i, PAGE_IMAGE_SELECTOR);
     }
 
-    void updateAvatarResource(final String filePath) {
+    void updateAvatarResource(final Uri uri) {
         mSamuiService.getQiniuToken()
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(stringResponse -> {
-                    mUploadManager.put(filePath, null, stringResponse.getString(), (key, info, response) -> {
+                    mUploadManager.put(uri.getPath(), null, stringResponse.getString(), (key, info, response) -> {
                         try {
                             mAvatarResource = new Resource(response.getString("key"));
                             mPicasso.load(mAvatarResource.getUrl(Resource.ResourceSize.THUMBNAIL))
@@ -244,7 +244,7 @@ public class SignupFragment extends Fragment {
                                 public void onBitmapLoaded(Bitmap bitmap, Picasso.LoadedFrom from) {
                                     File file = FileHelper.createTmpFile(getActivity());
                                     FileHelper.dumpBitmapToFile(bitmap, file);
-                                    updateAvatarResource(file.getPath());
+                                    updateAvatarResource(Uri.fromFile(file));
                                 }
 
                                 @Override

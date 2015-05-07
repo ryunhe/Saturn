@@ -4,3 +4,6 @@
 [submodule "multi-image-selector"]
 	path = multi-image-selector
 	url = git@github.com:ryunhe/MultiImageSelector.git
+[submodule "network-events"]
+	path = network-events
+	url = git@github.com:ryunhe/NetworkEvents.git

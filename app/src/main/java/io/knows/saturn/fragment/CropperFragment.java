@@ -3,31 +3,30 @@ package io.knows.saturn.fragment;
 import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Bitmap;
-import android.media.ThumbnailUtils;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Toast;
 
 import com.edmodo.cropper.CropImageView;
 
 import java.io.File;
-import java.io.FileNotFoundException;
+import java.io.IOException;
 
 import butterknife.InjectView;
 import butterknife.OnClick;
 import io.knows.saturn.R;
-import io.knows.saturn.activity.CropperActivity;
-import io.knows.saturn.activity.SignupActivity;
 import io.knows.saturn.helper.FileHelper;
+import io.knows.saturn.model.Resource;
 
 /**
  * Created by ryun on 15-4-22.
  */
 public class CropperFragment extends Fragment {
+    final static int MAX_SIZE = Resource.ResourceSize.ORIGINAL.getSize();
+
     @InjectView(R.id.image_cropper)
     CropImageView mCropperImage;
 
@@ -41,12 +40,12 @@ public class CropperFragment extends Fragment {
 
         Uri resource = getActivity().getIntent().getData();
         try {
-            Bitmap bitmap = FileHelper.getBitmapFromUriWithSize(getActivity(), resource, 1000);
+            Bitmap bitmap = FileHelper.getBitmapWithSize(getActivity(), resource, MAX_SIZE, MAX_SIZE);
             mCropperImage.setImageBitmap(bitmap);
-        } catch (FileNotFoundException e) {
+            mCropperImage.setFixedAspectRatio(true);
+        } catch (IOException e) {
             e.printStackTrace();
         }
-        mCropperImage.setFixedAspectRatio(true);
 
         return layout;
     }

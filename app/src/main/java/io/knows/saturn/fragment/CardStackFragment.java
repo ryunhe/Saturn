@@ -24,6 +24,7 @@ import io.knows.saturn.R;
 import io.knows.saturn.activity.CongratsActivity;
 import io.knows.saturn.activity.ProfileActivity;
 import io.knows.saturn.adapter.Adapter;
+import io.knows.saturn.helper.LocationManager;
 import io.knows.saturn.helper.StorageWrapper;
 import io.knows.saturn.model.Media;
 import io.knows.saturn.model.Resource;
@@ -158,12 +159,16 @@ public class CardStackFragment extends Fragment {
 
             Media media = getItem(position);
 
-            holder.contentText.setText(media.content);
+            StringBuilder content = new StringBuilder();
+            content.append(media.content);
+            content.append(" ~ ");
+            content.append(LocationManager.getDistanceReadable(media.location));
+            holder.contentText.setText(content);
             holder.primaryText.setText(String.format("%s, %d", media.user.nickname, media.user.age));
             holder.secondaryText.setText(String.format("%s, %s", media.user.school, media.user.hometown[media.user.hometown.length - 1]));
             holder.countsText.setText(String.format("%d", media.user.counts.media));
 
-            mPicasso.load(media.resource.getUrl(Resource.ResourceSize.STANDARD))
+            mPicasso.load(media.resource.getUrl(Resource.ResourceSize.MEDIUM))
                     .placeholder(R.drawable.content_default_pic)
                     .into(holder.resourceImage);
 
@@ -218,7 +223,7 @@ public class CardStackFragment extends Fragment {
                                 for (Media media : mediaListResponse.getResult()) {
 
                                     // Pre-load resource
-                                    mPicasso.load(media.resource.getUrl(Resource.ResourceSize.STANDARD))
+                                    mPicasso.load(media.resource.getUrl(Resource.ResourceSize.MEDIUM))
                                             .fetch(new Callback() {
                                                 @Override
                                                 public void onSuccess() {

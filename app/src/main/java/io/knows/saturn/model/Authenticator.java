@@ -4,30 +4,36 @@ import android.support.annotation.Nullable;
 
 import com.github.pwittchen.prefser.library.Prefser;
 
+import io.knows.saturn.helper.RxBus;
 import io.knows.saturn.helper.StorageWrapper;
+import io.knows.saturn.response.AuthResponse;
 import rx.Observable;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
 import rx.subjects.PublishSubject;
+import rx.subjects.SerializedSubject;
+import rx.subjects.Subject;
 
 /**
  * Created by ryun on 15-4-30.
  */
 public class Authenticator {
-    User mUser = new User();
-    final PublishSubject<Authenticator> mSubject = PublishSubject.create();
     final StorageWrapper mStorage;
     final Prefser mPrefser;
+    final RxBus<Authenticator> mBus;
     static Authenticator mInstance;
+
+    User mUser = new User();
 
     private Authenticator(StorageWrapper storage, Prefser prefser) {
         mStorage = storage;
         mPrefser = prefser;
+        mBus = new RxBus<>();
 
         if (null != getUserId()) {
             mStorage.load(User.class, getUserId()).subscribeOn(Schedulers.io())
                     .observeOn(AndroidSchedulers.mainThread())
-                    .subscribe(this::setUser);
+                    .subscribe(this::putUser);
         }
     }
 
@@ -35,12 +41,12 @@ public class Authenticator {
         user.save(mStorage);
         mPrefser.put(Preferences.AUTHENTICATOR_USER_ID.toString(), user.id);
 
-        setUser(user);
+        putUser(user);
     }
 
-    public void setUser(User user) {
+    public void putUser(User user) {
         mUser = user;
-        mSubject.onNext(this);
+        mBus.send(this); // PRODUCING
     }
 
     public User getUser() {
@@ -56,8 +62,8 @@ public class Authenticator {
         return null != getUserId();
     }
 
-    public Observable<Authenticator> getObservable() {
-        return mSubject.asObservable().startWith(this);
+    public Observable<Authenticator> toObservable() {
+        return mBus.toObservable();
     }
 
     public static Authenticator getInstance(StorageWrapper storage, Prefser prefser) {

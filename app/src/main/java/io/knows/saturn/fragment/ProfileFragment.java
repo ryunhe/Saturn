@@ -109,7 +109,7 @@ public class ProfileFragment extends Fragment {
                 mPrimaryText.setText(String.format("%s, %d", user.nickname, user.age));
                 mSecondaryText.setText(String.format("%s, %s", user.school, user.hometown[user.hometown.length - 1]));
 
-                mPagerAdapter.addData(user.cover.getUrl(Resource.ResourceSize.STANDARD));
+                mPagerAdapter.addData(user.cover.getUrl(Resource.ResourceSize.MEDIUM));
                 mPagerAdapter.notifyDataSetChanged();
 
                 if (user.counts.media > 1) {
@@ -119,7 +119,7 @@ public class ProfileFragment extends Fragment {
                             .subscribe(mediaListResponse -> {
                                 for (Media media : mediaListResponse.getResult()) {
                                     if (!user.cover.identity.equals(media.resource.identity)) {
-                                        mPagerAdapter.addData(media.resource.getUrl(Resource.ResourceSize.STANDARD));
+                                        mPagerAdapter.addData(media.resource.getUrl(Resource.ResourceSize.MEDIUM));
                                     }
                                 }
                                 mPagerAdapter.notifyDataSetChanged();

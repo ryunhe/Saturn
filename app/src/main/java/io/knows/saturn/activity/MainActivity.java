@@ -1,6 +1,5 @@
 package io.knows.saturn.activity;
 
-import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
@@ -9,6 +8,7 @@ import android.widget.AdapterView;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.amap.api.location.AMapLocation;
 import com.github.pwittchen.networkevents.library.NetworkEvents;
 import com.github.pwittchen.networkevents.library.event.ConnectivityChanged;
 import com.mikepenz.community_material_typeface_library.CommunityMaterial;
@@ -24,10 +24,9 @@ import com.squareup.picasso.Picasso;
 import javax.inject.Inject;
 
 import butterknife.InjectView;
-import de.keyboardsurfer.android.widget.crouton.Crouton;
-import de.keyboardsurfer.android.widget.crouton.Style;
 import io.knows.saturn.R;
 import io.knows.saturn.fragment.CardStackFragment;
+import io.knows.saturn.helper.LocationManager;
 import io.knows.saturn.model.Authenticator;
 import io.knows.saturn.model.Resource;
 import io.knows.saturn.model.User;
@@ -39,7 +38,9 @@ import timber.log.Timber;
 /**
  * Created by ryun on 15-4-21.
  */
-public class MainActivity extends Activity implements Drawer.OnDrawerItemClickListener, Drawer.OnDrawerListener {
+public class MainActivity extends Activity implements Drawer.OnDrawerItemClickListener, Drawer.OnDrawerListener, LocationManager.LocationListener {
+    @Inject
+    LocationManager mLocationManager;
     @Inject
     SamuiService mSamuiService;
     @Inject
@@ -48,6 +49,10 @@ public class MainActivity extends Activity implements Drawer.OnDrawerItemClickLi
     Authenticator mAuthenticator;
     @Inject
     Picasso mPicasso;
+    @Inject
+    Bus mBus;
+    @Inject
+    NetworkEvents mNetworkEvents;
 
     @InjectView(R.id.toolbar)
     Toolbar mToolbar;
@@ -57,16 +62,9 @@ public class MainActivity extends Activity implements Drawer.OnDrawerItemClickLi
     Drawer.Result mDrawerResult;
     User me;
 
-    Bus mBus;
-    NetworkEvents mNetworkEvents;
-
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-        mBus = new Bus();
-        mNetworkEvents = new NetworkEvents(this, mBus);
 
         setContentView(R.layout.activity_main);
         inject();
@@ -80,7 +78,7 @@ public class MainActivity extends Activity implements Drawer.OnDrawerItemClickLi
         ImageView avatarImage = (ImageView) drawerHeader.findViewById(R.id.image_avatar);
         TextView nicknameText = (TextView) drawerHeader.findViewById(R.id.text_nickname);
 
-        mAuthenticator.getObservable()
+        mAuthenticator.toObservable()
                 .subscribe(auth -> {
                     me = auth.getUser();
                     mPicasso.load(me.cover.getUrl(Resource.ResourceSize.THUMBNAIL)).into(avatarImage);
@@ -94,6 +92,7 @@ public class MainActivity extends Activity implements Drawer.OnDrawerItemClickLi
                 .withHeader(drawerHeader)
                 .addDrawerItems(
                         new PrimaryDrawerItem().withName(R.string.drawer_item_home).withIcon(CommunityMaterial.Icon.cmd_home),
+                        new PrimaryDrawerItem().withName(R.string.drawer_item_post).withIcon(CommunityMaterial.Icon.cmd_folder_multiple_image),
                         new PrimaryDrawerItem().withName(R.string.drawer_item_exit).withIcon(CommunityMaterial.Icon.cmd_power)
                 )
                 .withOnDrawerItemClickListener(this)
@@ -132,6 +131,9 @@ public class MainActivity extends Activity implements Drawer.OnDrawerItemClickLi
                             .commit();
                     break;
                 case 1:
+                    startActivity(new Intent(getActivity(), PostActivity.class));
+                    break;
+                case 2:
                     mRennClient.logout();
                     Intent i = new Intent(getActivity(), StartActivity.class);
                     i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
@@ -150,6 +152,12 @@ public class MainActivity extends Activity implements Drawer.OnDrawerItemClickLi
     @Override
     public void onDrawerClosed(View view) {
 
+    }
+
+    public void onLocationChanged(AMapLocation location) {
+        Timber.d(location.toString());
+        Double geoLat = location.getLatitude();
+        Double geoLng = location.getLongitude();
     }
 
     @Subscribe
@@ -171,6 +179,7 @@ public class MainActivity extends Activity implements Drawer.OnDrawerItemClickLi
         super.onResume();
         mBus.register(this);
         mNetworkEvents.register();
+        mLocationManager.register(this);
     }
 
     @Override
@@ -178,5 +187,6 @@ public class MainActivity extends Activity implements Drawer.OnDrawerItemClickLi
         super.onPause();
         mBus.unregister(this);
         mNetworkEvents.unregister();
+        mLocationManager.unregister(this);
     }
 }

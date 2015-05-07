@@ -17,14 +17,21 @@ public class Resource {
     }
 
     public enum ResourceSize {
-        STANDARD("standard"),
-        THUMBNAIL("thumbnail");
+        ORIGINAL("original", 1280),
+        STANDARD("standard", 640),
+        MEDIUM("medium", 320),
+        THUMBNAIL("thumbnail", 150);
         String text;
-        ResourceSize(String type) {
+        Integer size;
+        ResourceSize(String type, Integer size) {
             this.text = type;
+            this.size = size;
         }
         public String getText() {
             return text;
+        }
+        public Integer getSize() {
+            return size;
         }
     }
 

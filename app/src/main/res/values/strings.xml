@@ -1,11 +1,13 @@
 <resources>
     <string name="app_name">友颜</string>
     <string name="title_signup">注册新用户</string>
+    <string name="title_post">发布新照片</string>
     <string name="title_school_picker">选择学校</string>
     <string name="title_region_picker">选择地区</string>
     <string name="title_profile">个人资料</string>
 
     <string name="drawer_item_home">首页</string>
+    <string name="drawer_item_post">发布</string>
     <string name="drawer_item_exit">退出</string>
 
     <string name="label_confirm">确定</string>
@@ -22,4 +24,5 @@
     <string name="hint_school_search">请输入学校名称</string>
     <string name="info_retrying">正在重试…</string>
     <string name="alert_status_offline">网络不稳定，请检查连接信号</string>
+    <string name="alert_load_image_failed">图片加载失败</string>
 </resources>
