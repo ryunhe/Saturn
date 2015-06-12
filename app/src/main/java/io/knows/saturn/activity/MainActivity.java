@@ -9,6 +9,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.amap.api.location.AMapLocation;
+import com.amap.api.maps2d.LocationSource;
 import com.github.pwittchen.networkevents.library.NetworkEvents;
 import com.github.pwittchen.networkevents.library.event.ConnectivityChanged;
 import com.mikepenz.community_material_typeface_library.CommunityMaterial;
@@ -24,13 +25,15 @@ import com.squareup.picasso.Picasso;
 import javax.inject.Inject;
 
 import butterknife.InjectView;
+import butterknife.OnClick;
 import io.knows.saturn.R;
 import io.knows.saturn.fragment.CardStackFragment;
+import io.knows.saturn.fragment.MapDiscoverFragment;
 import io.knows.saturn.helper.LocationManager;
 import io.knows.saturn.model.Authenticator;
 import io.knows.saturn.model.Resource;
 import io.knows.saturn.model.User;
-import io.knows.saturn.service.SamuiService;
+import io.knows.saturn.service.ApiService;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
 import timber.log.Timber;
@@ -38,11 +41,11 @@ import timber.log.Timber;
 /**
  * Created by ryun on 15-4-21.
  */
-public class MainActivity extends Activity implements Drawer.OnDrawerItemClickListener, Drawer.OnDrawerListener, LocationManager.LocationListener {
+public class MainActivity extends Activity implements Drawer.OnDrawerItemClickListener, Drawer.OnDrawerListener, LocationManager.LocationListener, LocationSource {
     @Inject
     LocationManager mLocationManager;
     @Inject
-    SamuiService mSamuiService;
+    ApiService mApiService;
     @Inject
     RennClient mRennClient;
     @Inject
@@ -59,8 +62,12 @@ public class MainActivity extends Activity implements Drawer.OnDrawerItemClickLi
     @InjectView(R.id.alert_offline)
     View mOfflineAlert;
 
+    AMapLocation mLocation;
+    OnLocationChangedListener mLocationChangedListener;
     Drawer.Result mDrawerResult;
     User me;
+
+    static final int PAGE_POST = 1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -81,7 +88,7 @@ public class MainActivity extends Activity implements Drawer.OnDrawerItemClickLi
         mAuthenticator.toObservable()
                 .subscribe(auth -> {
                     me = auth.getUser();
-                    mPicasso.load(me.cover.getUrl(Resource.ResourceSize.THUMBNAIL)).into(avatarImage);
+                    mPicasso.load(me.cover.getUrl(Resource.ResourceSize.MEDIUM)).into(avatarImage);
                     nicknameText.setText(me.nickname);
                 });
 
@@ -91,8 +98,8 @@ public class MainActivity extends Activity implements Drawer.OnDrawerItemClickLi
                 .withToolbar(mToolbar)
                 .withHeader(drawerHeader)
                 .addDrawerItems(
-                        new PrimaryDrawerItem().withName(R.string.drawer_item_home).withIcon(CommunityMaterial.Icon.cmd_home),
-                        new PrimaryDrawerItem().withName(R.string.drawer_item_post).withIcon(CommunityMaterial.Icon.cmd_folder_multiple_image),
+                        new PrimaryDrawerItem().withName(R.string.drawer_item_card).withIcon(CommunityMaterial.Icon.cmd_home),
+                        new PrimaryDrawerItem().withName(R.string.drawer_item_map).withIcon(CommunityMaterial.Icon.cmd_map),
                         new PrimaryDrawerItem().withName(R.string.drawer_item_exit).withIcon(CommunityMaterial.Icon.cmd_power)
                 )
                 .withOnDrawerItemClickListener(this)
@@ -103,7 +110,7 @@ public class MainActivity extends Activity implements Drawer.OnDrawerItemClickLi
         mDrawerResult.keyboardSupportEnabled(this, true);
 
         // update profile
-        mSamuiService.getUser(mAuthenticator.getUserId())
+        mApiService.getUser(mAuthenticator.getUserId())
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(userEntityResponse -> mAuthenticator.saveUser(userEntityResponse.getEntity()));
@@ -131,7 +138,10 @@ public class MainActivity extends Activity implements Drawer.OnDrawerItemClickLi
                             .commit();
                     break;
                 case 1:
-                    startActivity(new Intent(getActivity(), PostActivity.class));
+                    getSupportFragmentManager()
+                            .beginTransaction()
+                            .replace(R.id.frame_fragment, new MapDiscoverFragment())
+                            .commit();
                     break;
                 case 2:
                     mRennClient.logout();
@@ -154,10 +164,16 @@ public class MainActivity extends Activity implements Drawer.OnDrawerItemClickLi
 
     }
 
+    @Override
     public void onLocationChanged(AMapLocation location) {
-        Timber.d(location.toString());
-        Double geoLat = location.getLatitude();
-        Double geoLng = location.getLongitude();
+        if (null != location) {
+            mLocation = location;
+            if (null != mLocationChangedListener) {
+                mLocationChangedListener.onLocationChanged(location);
+            }
+
+            Timber.d(location.toString());
+        }
     }
 
     @Subscribe
@@ -187,6 +203,22 @@ public class MainActivity extends Activity implements Drawer.OnDrawerItemClickLi
         super.onPause();
         mBus.unregister(this);
         mNetworkEvents.unregister();
-        mLocationManager.unregister(this);
+        mLocationManager.destroy();
+    }
+
+    @OnClick(R.id.button_post)
+    void post() {
+        Intent i = new Intent(this, PostActivity.class);
+        startActivityForResult(i, PAGE_POST);
+    }
+
+    @Override
+    public void activate(OnLocationChangedListener onLocationChangedListener) {
+        mLocationChangedListener = onLocationChangedListener;
+    }
+
+    @Override
+    public void deactivate() {
+        mLocationChangedListener = null;
     }
 }

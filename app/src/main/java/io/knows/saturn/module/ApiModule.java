@@ -4,7 +4,7 @@ import javax.inject.Singleton;
 
 import dagger.Module;
 import dagger.Provides;
-import io.knows.saturn.service.SamuiService;
+import io.knows.saturn.service.ApiService;
 import retrofit.Endpoint;
 import retrofit.Endpoints;
 import retrofit.ErrorHandler;
@@ -38,8 +38,8 @@ public class ApiModule {
     }
 
     @Provides @Singleton
-    SamuiService provideSamuiService(RestAdapter restAdapter) {
-        return restAdapter.create(SamuiService.class);
+    ApiService provideApiService(RestAdapter restAdapter) {
+        return restAdapter.create(ApiService.class);
     }
 
     class ApiErrorHandler implements ErrorHandler {

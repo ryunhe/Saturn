@@ -11,6 +11,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.faradaj.blurbehind.BlurBehind;
+import com.github.pwittchen.prefser.library.Prefser;
 import com.lorentzos.flingswipe.SwipeFlingAdapterView;
 import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
@@ -29,7 +30,7 @@ import io.knows.saturn.helper.StorageWrapper;
 import io.knows.saturn.model.Media;
 import io.knows.saturn.model.Resource;
 import io.knows.saturn.response.MediaListResponse;
-import io.knows.saturn.service.SamuiService;
+import io.knows.saturn.service.ApiService;
 import rx.Observer;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
@@ -42,9 +43,11 @@ public class CardStackFragment extends Fragment {
     @InjectView(R.id.container)
     SwipeFlingAdapterView mFlingContainer;
     @Inject
-    SamuiService mSamuiService;
+    ApiService mApiService;
     @Inject
     Picasso mPicasso;
+    @Inject
+    Prefser mPrefser;
     @Inject
     StorageWrapper mStorageWrapper;
 
@@ -109,7 +112,7 @@ public class CardStackFragment extends Fragment {
         @Override
         public void onRightCardExit(Object dataObject) {
             Media media = (Media) dataObject;
-            mSamuiService.like(media.id).subscribeOn(Schedulers.io())
+            mApiService.like(media.id).subscribeOn(Schedulers.io())
                     .observeOn(AndroidSchedulers.mainThread())
                     .subscribe(matchedResponse -> {
                         if (matchedResponse.matched()) {
@@ -131,8 +134,8 @@ public class CardStackFragment extends Fragment {
         public void onScroll(float scrollProgressPercent) {
             View view = mFlingContainer.getSelectedView();
             if (view != null) {
-                view.findViewById(R.id.indicator_item_swipe_right).setAlpha(scrollProgressPercent < 0 ? -scrollProgressPercent : 0);
-                view.findViewById(R.id.indicator_item_swipe_left).setAlpha(scrollProgressPercent > 0 ? scrollProgressPercent : 0);
+                view.findViewById(R.id.indicator_item_swipe_pass).setAlpha(scrollProgressPercent < 0 ? -scrollProgressPercent : 0);
+                view.findViewById(R.id.indicator_item_swipe_like).setAlpha(scrollProgressPercent > 0 ? scrollProgressPercent : 0);
             }
         }
     }
@@ -162,13 +165,13 @@ public class CardStackFragment extends Fragment {
             StringBuilder content = new StringBuilder();
             content.append(media.content);
             content.append(" ~ ");
-            content.append(LocationManager.getDistanceReadable(media.location));
+            content.append(LocationManager.getDistanceReadable(media.location, mPrefser));
             holder.contentText.setText(content);
             holder.primaryText.setText(String.format("%s, %d", media.user.nickname, media.user.age));
             holder.secondaryText.setText(String.format("%s, %s", media.user.school, media.user.hometown[media.user.hometown.length - 1]));
             holder.countsText.setText(String.format("%d", media.user.counts.media));
 
-            mPicasso.load(media.resource.getUrl(Resource.ResourceSize.MEDIUM))
+            mPicasso.load(media.resource.getUrl(Resource.ResourceSize.STANDARD))
                     .placeholder(R.drawable.content_default_pic)
                     .into(holder.resourceImage);
 
@@ -204,46 +207,32 @@ public class CardStackFragment extends Fragment {
             if (!fetching) {
                 fetching = true;
 
-                mSamuiService.getRecentMedia()
+                mApiService.getRecentMedia()
                         .subscribeOn(Schedulers.io())
                         .observeOn(AndroidSchedulers.mainThread())
-                        .subscribe(new Observer<MediaListResponse>() {
-                            @Override
-                            public void onCompleted() {
+                        .subscribe(mediaListResponse -> {
+                            for (Media media : mediaListResponse.getResult()) {
 
+                                // Pre-load resource
+                                mPicasso.load(media.resource.getUrl(Resource.ResourceSize.STANDARD))
+                                        .fetch(new Callback() {
+                                            @Override
+                                            public void onSuccess() {
+                                                mDataList.add(media);
+                                                mListAdapter.notifyDataSetChanged();
+
+                                                // Store object
+                                                media.user.save(mStorageWrapper);
+                                            }
+
+                                            @Override
+                                            public void onError() {
+
+                                            }
+                                        });
                             }
 
-                            @Override
-                            public void onError(Throwable e) {
-
-                            }
-
-                            @Override
-                            public void onNext(MediaListResponse mediaListResponse) {
-                                for (Media media : mediaListResponse.getResult()) {
-
-                                    // Pre-load resource
-                                    mPicasso.load(media.resource.getUrl(Resource.ResourceSize.MEDIUM))
-                                            .fetch(new Callback() {
-                                                @Override
-                                                public void onSuccess() {
-                                                    mDataList.add(media);
-                                                    mListAdapter.notifyDataSetChanged();
-
-                                                    // Store object
-                                                    media.user.save(mStorageWrapper);
-                                                }
-
-                                                @Override
-                                                public void onError() {
-
-                                                }
-                                            });
-                                }
-
-                                fetching = false;
-
-                            }
+                            fetching = false;
                         });
             }
         }

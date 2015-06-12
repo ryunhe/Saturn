@@ -116,6 +116,7 @@
     <orderEntry type="library" exported="" name="lib-core-3.1.0" level="project" />
     <orderEntry type="library" exported="" name="okhttp-urlconnection-1.6.0" level="project" />
     <orderEntry type="library" exported="" name="android-exif-extended-1.0.6" level="project" />
+    <orderEntry type="library" exported="" name="AMap_Services_V2.4.0" level="project" />
     <orderEntry type="library" exported="" name="prefser-1.0.3" level="project" />
     <orderEntry type="library" exported="" name="cupboard-2.1.1" level="project" />
     <orderEntry type="library" exported="" name="Android_Location_V1.3.2" level="project" />
@@ -142,6 +143,7 @@
     <orderEntry type="library" exported="" name="gson-2.3.1" level="project" />
     <orderEntry type="library" exported="" name="support-v13-21.0.3" level="project" />
     <orderEntry type="library" exported="" name="javax.inject-1" level="project" />
+    <orderEntry type="library" exported="" name="Android_2DMapApi_V2.4.1" level="project" />
     <orderEntry type="library" exported="" name="RennSDK-Android" level="project" />
     <orderEntry type="library" exported="" name="support-v4-22.1.0" level="project" />
     <orderEntry type="library" exported="" name="hlistviewanimations-library-1.0.1" level="project" />

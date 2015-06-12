@@ -40,27 +40,27 @@
 
             <IconicsTextView
                 android:alpha="0"
-                android:id="@+id/indicator_item_swipe_left"
+                android:id="@+id/indicator_item_swipe_like"
                 android:text="{cmd-heart-outline}"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_margin="@dimen/item_margin"
                 android:layout_centerVertical="true"
-                android:textColor="@color/red"
-                android:textSize="80sp"
+                android:textColor="@color/green"
+                android:textSize="100sp"
                 />
 
             <IconicsTextView
                 android:alpha="0"
-                android:id="@+id/indicator_item_swipe_right"
+                android:id="@+id/indicator_item_swipe_pass"
                 android:text="{cmd-close-circle-outline}"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_margin="@dimen/item_margin"
                 android:layout_centerVertical="true"
                 android:layout_alignParentRight="true"
-                android:textColor="@color/text_black"
-                android:textSize="80sp"
+                android:textColor="@color/red"
+                android:textSize="100sp"
                 />
         </io.knows.saturn.widget.SquaredRelativeLayout>
 

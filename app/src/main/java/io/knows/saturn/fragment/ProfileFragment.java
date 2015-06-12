@@ -1,16 +1,10 @@
 package io.knows.saturn.fragment;
 
-import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
-import android.text.Spannable;
-import android.text.SpannableString;
-import android.text.SpannableStringBuilder;
-import android.text.style.AbsoluteSizeSpan;
-import android.text.style.StyleSpan;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -21,7 +15,6 @@ import com.squareup.picasso.Picasso;
 import com.viewpagerindicator.CirclePageIndicator;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -38,8 +31,7 @@ import io.knows.saturn.model.Authenticator;
 import io.knows.saturn.model.Media;
 import io.knows.saturn.model.Resource;
 import io.knows.saturn.model.User;
-import io.knows.saturn.service.SamuiService;
-import io.knows.saturn.widget.RoundedBackgroundSpan;
+import io.knows.saturn.service.ApiService;
 import io.knows.saturn.widget.TagView;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
@@ -53,7 +45,7 @@ public class ProfileFragment extends Fragment {
     @Inject
     StorageWrapper mStorageWrapper;
     @Inject
-    SamuiService mSamuiService;
+    ApiService mApiService;
     @Inject
     Authenticator mAuthenticator;
 
@@ -109,17 +101,17 @@ public class ProfileFragment extends Fragment {
                 mPrimaryText.setText(String.format("%s, %d", user.nickname, user.age));
                 mSecondaryText.setText(String.format("%s, %s", user.school, user.hometown[user.hometown.length - 1]));
 
-                mPagerAdapter.addData(user.cover.getUrl(Resource.ResourceSize.MEDIUM));
+                mPagerAdapter.addData(user.cover.getUrl(Resource.ResourceSize.STANDARD));
                 mPagerAdapter.notifyDataSetChanged();
 
                 if (user.counts.media > 1) {
-                    mSamuiService.getUserRecentMedia(user.id, user.counts.media)
+                    mApiService.getUserRecentMedia(user.id, user.counts.media)
                             .subscribeOn(Schedulers.io())
                             .observeOn(AndroidSchedulers.mainThread())
                             .subscribe(mediaListResponse -> {
                                 for (Media media : mediaListResponse.getResult()) {
                                     if (!user.cover.identity.equals(media.resource.identity)) {
-                                        mPagerAdapter.addData(media.resource.getUrl(Resource.ResourceSize.MEDIUM));
+                                        mPagerAdapter.addData(media.resource.getUrl(Resource.ResourceSize.STANDARD));
                                     }
                                 }
                                 mPagerAdapter.notifyDataSetChanged();

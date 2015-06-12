@@ -37,6 +37,7 @@ import io.knows.saturn.fragment.AuthFragment;
 import io.knows.saturn.fragment.CongratsFragment;
 import io.knows.saturn.fragment.CardStackFragment;
 import io.knows.saturn.fragment.CropperFragment;
+import io.knows.saturn.fragment.MapDiscoverFragment;
 import io.knows.saturn.fragment.MediaListFragment;
 import io.knows.saturn.fragment.PostFragment;
 import io.knows.saturn.fragment.ProfileFragment;
@@ -77,6 +78,7 @@ import static java.util.concurrent.TimeUnit.SECONDS;
         injects = {
                 MediaListFragment.class,
                 CardStackFragment.class,
+                MapDiscoverFragment.class,
                 CongratsFragment.class,
                 ProfileFragment.class,
                 SchoolPickerFragment.class,
@@ -135,12 +137,12 @@ public class DataModule {
 
     @Provides @Singleton
     NetworkEvents provideNetworkEvents(Application application, Bus bus) {
-        return new NetworkEvents(application, bus);
+        return new NetworkEvents(application, bus, "http://www.baidu.com");
     }
 
     @Provides
-    LocationManager provideLocationManager(Application application) {
-        return new LocationManager(application);
+    LocationManager provideLocationManager(Application application, Prefser prefser) {
+        return new LocationManager(application, prefser);
     }
 
     @Provides @Singleton

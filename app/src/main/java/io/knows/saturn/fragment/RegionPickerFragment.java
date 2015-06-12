@@ -10,11 +10,8 @@ import android.view.ViewGroup;
 import android.widget.ListView;
 import android.widget.TextView;
 
-import com.google.common.base.Strings;
-
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 import javax.inject.Inject;
@@ -27,16 +24,14 @@ import io.knows.saturn.activity.SignupActivity;
 import io.knows.saturn.activity.SubmitActivity;
 import io.knows.saturn.adapter.Adapter;
 import io.knows.saturn.model.Region;
-import io.knows.saturn.service.SamuiService;
-import rx.android.schedulers.AndroidSchedulers;
-import rx.schedulers.Schedulers;
+import io.knows.saturn.service.ApiService;
 
 /**
  * Created by ryun on 15-4-22.
  */
 public class RegionPickerFragment extends Fragment {
     @Inject
-    SamuiService mSamuiService;
+    ApiService mApiService;
 
     @InjectView(R.id.list_main)
     ListView mListView;

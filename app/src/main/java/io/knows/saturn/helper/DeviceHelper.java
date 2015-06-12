@@ -1,11 +1,13 @@
 package io.knows.saturn.helper;
 
+import android.app.Activity;
 import android.content.Context;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Build;
 import android.telephony.TelephonyManager;
 import android.text.TextUtils;
+import android.util.DisplayMetrics;
 import android.view.Window;
 import android.view.WindowManager;
 
@@ -82,5 +84,14 @@ public class DeviceHelper {
         WindowManager.LayoutParams layout = window.getAttributes();
         layout.screenBrightness = 1F;
         window.setAttributes(layout);
+    }
+
+    public static DisplayMetrics getScreenSize(Activity activity) {
+        DisplayMetrics display;
+        int mDisplayWidth, mDisplayHeight;
+
+        display = new DisplayMetrics();
+        activity.getWindowManager().getDefaultDisplay().getMetrics(display);
+        return display;
     }
 }

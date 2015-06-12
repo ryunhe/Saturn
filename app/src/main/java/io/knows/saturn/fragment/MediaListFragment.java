@@ -20,7 +20,7 @@ import io.knows.saturn.R;
 import io.knows.saturn.adapter.IndicatorAdapter;
 import io.knows.saturn.listener.EndlessScrollListener;
 import io.knows.saturn.model.Media;
-import io.knows.saturn.service.SamuiService;
+import io.knows.saturn.service.ApiService;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
 
@@ -37,7 +37,7 @@ public class MediaListFragment extends Fragment implements SwipeRefreshLayout.On
     SwipeRefreshLayout mSwipeContainer;
 
     @Inject
-    SamuiService mSamuiService;
+    ApiService mApiService;
 
     MediaListAdapter mListAdapter;
 
@@ -137,7 +137,7 @@ public class MediaListFragment extends Fragment implements SwipeRefreshLayout.On
                     mDataList.clear();
                 }
 
-                mSamuiService.getRecentMedia()
+                mApiService.getRecentMedia()
                         .subscribeOn(Schedulers.io())
                         .observeOn(AndroidSchedulers.mainThread())
                         .subscribe(mediaListResponse -> {

@@ -10,7 +10,7 @@ public class Media extends Model {
     public User user;
     public String userId;
     public String content;
-    public Double[] location;
+    public Double[] location; // [lng,lat]
 
     public void save(StorageWrapper wrapper) {
         userId = user.id;

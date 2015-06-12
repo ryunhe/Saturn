@@ -7,7 +7,7 @@
     android:orientation="horizontal"
     >
 
-    <IconicsTextView
+    <IconicsButton
         style="@style/SaturnIcon.ActionButton"
         android:id="@+id/button_back"
         android:text="{cmd-arrow-left}"
@@ -18,7 +18,7 @@
         android:id="@+id/text_title"
         />
 
-    <IconicsTextView
+    <IconicsButton
         style="@style/SaturnIcon.ActionButton"
         android:id="@+id/button_menu"
         android:text="{cmd-dots-vertical}"

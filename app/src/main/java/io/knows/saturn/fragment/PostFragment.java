@@ -3,7 +3,6 @@ package io.knows.saturn.fragment;
 import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -11,7 +10,9 @@ import android.support.v7.app.AlertDialog;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.aviary.android.feather.sdk.AviaryIntent;
@@ -19,28 +20,29 @@ import com.aviary.android.feather.sdk.internal.Constants;
 import com.aviary.android.feather.sdk.internal.filters.ToolLoaderFactory;
 import com.aviary.android.feather.sdk.internal.headless.utils.MegaPixels;
 import com.aviary.android.feather.sdk.utils.AviaryIntentConfigurationValidator;
+import com.github.pwittchen.prefser.library.Prefser;
 import com.qiniu.android.storage.UploadManager;
 import com.squareup.picasso.Picasso;
 
 import org.json.JSONException;
 
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.io.InputStream;
 import java.text.ParseException;
 import java.util.List;
 
 import javax.inject.Inject;
 
 import butterknife.InjectView;
+import butterknife.OnClick;
+import butterknife.OnTextChanged;
 import io.knows.saturn.R;
 import io.knows.saturn.activity.CropperActivity;
 import io.knows.saturn.activity.SubmitActivity;
 import io.knows.saturn.helper.FileHelper;
-import io.knows.saturn.model.Authenticator;
+import io.knows.saturn.helper.LocationManager;
 import io.knows.saturn.model.Resource;
-import io.knows.saturn.service.SamuiService;
+import io.knows.saturn.service.ApiService;
 import me.nereo.multi_image_selector.MultiImageSelectorActivity;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
@@ -51,19 +53,24 @@ import timber.log.Timber;
  */
 public class PostFragment extends Fragment {
     @Inject
-    Picasso mPicasso;
-    @Inject
     UploadManager mUploadManager;
     @Inject
-    SamuiService mSamuiService;
+    ApiService mApiService;
     @Inject
-    Authenticator mAuthenticator;
+    Prefser mPrefser;
 
     @InjectView(R.id.image_resource)
     ImageView mImage;
+    @InjectView(R.id.input_content)
+    EditText mContentInput;
+    @InjectView(R.id.text_content_count)
+    TextView mContentCountText;
+    @InjectView(R.id.text_location)
+    TextView mLocationText;
 
     Uri mResourceUri;
     Resource mResource;
+    Integer mContentMaxLength;
 
     final static int PREVIEW_SIZE = Resource.ResourceSize.ORIGINAL.getSize();
 
@@ -76,9 +83,15 @@ public class PostFragment extends Fragment {
                              @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
 
-
         View layout = inflater.inflate(R.layout.fragment_post, container, false);
         inject(layout);
+
+        mContentMaxLength = getResources().getInteger(R.integer.content_max_length);
+        mContentCountText.setText(mContentMaxLength.toString());
+        mLocationText.setText(String.format("%s - %.3f, %.3f"
+                , LocationManager.getPoi(mPrefser)
+                , LocationManager.getLongitude(mPrefser)
+                , LocationManager.getLatitude(mPrefser)));
 
         ((SubmitActivity) getActivity()).setOnPageSubmitListener(() -> {
             try {
@@ -87,7 +100,6 @@ public class PostFragment extends Fragment {
                 e.printStackTrace();
             }
         });
-
 
         // pre-load the cds service
         Intent cdsIntent = AviaryIntent.createCdsInitIntent(getActivity());
@@ -100,7 +112,7 @@ public class PostFragment extends Fragment {
             new AlertDialog.Builder(getActivity()).setMessage(e.getMessage()).show();
         }
 
-        start();
+//        start();
 
         return layout;
     }
@@ -168,11 +180,14 @@ public class PostFragment extends Fragment {
                     startActivityForResult(i, PAGE_AVIARY_EDITOR);
                     break;
             }
+        } else {
+            getActivity().finish();
         }
 
         super.onActivityResult(requestCode, resultCode, data);
     }
 
+    @OnClick(R.id.image_resource)
     void start() {
         Intent i = new Intent(getActivity(), MultiImageSelectorActivity.class);
         i.putExtra(MultiImageSelectorActivity.EXTRA_SHOW_CAMERA, true);
@@ -180,31 +195,40 @@ public class PostFragment extends Fragment {
         startActivityForResult(i, PAGE_IMAGE_SELECTOR);
     }
 
-    void uploadResource(final Uri uri) {
-        mSamuiService.getQiniuToken()
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(stringResponse -> {
-                    mUploadManager.put(uri.getPath(), null, stringResponse.getString(), (key, info, response) -> {
-                        try {
-                            mResource = new Resource(response.getString("key"));
-                            mPicasso.load(mResource.getUrl(Resource.ResourceSize.THUMBNAIL))
-                                    .into(mImage);
-                        } catch (JSONException e) {
-                            e.printStackTrace();
-                        }
-                    }, null);
-                });
-    }
-
     void submit() throws ParseException {
-        if (null != mResource) {
-            mSamuiService.createMedia(mResource.identity)
+        if (null != mResourceUri) {
+            mApiService.getQiniuToken()
                     .subscribeOn(Schedulers.io())
                     .observeOn(AndroidSchedulers.mainThread())
-                    .subscribe(mediaEntityResponse -> {
-                        Toast.makeText(getActivity(), "保存成功", Toast.LENGTH_SHORT).show();
+                    .subscribe(stringResponse -> {
+                        mUploadManager.put(mResourceUri.getPath(), null, stringResponse.getString(), (key, info, response) -> {
+                            try {
+                                mResource = new Resource(response.getString("key"));
+                                Toast.makeText(getActivity(), "上传成功", Toast.LENGTH_SHORT).show();
+
+                                mApiService.createMedia(mResource.identity
+                                        , mContentInput.getText().toString()
+                                        , LocationManager.getLatitude(mPrefser)
+                                        , LocationManager.getLongitude(mPrefser))
+
+                                        .subscribeOn(Schedulers.io())
+                                        .observeOn(AndroidSchedulers.mainThread())
+                                        .subscribe(mediaEntityResponse -> {
+                                            Toast.makeText(getActivity(), "发布成功", Toast.LENGTH_SHORT).show();
+                                            getActivity().setResult(Activity.RESULT_OK);
+                                            getActivity().finish();
+                                        });
+
+                            } catch (JSONException e) {
+                                e.printStackTrace();
+                            }
+                        }, null);
                     });
         }
+    }
+
+    @OnTextChanged(R.id.input_content)
+    void count(CharSequence s, int start, int before, int count) {
+        mContentCountText.setText(Integer.toString(mContentMaxLength - mContentInput.getText().length()));
     }
 }

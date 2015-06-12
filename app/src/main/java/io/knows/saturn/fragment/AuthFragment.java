@@ -16,12 +16,11 @@ import javax.inject.Inject;
 import butterknife.OnClick;
 import io.knows.saturn.BuildConfig;
 import io.knows.saturn.R;
-import io.knows.saturn.activity.MainActivity;
 import io.knows.saturn.activity.SignupActivity;
 import io.knows.saturn.activity.StartActivity;
 import io.knows.saturn.helper.DeviceHelper;
 import io.knows.saturn.model.User;
-import io.knows.saturn.service.SamuiService;
+import io.knows.saturn.service.ApiService;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
 import timber.log.Timber;
@@ -33,7 +32,7 @@ public class AuthFragment extends Fragment {
     @Inject
     RennClient mRennClient;
     @Inject
-    SamuiService mSamuiService;
+    ApiService mApiService;
 
     static final int PAGE_SIGN_UP = 1;
 
@@ -65,7 +64,7 @@ public class AuthFragment extends Fragment {
             public void onLoginSuccess() {
                 Toast.makeText(getActivity(), "登录成功", Toast.LENGTH_SHORT).show();
 
-                mSamuiService.authRenren(DeviceHelper.getDeviceId(getActivity()), mRennClient.getUid().toString())
+                mApiService.authRenren(DeviceHelper.getDeviceId(getActivity()), mRennClient.getUid().toString())
                         .subscribeOn(Schedulers.io())
                         .observeOn(AndroidSchedulers.mainThread())
                         .subscribe(authResponse -> {

@@ -3,9 +3,12 @@
 <LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="80dp"
+    android:layout_height="70dp"
     android:orientation="horizontal"
-    android:padding="@dimen/item_margin"
+    android:paddingLeft="@dimen/item_margin"
+    android:paddingRight="@dimen/item_margin"
+    android:paddingTop="@dimen/item_margin_small"
+    android:paddingBottom="@dimen/item_margin_small"
     >
 
     <LinearLayout
@@ -20,14 +23,15 @@
             android:id="@+id/text_primary"
             android:layout_width="match_parent"
             android:text="{primary}"
-            style="@style/SaturnText.Large"
+            android:textSize="22sp"
+            style="@style/SaturnText"
             />
 
         <TextView
             android:id="@+id/text_secondary"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:gravity="bottom"
+            android:gravity="center_vertical"
             android:text="{secondary}"
             style="@style/SaturnText.Small"
             />

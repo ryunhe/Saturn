@@ -6,8 +6,8 @@
     <string name="title_region_picker">选择地区</string>
     <string name="title_profile">个人资料</string>
 
-    <string name="drawer_item_home">首页</string>
-    <string name="drawer_item_post">发布</string>
+    <string name="drawer_item_card">卡片</string>
+    <string name="drawer_item_map">地图</string>
     <string name="drawer_item_exit">退出</string>
 
     <string name="label_confirm">确定</string>
@@ -21,8 +21,11 @@
     <string name="label_gender">性别</string>
     <string name="label_hometown">家乡</string>
     <string name="label_school">学校</string>
+    <string name="label_content">此刻的想法…</string>
     <string name="hint_school_search">请输入学校名称</string>
     <string name="info_retrying">正在重试…</string>
     <string name="alert_status_offline">网络不稳定，请检查连接信号</string>
     <string name="alert_load_image_failed">图片加载失败</string>
+
+    <string name="text_signup_content">#新人报道</string>
 </resources>

@@ -34,6 +34,7 @@
     <uses-permission android:name="android.permission.CHANGE_WIFI_STATE" />
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
     <uses-permission android:name="android.permission.CHANGE_CONFIGURATION" />
+    <uses-permission android:name="android.permission.WRITE_SETTINGS" />
 
     <!-- Aviary Map -->
 
@@ -83,11 +84,6 @@
             />
 
         <activity
-            android:name=".activity.AviarySampleActivity"
-            android:screenOrientation="portrait"
-            />
-
-        <activity
             android:name=".activity.SchoolPickerActivity"
             android:screenOrientation="portrait"
             />
@@ -123,12 +119,6 @@
             android:authorities="${applicationId}.AviaryCdsProvider"
             android:process=":aviarycds"
             android:exported="false" />
-
-
-        <!-- Network Events -->
-        <meta-data
-            android:name="com.github.pwittchen.networkevents.ping"
-            android:value="http://www.baidu.com" />
 
     </application>
 

@@ -11,15 +11,75 @@
     android:padding="@dimen/activity_margin"
     >
 
-    <com.makeramen.roundedimageview.RoundedImageView
-        xmlns:app="http://schemas.android.com/apk/res-auto"
-        android:id="@+id/image_resource"
-        android:layout_width="@dimen/avatar_normal_size"
-        android:layout_height="@dimen/avatar_normal_size"
-        android:src="@drawable/anonymous_avatar"
-        android:scaleType="centerCrop"
-        app:riv_oval="false"
-        app:riv_corner_radius="@dimen/corner_radius"
-        />
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        >
+
+        <com.makeramen.roundedimageview.RoundedImageView
+            xmlns:app="http://schemas.android.com/apk/res-auto"
+            android:id="@+id/image_resource"
+            android:layout_width="100dp"
+            android:layout_height="100dp"
+            android:src="@drawable/content_default_pic"
+            android:scaleType="centerCrop"
+            app:riv_oval="false"
+            app:riv_corner_radius="@dimen/corner_radius"
+            />
+
+        <RelativeLayout
+            android:layout_weight="1"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            >
+            <EditText
+                style="@style/SaturnInput"
+                android:id="@+id/input_content"
+                android:singleLine="false"
+                android:lines="5"
+                android:minLines="5"
+                android:layout_width="fill_parent"
+                android:layout_height="fill_parent"
+                android:layout_marginLeft="@dimen/item_margin_small"
+                android:gravity="top"
+                android:hint="@string/label_content"
+                android:maxLength="@integer/content_max_length"
+                />
+            <TextView
+                style="@style/SaturnText.Mini"
+                android:id="@+id/text_content_count"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentBottom="true"
+                android:layout_alignParentRight="true"
+                />
+        </RelativeLayout>
+
+
+    </LinearLayout>
+
+    <LinearLayout
+        style="@style/SaturnRow.Content"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:background="@drawable/background_border_bottom"
+        >
+
+        <IconicsTextView
+            style="@style/SaturnIcon"
+            android:text="{cmd-map-marker}"
+            />
+
+        <TextView
+            style="@style/SaturnText.Mini"
+            android:id="@+id/text_location"
+            android:layout_weight="1"
+            android:layout_width="0dp"
+            />
+
+    </LinearLayout>
+
 
 </LinearLayout>

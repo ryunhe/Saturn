@@ -6,20 +6,24 @@
     android:layout_height="wrap_content"
     android:gravity="center_vertical">
 
-    <Button
+    <IconicsTextView
         android:id="@+id/button_pass"
-        android:layout_width="72dp"
-        android:layout_height="72dp"
+        android:text="{cmd-close-circle-outline}"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:layout_margin="@dimen/item_margin_small"
-        android:background="@drawable/button_card_action_pass"
+        android:textColor="@color/red"
+        android:textSize="80sp"
         />
 
-    <Button
+    <IconicsTextView
         android:id="@+id/button_like"
-        android:layout_width="72dp"
-        android:layout_height="72dp"
+        android:text="{cmd-heart-outline}"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:layout_margin="@dimen/item_margin_small"
-        android:background="@drawable/button_card_action_like"
+        android:textColor="@color/green"
+        android:textSize="80sp"
         />
 
 </LinearLayout>

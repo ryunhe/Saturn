@@ -19,7 +19,7 @@ import rx.Observable;
 /**
  * Created by ryun on 15-4-20.
  */
-public interface SamuiService {
+public interface ApiService {
     // Media
     @GET("/media/{media}")
     Observable<MediaEntityResponse> getMedia(@Path("media") String media);
@@ -30,12 +30,20 @@ public interface SamuiService {
     @GET("/media/recent")
     Observable<MediaListResponse> getRecentMedia();
 
+    @GET("/media/nearby")
+    Observable<MediaListResponse> getNearByMedia(@Query("lat") double lat,
+                                                 @Query("lng") double lng,
+                                                 @Query("distance") float distance);
+
     @GET("/media/popular")
     Observable<MediaListResponse> getPopularMedia();
 
     @FormUrlEncoded
     @POST("/media")
-    Observable<MediaEntityResponse> createMedia(@Field("resource") String resource);
+    Observable<MediaEntityResponse> createMedia(@Field("resource") String resource,
+                                                @Field("content") String content,
+                                                @Field("lat") double lat,
+                                                @Field("lng") double lng);
 
     // User
     @GET("/users/{user}")

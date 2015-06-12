@@ -2,26 +2,21 @@
 
 <LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
+    android:layout_width="fill_parent"
     android:layout_height="match_parent"
     android:orientation="horizontal"
     >
 
-    <IconicsButton
-        style="@style/SaturnIcon.ActionButton"
-        android:id="@+id/button_back"
-        android:text="{cmd-arrow-left}"
-        />
-
     <TextView
         style="@style/SaturnActionBar.Title"
         android:id="@+id/text_title"
+        android:text="@string/app_name"
         />
 
     <IconicsButton
         style="@style/SaturnIcon.ActionButton"
-        android:id="@+id/button_submit"
-        android:text="{cmd-check}"
+        android:id="@+id/button_post"
+        android:text="{cmd-plus}"
         />
 
 </LinearLayout>

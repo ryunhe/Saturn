@@ -18,6 +18,7 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Toast;
 
+import com.github.pwittchen.prefser.library.Prefser;
 import com.google.gson.Gson;
 import com.qiniu.android.storage.UploadManager;
 import com.renn.rennsdk.RennClient;
@@ -49,11 +50,12 @@ import io.knows.saturn.activity.SchoolPickerActivity;
 import io.knows.saturn.activity.SignupActivity;
 import io.knows.saturn.activity.SubmitActivity;
 import io.knows.saturn.helper.FileHelper;
+import io.knows.saturn.helper.LocationManager;
 import io.knows.saturn.model.Authenticator;
 import io.knows.saturn.model.Resource;
 import io.knows.saturn.model.User;
 import io.knows.saturn.model.renren.RennUser;
-import io.knows.saturn.service.SamuiService;
+import io.knows.saturn.service.ApiService;
 import io.knows.saturn.widget.DatePickerDialogWithMaxMinRange;
 import me.nereo.multi_image_selector.MultiImageSelectorActivity;
 import rx.android.schedulers.AndroidSchedulers;
@@ -71,9 +73,11 @@ public class SignupFragment extends Fragment {
     @Inject
     UploadManager mUploadManager;
     @Inject
-    SamuiService mSamuiService;
+    ApiService mApiService;
     @Inject
     Authenticator mAuthenticator;
+    @Inject
+    Prefser mPrefser;
 
     @InjectView(R.id.input_nickname)
     EditText mNicknameInput;
@@ -110,14 +114,11 @@ public class SignupFragment extends Fragment {
 
         loadRennProfile();
 
-        ((SubmitActivity) getActivity()).setOnPageSubmitListener(new SubmitActivity.OnPageSubmitListener() {
-            @Override
-            public void onSubmit() {
-                try {
-                    submit();
-                } catch (ParseException e) {
-                    e.printStackTrace();
-                }
+        ((SubmitActivity) getActivity()).setOnPageSubmitListener(() -> {
+            try {
+                submit();
+            } catch (ParseException e) {
+                e.printStackTrace();
             }
         });
 
@@ -196,7 +197,7 @@ public class SignupFragment extends Fragment {
     }
 
     void updateAvatarResource(final Uri uri) {
-        mSamuiService.getQiniuToken()
+        mApiService.getQiniuToken()
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(stringResponse -> {
@@ -287,12 +288,16 @@ public class SignupFragment extends Fragment {
                 : User.Gender.FEMALE;
 
         if (null != mAvatarResource) {
-            mSamuiService.createMedia(mAvatarResource.identity)
+            mApiService.createMedia(mAvatarResource.identity
+                    , getString(R.string.text_signup_content)
+                    , LocationManager.getLatitude(mPrefser)
+                    , LocationManager.getLongitude(mPrefser))
+
                     .subscribeOn(Schedulers.io())
                     .observeOn(AndroidSchedulers.mainThread())
                     .subscribe(mediaEntityResponse -> {
                         Toast.makeText(getActivity(), "保存成功", Toast.LENGTH_SHORT).show();
-                        mSamuiService.updateProfile(nickname, gender.getCode(), birthday, hometown, school, null, null)
+                        mApiService.updateProfile(nickname, gender.getCode(), birthday, hometown, school, null, null)
                                 .subscribeOn(Schedulers.io())
                                 .observeOn(AndroidSchedulers.mainThread())
                                 .subscribe(userEntityResponse -> {

@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="primary">#2196F3</color>
-    <color name="primary_dark">#1976D2</color>
-    <color name="primary_light">#BBDEFB</color>
+    <color name="primary">#ffa333</color>
+    <color name="primary_dark">#c67f29</color>
+    <color name="primary_light">#ffeb4a</color>
     <color name="primary_text">#DE000000</color>
     <color name="secondary_text">#8A000000</color>
     <color name="window_background">#F9F9F9</color>
@@ -41,5 +41,6 @@
     <color name="white_transparent">#ddffffff</color>
     <color name="gray_transparent">#44333333</color>
     <color name="black_transparent">#cc333333</color>
+    <color name="green_transparent">#444b954e</color>
 
 </resources>

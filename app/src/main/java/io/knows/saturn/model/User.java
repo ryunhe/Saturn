@@ -14,7 +14,7 @@ public class User extends Model {
     public Counts counts;
     public Resource cover;
     public Gender gender;
-    public Double[] location;
+    public Double[] location; // [lng,lat]
     public Like[] likes;
 
     public class Counts {

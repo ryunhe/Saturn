@@ -20,7 +20,7 @@ public class Resource {
         ORIGINAL("original", 1280),
         STANDARD("standard", 640),
         MEDIUM("medium", 320),
-        THUMBNAIL("thumbnail", 150);
+        THUMBNAIL("thumbnail", 80);
         String text;
         Integer size;
         ResourceSize(String type, Integer size) {

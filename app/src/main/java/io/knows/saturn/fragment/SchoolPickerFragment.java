@@ -21,11 +21,10 @@ import butterknife.OnEditorAction;
 import butterknife.OnItemClick;
 import butterknife.OnTextChanged;
 import io.knows.saturn.R;
-import io.knows.saturn.activity.SchoolPickerActivity;
 import io.knows.saturn.activity.SignupActivity;
 import io.knows.saturn.activity.SubmitActivity;
 import io.knows.saturn.adapter.Adapter;
-import io.knows.saturn.service.SamuiService;
+import io.knows.saturn.service.ApiService;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
 
@@ -34,7 +33,7 @@ import rx.schedulers.Schedulers;
  */
 public class SchoolPickerFragment extends Fragment {
     @Inject
-    SamuiService mSamuiService;
+    ApiService mApiService;
 
     @InjectView(R.id.list_main)
     ListView mListView;
@@ -104,7 +103,7 @@ public class SchoolPickerFragment extends Fragment {
         }
 
         public void doFetch(String keyword) {
-            mSamuiService.getSearchSchool(keyword)
+            mApiService.getSearchSchool(keyword)
                     .subscribeOn(Schedulers.io())
                     .observeOn(AndroidSchedulers.mainThread())
                     .subscribe(schoolListResponse -> {
